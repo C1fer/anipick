@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Anime Quick Pick Filters</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700;800;900&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3E4C6D", // Muted slate blue
+                        "background-ultra-dark": "#0B0B0C",
+                        "card-dark": "#121214",
+                        "border-dark": "#222224",
+                        "accent-indigo": "#4F5B93",
+                        "text-off-white": "#E2E2E4",
+                        "text-muted": "#8A8A8E"
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        body {
+            font-family: "Spline Sans", sans-serif;
+            background-color: #0B0B0C;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #121214;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #222224;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="bg-background-ultra-dark min-h-screen text-text-off-white">
+    <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+        <header
+            class="sticky top-0 z-50 w-full border-b border-solid border-border-dark bg-background-ultra-dark/90 backdrop-blur-md px-6 md:px-10 py-3">
+            <div class="mx-auto flex max-w-[960px] items-center justify-between">
+                <div class="flex items-center gap-4 text-accent-indigo">
+                    <div class="size-6">
+                        <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-text-off-white text-xl font-bold leading-tight tracking-tight">AnimePick</h2>
+                </div>
+                <div class="flex flex-1 justify-end gap-6 md:gap-8">
+                    <nav class="hidden md:flex items-center gap-8">
+                        <a class="text-text-muted text-sm font-medium hover:text-text-off-white transition-colors"
+                            href="#">Discover</a>
+                        <a class="text-text-muted text-sm font-medium hover:text-text-off-white transition-colors"
+                            href="#">Top 100</a>
+                        <a class="text-text-muted text-sm font-medium hover:text-text-off-white transition-colors"
+                            href="#">My List</a>
+                    </nav>
+                    <button
+                        class="flex items-center justify-center rounded-lg h-10 w-10 bg-card-dark border border-border-dark text-text-off-white hover:bg-accent-indigo/20 transition-all">
+                        <span class="material-symbols-outlined">account_circle</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+        <main class="flex-1 flex justify-center py-8 px-4 md:px-0">
+            <div class="w-full max-w-[640px] flex flex-col gap-6">
+                <div class="flex flex-col gap-2 px-2">
+                    <h1 class="text-text-off-white text-4xl font-black leading-tight tracking-tight">Anime Quick Pick
+                    </h1>
+                    <p class="text-text-muted text-base font-normal">Set your filters and discover your next
+                        binge-watch.</p>
+                </div>
+                <div class="bg-card-dark rounded-xl border border-border-dark p-6 shadow-2xl">
+                    <div class="mb-6">
+                        <h3 class="text-text-muted text-xs font-bold uppercase tracking-wider mb-3">Release Type</h3>
+                        <div class="flex bg-background-ultra-dark p-1 rounded-lg border border-border-dark">
+                            <label class="flex-1 cursor-pointer">
+                                <input class="sr-only peer" name="type" type="radio" value="TV" />
+                                <div
+                                    class="flex h-10 items-center justify-center rounded-lg text-text-muted peer-checked:bg-accent-indigo peer-checked:text-text-off-white font-medium transition-all">
+                                    TV</div>
+                            </label>
+                            <label class="flex-1 cursor-pointer">
+                                <input class="sr-only peer" name="type" type="radio" value="Movie" />
+                                <div
+                                    class="flex h-10 items-center justify-center rounded-lg text-text-muted peer-checked:bg-accent-indigo peer-checked:text-text-off-white font-medium transition-all">
+                                    Movie</div>
+                            </label>
+                            <label class="flex-1 cursor-pointer">
+                                <input checked="" class="sr-only peer" name="type" type="radio" value="Any" />
+                                <div
+                                    class="flex h-10 items-center justify-center rounded-lg text-text-muted peer-checked:bg-accent-indigo peer-checked:text-text-off-white font-medium transition-all">
+                                    Any</div>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <h3 class="text-text-muted text-xs font-bold uppercase tracking-wider mb-3">Status</h3>
+                            <div class="flex bg-background-ultra-dark p-1 rounded-lg border border-border-dark">
+                                <label class="flex-1 cursor-pointer">
+                                    <input class="sr-only peer" name="status" type="radio" value="Finished" />
+                                    <div
+                                        class="flex h-10 items-center justify-center rounded-lg text-text-muted peer-checked:bg-accent-indigo peer-checked:text-text-off-white font-medium transition-all text-sm">
+                                        Finished</div>
+                                </label>
+                                <label class="flex-1 cursor-pointer">
+                                    <input class="sr-only peer" name="status" type="radio" value="Airing" />
+                                    <div
+                                        class="flex h-10 items-center justify-center rounded-lg text-text-muted peer-checked:bg-accent-indigo peer-checked:text-text-off-white font-medium transition-all text-sm">
+                                        Airing</div>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-text-muted text-xs font-bold uppercase tracking-wider mb-3">Episodes</h3>
+                            <div
+                                class="grid grid-cols-4 gap-1 bg-background-ultra-dark p-1 rounded-lg border border-border-dark">
+                                <label class="cursor-pointer">
+                                    <input class="sr-only peer" name="eps" type="radio" value="&lt;13" />
+                                    <div
+                                        class="flex h-10 items-center justify-center rounded-lg text-text-muted peer-checked:bg-accent-indigo peer-checked:text-text-off-white font-medium transition-all text-xs">
+                                        &lt;13</div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input class="sr-only peer" name="eps" type="radio" value="13-26" />
+                                    <div
+                                        class="flex h-10 items-center justify-center rounded-lg text-text-muted peer-checked:bg-accent-indigo peer-checked:text-text-off-white font-medium transition-all text-xs">
+                                        13-26</div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input class="sr-only peer" name="eps" type="radio" value="26+" />
+                                    <div
+                                        class="flex h-10 items-center justify-center rounded-lg text-text-muted peer-checked:bg-accent-indigo peer-checked:text-text-off-white font-medium transition-all text-xs">
+                                        26+</div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input checked="" class="sr-only peer" name="eps" type="radio" value="Any" />
+                                    <div
+                                        class="flex h-10 items-center justify-center rounded-lg text-text-muted peer-checked:bg-accent-indigo peer-checked:text-text-off-white font-medium transition-all text-xs">
+                                        Any</div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <h3 class="text-text-muted text-xs font-bold uppercase tracking-wider mb-3">Genres</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <label class="cursor-pointer group">
+                                <input checked="" class="sr-only peer" type="checkbox" />
+                                <span
+                                    class="inline-block px-4 py-2 rounded-full border border-border-dark bg-background-ultra-dark text-text-muted peer-checked:bg-accent-indigo peer-checked:border-accent-indigo peer-checked:text-text-off-white text-sm font-medium transition-all">Action</span>
+                            </label>
+                            <label class="cursor-pointer group">
+                                <input class="sr-only peer" type="checkbox" />
+                                <span
+                                    class="inline-block px-4 py-2 rounded-full border border-border-dark bg-background-ultra-dark text-text-muted peer-checked:bg-accent-indigo peer-checked:border-accent-indigo peer-checked:text-text-off-white text-sm font-medium transition-all">Adventure</span>
+                            </label>
+                            <label class="cursor-pointer group">
+                                <input checked="" class="sr-only peer" type="checkbox" />
+                                <span
+                                    class="inline-block px-4 py-2 rounded-full border border-border-dark bg-background-ultra-dark text-text-muted peer-checked:bg-accent-indigo peer-checked:border-accent-indigo peer-checked:text-text-off-white text-sm font-medium transition-all">Sci-Fi</span>
+                            </label>
+                            <label class="cursor-pointer group">
+                                <input class="sr-only peer" type="checkbox" />
+                                <span
+                                    class="inline-block px-4 py-2 rounded-full border border-border-dark bg-background-ultra-dark text-text-muted peer-checked:bg-accent-indigo peer-checked:border-accent-indigo peer-checked:text-text-off-white text-sm font-medium transition-all">Romance</span>
+                            </label>
+                            <label class="cursor-pointer group">
+                                <input class="sr-only peer" type="checkbox" />
+                                <span
+                                    class="inline-block px-4 py-2 rounded-full border border-border-dark bg-background-ultra-dark text-text-muted peer-checked:bg-accent-indigo peer-checked:border-accent-indigo peer-checked:text-text-off-white text-sm font-medium transition-all">Fantasy</span>
+                            </label>
+                            <label class="cursor-pointer group">
+                                <input class="sr-only peer" type="checkbox" />
+                                <span
+                                    class="inline-block px-4 py-2 rounded-full border border-border-dark bg-background-ultra-dark text-text-muted peer-checked:bg-accent-indigo peer-checked:border-accent-indigo peer-checked:text-text-off-white text-sm font-medium transition-all">Isekai</span>
+                            </label>
+                            <label class="cursor-pointer group">
+                                <input class="sr-only peer" type="checkbox" />
+                                <span
+                                    class="inline-block px-4 py-2 rounded-full border border-border-dark bg-background-ultra-dark text-text-muted peer-checked:bg-accent-indigo peer-checked:border-accent-indigo peer-checked:text-text-off-white text-sm font-medium transition-all">Mystery</span>
+                            </label>
+                            <button
+                                class="flex items-center gap-1 px-4 py-2 rounded-full border border-dashed border-border-dark text-text-muted/60 text-sm font-medium hover:bg-white/5 transition-all">
+                                <span class="material-symbols-outlined text-sm">add</span> More
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mb-8">
+                        <h3 class="text-text-muted text-xs font-bold uppercase tracking-wider mb-3">Demographic</h3>
+                        <div class="relative">
+                            <select
+                                class="w-full bg-background-ultra-dark border border-border-dark rounded-lg h-12 px-4 text-text-off-white appearance-none cursor-pointer focus:ring-1 focus:ring-accent-indigo/50">
+                                <option>All Demographics</option>
+                                <option>Shonen</option>
+                                <option>Seinen</option>
+                                <option>Shojo</option>
+                                <option>Josei</option>
+                            </select>
+                            <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted">
+                                <span class="material-symbols-outlined">expand_more</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="flex items-center justify-between p-4 bg-background-ultra-dark/40 rounded-xl border border-border-dark mb-8">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-accent-indigo">warning</span>
+                            <div>
+                                <p class="text-text-off-white font-bold text-sm">NSFW Content</p>
+                                <p class="text-text-muted text-xs">Show mature and R-rated series</p>
+                            </div>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input class="sr-only peer" type="checkbox" value="" />
+                            <div
+                                class="w-11 h-6 bg-border-dark peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-text-off-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-text-off-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent-indigo">
+                            </div>
+                        </label>
+                    </div>
+                    <button
+                        class="group relative w-full overflow-hidden rounded-xl bg-accent-indigo p-4 transition-all hover:bg-accent-indigo/90 active:scale-[0.98]">
+                        <div class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity">
+                        </div>
+                        <div class="flex items-center justify-center gap-2 text-text-off-white text-lg font-bold">
+                            <span class="material-symbols-outlined">auto_awesome</span>
+                            <span>Find my Anime</span>
+                        </div>
+                    </button>
+                </div>
+                <div class="flex flex-col gap-3 px-2">
+                    <h4 class="text-text-muted text-[10px] font-bold uppercase tracking-widest">Trending Choice</h4>
+                    <div
+                        class="bg-gradient-to-r from-accent-indigo/10 to-transparent border-l-2 border-accent-indigo p-4 rounded-r-lg">
+                        <p class="text-text-muted text-sm font-medium">Over 1,200 users picked <span
+                                class="text-text-off-white italic">"Chainsaw Man"</span> with these filters today.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer class="w-full py-10 px-6 border-t border-border-dark bg-background-ultra-dark text-center">
+            <p class="text-text-muted/40 text-[10px] uppercase tracking-widest">© 2024 AnimePick. Driven by the
+                community. Data via AniList API.</p>
+        </footer>
+    </div>
+
+</body>
+
+</html>
