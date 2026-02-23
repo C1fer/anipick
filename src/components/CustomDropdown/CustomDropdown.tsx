@@ -43,13 +43,13 @@ export const CustomDropdown = (props: CustomDropdownProps): React.ReactElement =
                 {props.label}
             </h3>}
             <DropdownMenu>
-                <DropdownMenuTrigger className="min-w-full focus:outline-none">
-                    <Button className="justify-between bg-background-ultra-dark border-border-dark border text-white font-medium focus:border-yellow cursor-pointer min-w-full">
+                <DropdownMenuTrigger className="w-full focus:outline-none">
+                    <Button className="justify-between bg-background-ultra-dark border-border-dark border text-white font-medium cursor-pointer min-w-full">
                         <span className="truncate">{triggerLabel}</span>
                         <ChevronDown className="w-4 h-4 ml-2 shrink-0" />
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-background-ultra-dark border-border-dark text-white max-h-80 w-56 overflow-y-auto">
+                <DropdownMenuContent className="bg-background-ultra-dark border-border-dark text-white max-h-80 overflow-y-auto">
                     {props.options.map((option) => (
                         <DropdownMenuCheckboxItem
                             className="data-highlighted:bg-accent-indigo data-highlighted:text-white"
