@@ -3,6 +3,7 @@ export type UseAnimeFilterViewResult = {
     state: FilterOptions;
     handleChange: (key: keyof FilterOptions, value: string|boolean|Record<number, string>[]) => void;
     onToggleSFW: () => void;
+    onSelectGenres: (genre: string) => void;
 }
 
 export type Lists = {

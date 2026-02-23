@@ -20,7 +20,7 @@ const ANIME_LENGTH_OPTIONS: Record<string, string> = {
 
 const ANIME_STATUS: Record<string, string> = {
     Finished: "finished",
-    Ongoing: "ongoing",
+    Airing: "ongoing",
     Any: "any",
 }
 
@@ -29,6 +29,7 @@ const ANIME_RELEASE_TYPE: Record<string, string> = {
     Movie: "movie",
     Any: "any",
 }
+
 
 export const useAnimeFilterView = (): UseAnimeFilterViewResult => {
     const [ filterOptions, setFilterOptions ] = useState<FilterOptions>(DEFAULT_FILTER_OPTIONS);
@@ -42,8 +43,12 @@ export const useAnimeFilterView = (): UseAnimeFilterViewResult => {
 
     const onToggleSFW = () => handleChange('sfw', !filterOptions.sfw);
 
-    const onSelectDemographic = (value: string) => {
-        
+    const onSelectGenres = (genre: string): void => {
+        if (filterOptions.genres.includes(genre)) {
+            handleChange('genres', filterOptions.genres.filter((g) => g !== genre));
+        } else {
+            handleChange('genres', [...filterOptions.genres, genre]);
+        }
     }
  
     return {
@@ -57,5 +62,6 @@ export const useAnimeFilterView = (): UseAnimeFilterViewResult => {
         state: filterOptions,
         handleChange,
         onToggleSFW,
+        onSelectGenres,
     }
 }

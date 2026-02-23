@@ -19,7 +19,6 @@ export const ToggleRadio = (props: ToggleRadioProps) : React.ReactElement => {
                         </div>
                     </label>
                 ))}
-
             </div>
         </div>
     )
