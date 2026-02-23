@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import { Root } from './pages/Root';
 import { AnimePickPage } from './pages/anime/AnimePickPage';
 import { MangaPickPage } from './pages/manga/MangaPickPage';
+import { Toaster } from 'sonner';
 
 const AppRouter = () => (
   <BrowserRouter>
@@ -21,6 +22,7 @@ const AppRouter = () => (
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
+    <Toaster visibleToasts={1} theme='dark'/>
     <AppRouter />
   </StrictMode>
 )

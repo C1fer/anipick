@@ -1,12 +1,14 @@
 import type { ToggleRadioOption } from "../ToggleRadio/ToggleRadio-def";
 
 export type UseAnimeFilterViewResult = {
+    isLoading: boolean;
     lists: Lists;
     state: FilterOptions;
     handleChange: <K extends keyof FilterOptions>(key: K, value: FilterOptions[K]) => void;
     onToggleSFW: () => void;
     onSelectGenre: (genre: SelectableOption) => void;
     onSelectDemographic: (demographic: SelectableOption) => void;
+    onSubmit: () => Promise<void>;
 }
 
 export type Lists = {

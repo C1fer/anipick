@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Constants } from "../../utils/constants";
 import type { FilterOptions, SelectableOption, UseAnimeFilterViewResult } from "./AnimeFilterView-def";
+import { JikanAPI } from "@/api/JikanAPI/JikanAPI";
+import { toast } from "sonner";
 
 const DEFAULT_FILTER_OPTIONS: FilterOptions = {
     releaseType: 'any',
@@ -32,17 +34,18 @@ const ANIME_RELEASE_TYPE: SelectableOption[] = [
 
 const GENRES: SelectableOption[] = Constants.genres.map((genre) => ({
     label: genre.name,
-    value: genre.name,
+    value: String(genre.mal_id),
 }))
 
 const DEMOGRAPHICS: SelectableOption[] = Constants.demographics.map((demo) => ({
     label: demo.name,
-    value: demo.name,
+    value: String(demo.mal_id),
 }))
 
 
 export const useAnimeFilterView = (): UseAnimeFilterViewResult => {
     const [ filterOptions, setFilterOptions ] = useState<FilterOptions>(DEFAULT_FILTER_OPTIONS);
+    const [ isLoading, setIsLoading ] = useState<boolean>(false);
 
     const handleChange = <K extends keyof FilterOptions>(key: K, value: FilterOptions[K]) => {
         setFilterOptions((prev) => ({
@@ -68,8 +71,37 @@ export const useAnimeFilterView = (): UseAnimeFilterViewResult => {
             handleChange('demographics', [...filterOptions.demographics, demographic]);
         }
     }
+
+    const onSubmit = async () => {
+        const { releaseType, status, genres, demographics, sfw } = filterOptions;
+
+        try {
+            setIsLoading(true);
+            const malGenresAndDemos : string = Array.from([...genres, ...demographics], (x => x.value)).join(",");
+
+            const response = await JikanAPI.searchAnime({
+                type: releaseType !== "any" ? releaseType : undefined,
+                status: status !== "any" ? status : undefined,
+                genres: malGenresAndDemos.length ? malGenresAndDemos : undefined,
+                sfw: sfw,
+                limit: 25,
+                order_by: "score",
+                sort: "desc",
+            });
+            console.log(response);
+        } catch (error) {
+            toast.error("An error ocurred. Please try again.", 
+                { 
+                    position: 'top-center', 
+                    style: { background: "var(--color-destructive-red)", color: "white", borderColor: "transparent" } 
+                });
+        } finally {
+            setIsLoading(false);
+        }
+    }
  
     return {
+        isLoading,
         lists: {
             releaseType: ANIME_RELEASE_TYPE,
             status: ANIME_STATUS,
@@ -82,5 +114,6 @@ export const useAnimeFilterView = (): UseAnimeFilterViewResult => {
         onToggleSFW,
         onSelectGenre,
         onSelectDemographic,
+        onSubmit,
     }
 }

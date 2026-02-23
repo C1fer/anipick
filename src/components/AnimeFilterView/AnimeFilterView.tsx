@@ -3,15 +3,19 @@ import { ToggleRadio } from "../ToggleRadio/ToggleRadio";
 import { CustomDropdown } from "../CustomDropdown/CustomDropdown";
 import { NSFWToggle } from "../NSFWToggle/NSFWToggle";
 import { Button } from "../ui/button";
+import { Spinner } from "../ui/spinner";
+import { Sparkles } from "lucide-react";
 
 export const AnimeFilterView = () => {
     const {
-       state,
-       lists,
-       handleChange,
-       onToggleSFW,
-       onSelectGenre,
-       onSelectDemographic
+        isLoading,
+        state,
+        lists,
+        handleChange,
+        onToggleSFW,
+        onSelectGenre,
+        onSelectDemographic,
+        onSubmit,
     } = useAnimeFilterView();
 
         
@@ -55,7 +59,11 @@ export const AnimeFilterView = () => {
                     onToggle={onToggleSFW}
                 />
             </div>
-            <Button className="w-full mt-6 p-5 cursor-pointer bg-accent-indigo text-white hover:bg-accent-indigo/90">
+            <Button 
+                className="w-full mt-6 py-8 cursor-pointer bg-accent-indigo text-white hover:bg-accent-indigo/90 gap-4 "
+                onClick={onSubmit}
+            >
+                {isLoading ? <Spinner/> : <Sparkles size={40} color="white"/>}
                 <span className="text-text-off-white">Find my Anime</span>
             </Button>
         </div>
