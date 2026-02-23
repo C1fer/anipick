@@ -12,13 +12,13 @@ export const CustomDropdown = (props: CustomDropdownProps): React.ReactElement =
             triggerLabel = "Any";
             break;
         case 1:
-            triggerLabel = props.selectedValues[0];
+            triggerLabel = props.selectedValues[0].label;
             break;
         case 2:
-            triggerLabel = `${props.selectedValues[0]}, ${props.selectedValues[1]}`;
+            triggerLabel = `${props.selectedValues[0].label}, ${props.selectedValues[1].label}`;
             break;
         default:
-            triggerLabel = `${props.selectedValues[0]}, ${props.selectedValues[1]} +${props.selectedValues.length - 2}`;
+            triggerLabel = `${props.selectedValues[0].label}, ${props.selectedValues[1].label} +${props.selectedValues.length - 2}`;
     }
 
      const showBadges = () => {
@@ -26,11 +26,11 @@ export const CustomDropdown = (props: CustomDropdownProps): React.ReactElement =
             
             return (
                 <div className="flex flex-wrap gap-2 mt-2">
-                    {props.selectedValues.map((name, idx) => (
+                    {props.selectedValues.map((val, idx) => (
                         <CustomBadge 
                             key={idx} 
-                            label={name} 
-                            onRemove={() => props.onSelected(name)}
+                            label={val.label} 
+                            onRemove={() => props.onSelected(val)}
                         />
                     ))}
                 </div>
@@ -50,14 +50,14 @@ export const CustomDropdown = (props: CustomDropdownProps): React.ReactElement =
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="bg-background-ultra-dark border-border-dark text-white max-h-80 w-56 overflow-y-auto">
-                    {props.options.map(([key, value]) => (
+                    {props.options.map((option) => (
                         <DropdownMenuCheckboxItem
                             className="data-highlighted:bg-accent-indigo data-highlighted:text-white"
-                            key={key}
-                            checked={props.selectedValues.includes(value)}
-                            onCheckedChange={() => props.onSelected(value)}
+                            key={`dropdown-option-${option.value}`}
+                            checked={props.selectedValues.some((val) => val.value === option.value)}
+                            onCheckedChange={() => props.onSelected(option)}
                         >
-                            {value}
+                            {option.label}
                         </DropdownMenuCheckboxItem>
                     ))}
                 </DropdownMenuContent>

@@ -1,7 +1,5 @@
 import { useAnimeFilterView } from "./useAnimeFilterView"
-import { Switch } from "../ui/switch";
 import { ToggleRadio } from "../ToggleRadio/ToggleRadio";
-import { CustomSelect } from "../CustomSelect/CustomSelect";
 import { CustomDropdown } from "../CustomDropdown/CustomDropdown";
 import { NSFWToggle } from "../NSFWToggle/NSFWToggle";
 
@@ -11,7 +9,8 @@ export const AnimeFilterView = () => {
        lists,
        handleChange,
        onToggleSFW,
-       onSelectGenres
+       onSelectGenre,
+       onSelectDemographic
     } = useAnimeFilterView();
 
     return (
@@ -29,25 +28,27 @@ export const AnimeFilterView = () => {
                 onSelected={(value) => handleChange('status', value)} 
             />
             <ToggleRadio 
-                headerTitle="Episodes" 
+                headerTitle="Length" 
                 options={lists.minEpisodes} 
                 selectedValue={state.minEpisodes.toString()} 
                 onSelected={(value) => handleChange('minEpisodes', value)} 
             />
             <CustomDropdown
                 label="Genres"
-                options={Object.entries(lists.genres)}
+                options={lists.genres}
                 selectedValues={state.genres}
-                onSelected={(value) => onSelectGenres(value)}
+                onSelected={(value) => onSelectGenre(value)}
                 showSelectionBadges={true}
             />
-            <CustomSelect
-                label="Demographic"
+            <CustomDropdown
+                label="Demographics"
                 options={lists.demographics}
-                onSelected={(value) => handleChange('demographics', value)}
+                selectedValues={state.demographics}
+                onSelected={(value) => onSelectDemographic(value)}
+                showSelectionBadges={true}
             />
             <NSFWToggle
-                isChecked={state.sfw}
+                isChecked={!state.sfw}
                 onToggle={onToggleSFW}
             />
         </div>

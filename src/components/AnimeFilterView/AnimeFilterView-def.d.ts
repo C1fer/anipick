@@ -1,24 +1,32 @@
+import type { ToggleRadioOption } from "../ToggleRadio/ToggleRadio-def";
+
 export type UseAnimeFilterViewResult = {
     lists: Lists;
     state: FilterOptions;
-    handleChange: (key: keyof FilterOptions, value: string|boolean|Record<number, string>[]) => void;
+    handleChange: <K extends keyof FilterOptions>(key: K, value: FilterOptions[K]) => void;
     onToggleSFW: () => void;
-    onSelectGenres: (genre: string) => void;
+    onSelectGenre: (genre: SelectableOption) => void;
+    onSelectDemographic: (demographic: SelectableOption) => void;
 }
 
 export type Lists = {
-    releaseType: Record<string, string>;
-    status: Record<string, string>;
-    minEpisodes: Record<string, string>;
-    genres: Record<number, string>;
-    demographics: Record<number, string>;
+    releaseType: ToggleRadioOption[];
+    status: ToggleRadioOption[];
+    minEpisodes:ToggleRadioOption[];
+    genres: SelectableOption[];
+    demographics: SelectableOption[];
 }
 
 export type FilterOptions = {
     releaseType: string;
     status: string;
     minEpisodes: string;
-    genres: Record<number, string>[];
-    demographics: Record<number, string>[];
+    genres: SelectableOption[];
+    demographics: SelectableOption[];
     sfw: boolean;
+}
+
+export type SelectableOption = {
+    label: string;
+    value: string;
 }

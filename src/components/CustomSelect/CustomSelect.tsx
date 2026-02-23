@@ -12,9 +12,9 @@ export const CustomSelect = (props: CustomSelectProps): React.ReactElement => {
                         <SelectValue placeholder="Select an option" />
                     </SelectTrigger>
                     <SelectContent className="bg-background-ultra-dark border-border-dark text-white" position="popper">
-                        {Object.entries(props.options).map(([id, name]) => (
-                            <SelectItem className="data-highlighted:bg-accent-indigo data-highlighted:text-white data-[state=checked]:stroke-white" key={id} value={id}>
-                                {name}
+                        {props.options.map((option) => (
+                            <SelectItem className="data-highlighted:bg-accent-indigo data-highlighted:text-white data-[state=checked]:stroke-white" key={option.value} value={option.value}>
+                                {option.label}
                             </SelectItem>
                         ))}
                     </SelectContent>

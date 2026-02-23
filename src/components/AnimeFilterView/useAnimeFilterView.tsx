@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Constants } from "../../utils/constants";
-import type { FilterOptions, UseAnimeFilterViewResult } from "./AnimeFilterView-def";
+import type { FilterOptions, SelectableOption, UseAnimeFilterViewResult } from "./AnimeFilterView-def";
 
 const DEFAULT_FILTER_OPTIONS: FilterOptions = {
     releaseType: 'any',
@@ -11,30 +11,40 @@ const DEFAULT_FILTER_OPTIONS: FilterOptions = {
     sfw: true,
 }
 
-const ANIME_LENGTH_OPTIONS: Record<string, string> = {
-    "<13": "13",
-    "13-24": "24",
-    "25+": "25",
-    "Any": "0",
-}
+const ANIME_MAX_EPISODES: SelectableOption[] = [
+    { label: "Short", value: "13" },
+    { label: "Medium", value: "25" },
+    { label: "Long", value: "26" },
+    { label: "Any", value: "0" },
+]
 
-const ANIME_STATUS: Record<string, string> = {
-    Finished: "finished",
-    Airing: "ongoing",
-    Any: "any",
-}
+const ANIME_STATUS: SelectableOption[] = [
+    { label: "Finished", value: "finished" },
+    { label: "Airing", value: "ongoing" },
+    { label: "Any", value: "any" },
+]
 
-const ANIME_RELEASE_TYPE: Record<string, string> = {
-    TV: "tv",
-    Movie: "movie",
-    Any: "any",
-}
+const ANIME_RELEASE_TYPE: SelectableOption[] = [
+    { label: "TV", value: "tv" },
+    { label: "Movie", value: "movie" },
+    { label: "Any", value: "any" },
+]
+
+const GENRES: SelectableOption[] = Constants.genres.map((genre) => ({
+    label: genre.name,
+    value: genre.name,
+}))
+
+const DEMOGRAPHICS: SelectableOption[] = Constants.demographics.map((demo) => ({
+    label: demo.name,
+    value: demo.name,
+}))
 
 
 export const useAnimeFilterView = (): UseAnimeFilterViewResult => {
     const [ filterOptions, setFilterOptions ] = useState<FilterOptions>(DEFAULT_FILTER_OPTIONS);
 
-    const handleChange = (key: keyof FilterOptions, value: string|boolean|Record<number, string>[]) => {
+    const handleChange = <K extends keyof FilterOptions>(key: K, value: FilterOptions[K]) => {
         setFilterOptions((prev) => ({
             ...prev,
             [key]: value,
@@ -43,11 +53,19 @@ export const useAnimeFilterView = (): UseAnimeFilterViewResult => {
 
     const onToggleSFW = () => handleChange('sfw', !filterOptions.sfw);
 
-    const onSelectGenres = (genre: string): void => {
-        if (filterOptions.genres.includes(genre)) {
-            handleChange('genres', filterOptions.genres.filter((g) => g !== genre));
+    const onSelectGenre = (genre: SelectableOption) => {
+        if (filterOptions.genres.some(g => g.value === genre.value)) {
+            handleChange('genres', filterOptions.genres.filter((g) => g.value !== genre.value));
         } else {
             handleChange('genres', [...filterOptions.genres, genre]);
+        }
+    }
+
+    const onSelectDemographic = (demographic: SelectableOption) => {
+        if (filterOptions.demographics.some(d => d.value === demographic.value)) {
+            handleChange('demographics', filterOptions.demographics.filter((d) => d.value !== demographic.value));
+        } else {
+            handleChange('demographics', [...filterOptions.demographics, demographic]);
         }
     }
  
@@ -55,13 +73,14 @@ export const useAnimeFilterView = (): UseAnimeFilterViewResult => {
         lists: {
             releaseType: ANIME_RELEASE_TYPE,
             status: ANIME_STATUS,
-            minEpisodes: ANIME_LENGTH_OPTIONS,
-            genres: Constants.genres,
-            demographics: Constants.demographics,
+            minEpisodes: ANIME_MAX_EPISODES,
+            genres: GENRES,
+            demographics: DEMOGRAPHICS,
         },
         state: filterOptions,
         handleChange,
         onToggleSFW,
-        onSelectGenres,
+        onSelectGenre,
+        onSelectDemographic,
     }
 }
