@@ -14,7 +14,7 @@ export const ToggleRadio = (props: ToggleRadioProps) : React.ReactElement => {
                             value={value} 
                             checked={props.selectedValue === value} 
                             onChange={() => props.onSelected(value)} />
-                        <div className="flex h-10 items-center justify-center rounded-lg text-text-muted peer-checked:bg-accent-indigo peer-checked:text-text-off-white font-medium transition-all">
+                        <div className="flex h-10 items-center justify-center rounded-lg text-sm text-text-muted peer-checked:bg-accent-indigo peer-checked:text-text-off-white font-medium transition-all">
                             {key}
                         </div>
                     </label>
