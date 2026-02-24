@@ -67,10 +67,10 @@ export type MALAnime = {
     approved: boolean;
     titles: MALTitle[];
     title: string;
-    title_english: string | null;
-    title_japanese: string | null;
+    title_english: string;
+    title_japanese: string;
     title_synonyms: string[];
-    type: string | null;
+    type: string;
     source: string | null;
     episodes: number | null;
     status: string;

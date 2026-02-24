@@ -5,8 +5,9 @@ import { NSFWToggle } from "../NSFWToggle/NSFWToggle";
 import { Button } from "../ui/button";
 import { Spinner } from "../ui/spinner";
 import { Sparkles } from "lucide-react";
+import type { AnimeFilterViewProps } from "./AnimeFilterView-def";
 
-export const AnimeFilterView = () => {
+export const AnimeFilterView = (props: AnimeFilterViewProps) => {
     const {
         isLoading,
         state,
@@ -16,7 +17,7 @@ export const AnimeFilterView = () => {
         onSelectGenre,
         onSelectDemographic,
         onSubmit,
-    } = useAnimeFilterView();
+    } = useAnimeFilterView(props);
 
         
     return (

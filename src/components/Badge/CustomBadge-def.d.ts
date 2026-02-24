@@ -1,4 +1,4 @@
 export interface CustomBadgeProps {
-    label: string;
+    label: string | null;
     onRemove?: () => void;
 }

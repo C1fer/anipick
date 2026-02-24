@@ -1,4 +1,9 @@
+import type { MALAnime } from "@/types/mal";
 import type { ToggleRadioOption } from "../ToggleRadio/ToggleRadio-def";
+
+export type AnimeFilterViewProps = {
+    onFilterSuccess: (results: MALAnime[]) => void;
+}
 
 export type UseAnimeFilterViewResult = {
     isLoading: boolean;

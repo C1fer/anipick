@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Constants } from "../../utils/constants";
-import type { FilterOptions, SelectableOption, UseAnimeFilterViewResult } from "./AnimeFilterView-def";
+import type { AnimeFilterViewProps, FilterOptions, SelectableOption, UseAnimeFilterViewResult } from "./AnimeFilterView-def";
 import { JikanAPI } from "@/api/JikanAPI/JikanAPI";
 import { toast } from "sonner";
+import { mockData } from "@/utils/MockData";
 
 const DEFAULT_FILTER_OPTIONS: FilterOptions = {
     releaseType: 'any',
@@ -43,7 +44,7 @@ const DEMOGRAPHICS: SelectableOption[] = Constants.demographics.map((demo) => ({
 }))
 
 
-export const useAnimeFilterView = (): UseAnimeFilterViewResult => {
+export const useAnimeFilterView = (props: AnimeFilterViewProps): UseAnimeFilterViewResult => {
     const [ filterOptions, setFilterOptions ] = useState<FilterOptions>(DEFAULT_FILTER_OPTIONS);
     const [ isLoading, setIsLoading ] = useState<boolean>(false);
 
@@ -77,18 +78,21 @@ export const useAnimeFilterView = (): UseAnimeFilterViewResult => {
 
         try {
             setIsLoading(true);
-            const malGenresAndDemos : string = Array.from([...genres, ...demographics], (x => x.value)).join(",");
-
-            const response = await JikanAPI.searchAnime({
-                type: releaseType !== "any" ? releaseType : undefined,
-                status: status !== "any" ? status : undefined,
-                genres: malGenresAndDemos.length ? malGenresAndDemos : undefined,
-                sfw: sfw,
-                limit: 25,
-                order_by: "score",
-                sort: "desc",
-            });
-            console.log(response);
+            // const malGenresAndDemos : string = Array.from([...genres, ...demographics], (x => x.value)).join(",");
+            const response = mockData;
+            if (response.length > 0) {
+                props.onFilterSuccess(response);
+            }
+            
+            // const response = await JikanAPI.searchAnime({
+            //     type: releaseType !== "any" ? releaseType : undefined,
+            //     status: status !== "any" ? status : undefined,
+            //     genres: malGenresAndDemos.length ? malGenresAndDemos : undefined,
+            //     sfw: sfw,
+            //     limit: 5,
+            //     order_by: "score",
+            //     sort: "desc",
+            // });
         } catch (error) {
             toast.error("An error ocurred. Please try again.", 
                 { 

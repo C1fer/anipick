@@ -1,6 +1,6 @@
 const ROUTES = {
     anime: '/anime',
-    manga: '/manga',
+    // manga: '/manga',
 }
 
 
