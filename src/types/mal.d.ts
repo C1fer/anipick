@@ -1,4 +1,4 @@
-export type MALAnimeImages = {
+export type MALImages = {
     jpg: {
         image_url: string;
         small_image_url: string;
@@ -59,10 +59,18 @@ export type MALEntity = {
     url?: string;
 };
 
+export type MALRating =
+    | "G - All Ages"
+    | "PG - Children"
+    | "PG-13 - Teens 13 or older"
+    | "R - 17+ (violence & profanity)"
+    | "R+ - Mild Nudity"
+    | "Rx - Hentai";
+
 export type MALAnime = {
     mal_id: number;
     url: string;
-    images: MALAnimeImages;
+    images: MALImages;
     trailer: MALTrailer;
     approved: boolean;
     titles: MALTitle[];
@@ -77,7 +85,7 @@ export type MALAnime = {
     airing: boolean;
     aired: MALAired;
     duration: string | null;
-    rating: string | null;
+    rating: MALRating | null;
     score: number | null;
     scored_by: number | null;
     rank: number | null;

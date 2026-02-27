@@ -1,4 +1,4 @@
-import type { MALEntity } from "../types/mal";
+import type { MALEntity, MALRating } from "../types/mal";
 
 const GENRES: MALEntity[] = [
     { mal_id: 1, name: "Action" },
@@ -89,9 +89,19 @@ const THEMES: MALEntity[] = [
     { mal_id: 48, name: "Workplace" },
 ];
 
+const RATINGS: Record<MALRating, string> = {
+    "G - All Ages": "Suitable for all ages",
+    "PG - Children": "PG",
+    "PG-13 - Teens 13 or older": "PG-13",
+    "R - 17+ (violence & profanity)": "R-17+",
+    "R+ - Mild Nudity": "R+",
+    "Rx - Hentai": "Hentai",
+} 
+
 export const Constants = Object.freeze({
     genres: GENRES,
     explicitGenres: EXPLICIT_GENRES,
     demographics: DEMOGRAPHICS,
     themes: THEMES,
+    ratings: RATINGS,
 });

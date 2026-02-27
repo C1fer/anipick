@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import { Spinner } from "../ui/spinner";
 import { Sparkles } from "lucide-react";
 import type { AnimeFilterViewProps } from "./AnimeFilterView-def";
+import { motion } from "motion/react"
 
 export const AnimeFilterView = (props: AnimeFilterViewProps) => {
     const {
@@ -21,7 +22,10 @@ export const AnimeFilterView = (props: AnimeFilterViewProps) => {
 
         
     return (
-        <div className="flex flex-col items-center justify-center w-full max-w-md">
+        <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex flex-col items-center justify-center w-full max-w-md">
             <div className="flex-col flex w-full gap-6 bg-card-dark rounded-xl border border-border-dark p-6 shadow-xl">
                 <ToggleRadio 
                     headerTitle="Release Type" 
@@ -67,7 +71,7 @@ export const AnimeFilterView = (props: AnimeFilterViewProps) => {
                 {isLoading ? <Spinner/> : <Sparkles size={40} color="white"/>}
                 <span className="text-text-off-white">Find my Anime</span>
             </Button>
-        </div>
+        </motion.div>
        
 
     )
