@@ -8,7 +8,7 @@ export const useMediaPickerPage = () => {
 
     const goToFilter = () => setViewState({ phase: "filter" });
 
-    const goToPick = (picks: MALAnime[] | MALManga[]) => setViewState({ phase: "pick", picks });
+    const goToPick = () => setViewState({ phase: "pick" });
 
     const goToResult = (selection: MALAnime | MALManga | null) => setViewState({ phase: "result", selection });
 

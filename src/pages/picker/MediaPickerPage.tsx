@@ -20,7 +20,6 @@ export const MediaPickerPage = ({ mediaType }: MediaPickerPageProps) => {
                 return (
                     <CardStack
                         mediaType={mediaType}
-                        picks={viewState.picks}
                         onGoBack={goToFilter}
                         onPickSelection={goToResult}
                         onPicksExhausted={() => goToResult(null)}
@@ -35,7 +34,6 @@ export const MediaPickerPage = ({ mediaType }: MediaPickerPageProps) => {
                     />
                 );
             }
-                
         }
     }
 

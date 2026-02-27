@@ -16,7 +16,7 @@ const getPicksFromFilters = async (filters: AnimeFilterOptions | null, queuedPic
         return getShuffledPicks(queuedPicks);
     }
 
-    
+    // const response = { data: mockDataV3 }
     const malGenresAndDemos : string = Array.from(
         [...filters.genres, ...filters.demographics], 
         (x => x.value)

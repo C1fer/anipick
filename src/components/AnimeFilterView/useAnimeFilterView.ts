@@ -47,7 +47,7 @@ const DEMOGRAPHICS: SelectableOption[] = Constants.demographics.map((demo) => ({
 
 export const useAnimeFilterView = (props: AnimeFilterViewProps): UseAnimeFilterViewResult => {
     const { filterOptions: globalFilters, setFilterOptions: setGlobalFilters } = useFilters();
-    const { queuedPicks, setQueuedPicks } = usePicks();
+    const { queuedPicks, setQueuedPicks, setCurrentPicks } = usePicks();
     
     const [ filterOptions, setAnimeFilterOptions ] = useState<AnimeFilterOptions>(globalFilters || DEFAULT_FILTER_OPTIONS);
     const [ isLoading, setIsLoading ] = useState<boolean>(false);
@@ -101,7 +101,8 @@ export const useAnimeFilterView = (props: AnimeFilterViewProps): UseAnimeFilterV
             const { picks, toQueue } = await AnimeService.getPicksFromFilters(filterOptions, hasNewFilters ? [] : queuedPicks);
             if (picks.length > 0) {
                 setQueuedPicks(toQueue);
-                props.onFilterSuccess(picks);
+                setCurrentPicks(picks);
+                props.onFilterSuccess();
             }
         } catch (error) {
             console.error("Error fetching anime picks:", error);

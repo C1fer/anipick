@@ -1,4 +1,4 @@
-import type { MALAired, MALBroadcast, MALEntity, MALTrailer, MALImages, MALRating, MALTitle, M } from "./mal";
+import type { MALAired, MALBroadcast, MALEntity, MALTrailer, MALImages, MALRating, MALTitle } from "./mal";
 
 export type MALAnimeReleaseType = 
     |"TV"
@@ -7,6 +7,8 @@ export type MALAnimeReleaseType =
     |"Special"
     |"ONA"
     |"Music"
+    |"TV Special"
+    
 
 export type MALAnimeStatus = 
     |"Finished Airing"

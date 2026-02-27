@@ -8,6 +8,7 @@ import { useAnimeCardStack } from "./useCardStack";
 
 export const CardStack = (props: CardStackProps): React.ReactElement => {
     const { 
+        picks,
         currentPickIdx,
         onCardSkipped,
         onCardPicked
@@ -15,7 +16,7 @@ export const CardStack = (props: CardStackProps): React.ReactElement => {
 
     const renderCards = (pick: MALAnime | MALManga, idx: number): React.ReactElement => {
         const isDisplaying: boolean = idx === currentPickIdx;
-        const isNextInStack: boolean = Math.min(currentPickIdx + 1, props.picks.length - 1) === idx;
+        const isNextInStack: boolean = Math.min(currentPickIdx + 1, picks.length - 1) === idx;
         
         return (
             <AnimatePresence 
@@ -53,12 +54,12 @@ export const CardStack = (props: CardStackProps): React.ReactElement => {
                     />
                 </button>
                 <span className="text-sm text-text-muted tracking-tight">
-                    {`${currentPickIdx + 1} / ${props.picks.length}`}
+                    {`${currentPickIdx + 1} / ${picks.length}`}
                 </span>
                 <div/>
             </div>
             <div className="grid columns-3 grid-rows-1">
-                {props.picks.map(renderCards)} 
+                {picks.map(renderCards)} 
             </div>
         </motion.div>
     )

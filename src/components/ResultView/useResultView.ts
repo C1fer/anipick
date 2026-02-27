@@ -8,7 +8,7 @@ import { usePicks } from "@/context/PicksContext";
 export const useResultView = ({ onRedrawPicks }: ResultViewProps) => {
     const [ isRedrawing, setIsRedrawing ] = useState(false);
     const { filterOptions: globalFilters } = useFilters();
-    const { queuedPicks, setQueuedPicks } = usePicks();
+    const { queuedPicks, setQueuedPicks, setCurrentPicks } = usePicks();
 
     const handleRedraw = async () => {
         try {
@@ -16,7 +16,8 @@ export const useResultView = ({ onRedrawPicks }: ResultViewProps) => {
             const { picks, toQueue } = await AnimeService.getPicksFromFilters(globalFilters, queuedPicks);
             if (picks.length > 0) {
                 setQueuedPicks(toQueue);
-                onRedrawPicks(picks);
+                setCurrentPicks(picks);
+                onRedrawPicks();
             }
         } catch (error) {
             console.error("Error fetching anime picks:", error);
