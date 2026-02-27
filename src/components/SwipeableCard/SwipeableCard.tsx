@@ -9,10 +9,7 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
 
     const {
         cardData,
-        dragDirection,
-        dragIndicatorColor,
-        dynamicStyles,
-        dragConstraints,
+        styles,
         handleCardDragEnd,
     } = useSwipeableCard(props);
 
@@ -39,17 +36,25 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
    )
 
    const renderDragIndicator = () => (
-        <motion.div 
-            className="flex justify-center items-center w-full h-full border-5 rounded-2xl pointer-events-none z-20 absolute"
-            style={{ borderColor: dragIndicatorColor }}
-        >
-            <motion.h2 
-                className="text-4xl font-extrabold border-6 p-4 rounded-lg rotate-30" 
-                style={{ color: dragIndicatorColor, borderColor: dragIndicatorColor }}
+        <>
+            <motion.div 
+                className="flex justify-center items-center w-full h-full border-5 rounded-2xl pointer-events-none z-20 absolute text-[#a84032] border-[#a84032]"
+                style={{ opacity: styles.skipOpacity }}
             >
-                {dragDirection === "left" ? "SKIP" : "PICK"}
-            </motion.h2>
-        </motion.div>
+                <span className="text-4xl font-extrabold border-6 border-[#a84032] p-4 rounded-lg rotate-30">
+                    SKIP
+                </span>
+            </motion.div>
+
+            <motion.div 
+                className="flex justify-center items-center w-full h-full border-5 rounded-2xl pointer-events-none z-20 absolute text-[#32a852] border-[#32a852]"
+                style={{ opacity: styles.pickOpacity }}
+            >
+                <span className="text-4xl font-extrabold border-6 border-[#32a852] p-4 rounded-lg rotate-30">
+                    PICK
+                </span>
+            </motion.div>
+        </>
     )
 
     const renderCardContent = () => (
@@ -97,19 +102,21 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
         <motion.div 
             key={`pick-card-${props.data.mal_id}`}
             className="cursor-grab row-start-1 col-start-1"
-            style={{ ...dynamicStyles, zIndex: displayedAtTop ? 10 : 0 }}
+            style={{ x: styles.x, opacity: styles.cardOpacity, rotate: styles.rotate, zIndex: displayedAtTop ? 10 : 0 }}
             drag={displayedAtTop ? 'x' : false}
-            dragConstraints={dragConstraints}
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.8}
             whileDrag={{ cursor: "grabbing" }}
             onDragEnd={(_, info) => handleCardDragEnd(info)}
-            layout
-            initial={{ scale: displayedAtTop ? 0.88 : 0.85}}
-            animate={displayedAtTop && { scale: 0.88 }}
-            exit={{ opacity: 0.4 }}
-            transition={{ duration: 0.3 }}
-            // dragElastic={1}
+            initial={{ scale: displayedAtTop ? 1 : 0.95, y: displayedAtTop ? 0 : 10, }}
+            animate={{ scale: displayedAtTop ? 1 : 0.95, y: displayedAtTop ? 0 : 10, }}
+            exit={{ 
+                x: styles.x.get() > 0 ? 300 : -300,
+                opacity: 0,
+                transition: { duration: 0.3 }
+            }}
         >   
-            {dragDirection && renderDragIndicator()}
+            {renderDragIndicator()}
             {renderCardContent()}
         </motion.div>
     )

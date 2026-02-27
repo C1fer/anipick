@@ -26,7 +26,7 @@ export const ResultView = (props: ResultViewProps ) => {
             <motion.div
                 className="bg-card-dark w-24 h-24 rounded-full flex items-center justify-center"
                 animate={{ y: [0, -15, 0] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             >
                 <Frown className="text-text-muted w-12 h-12"/>
             </motion.div>
@@ -117,13 +117,8 @@ export const ResultView = (props: ResultViewProps ) => {
     )
 
     return (
-        <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="flex h-full items-center justify-center"
-        >
+        <div className="flex h-full items-center justify-center">
             {props.selection ? renderSelectionDetails(props.selection) : renderEmptyState()}
-        </motion.div>
+        </div>
     )
 }

@@ -1,16 +1,11 @@
-import { animate, useMotionValue, useMotionValueEvent, useTransform, type PanInfo } from "motion/react"
+import { useMotionValue, useTransform, type PanInfo } from "motion/react"
 import type { SwipeableCardData, SwipeableCardProps } from "./SwipeableCard-def";
 import type { MALEntity } from "@/types/mal";
-import { useState } from "react";
 
-const DRAG_CONSTRAINT: number = 150;
-const TILT_THRESHOLD: number = DRAG_CONSTRAINT * 0.5; // Adjust this value to control when the card starts tilting during drag
-
-const dragConstraints = { left: -DRAG_CONSTRAINT, right: DRAG_CONSTRAINT };
+const DRAG_THRESHOLD: number = 100;
+const TILT_THRESHOLD: number = DRAG_THRESHOLD * 2; // Adjust this value to control when the card starts tilting during drag
 
 export const useSwipeableCard = (props: SwipeableCardProps) => {
-    const [dragDirection, setDragDirection] = useState<"left" | "right" | null>(null);
-
      const episodeCount = props.mediaType === "anime" 
         ? props.data.episodes ? `${props.data.episodes} episodes` : "Unknown (Airing)" 
         : props.data.volumes;
@@ -27,50 +22,36 @@ export const useSwipeableCard = (props: SwipeableCardProps) => {
     }
 
     const posX = useMotionValue(0);
-
-    useMotionValueEvent(posX, "change", (latest) => {
-        const newDirection = latest === 0 
-            ? null 
-            : latest > 0 ? "right" : "left";
-            
-        if (newDirection !== dragDirection) {
-            setDragDirection(newDirection);
-        }
-    });
-
-    const { opacity, dragIndicatorColor } = useTransform(
-        posX,
-        [-DRAG_CONSTRAINT, 0, DRAG_CONSTRAINT],
-        {
-            opacity: [0.7, 1, 0.7],
-            dragIndicatorColor: ['#a84032', 'rgba(0,0,0,0)', '#32a852'],
-        }
+    
+    const cardOpacity = useTransform(
+        posX, 
+        [-200, -100, 0, 100, 200], 
+        [0.5, 1, 1, 1, 0.5]
     );
+
+    const pickOpacity = useTransform(posX, [0, DRAG_THRESHOLD], [0, 1]);
+
+    const skipOpacity = useTransform(posX, [-DRAG_THRESHOLD, 0], [1, 0]);
 
     const rotate = useTransform(
         posX,
-        [-TILT_THRESHOLD, 0, TILT_THRESHOLD],
-        [-15, 0, 15]
+        [-TILT_THRESHOLD, TILT_THRESHOLD],
+        [-20, 20]
     );
 
-    const dynamicStyles = { x: posX, opacity, rotate };
+    const styles = { x: posX, cardOpacity, rotate, pickOpacity, skipOpacity };
 
     const handleCardDragEnd = ({ offset }: PanInfo) => {
-        if (offset.x > DRAG_CONSTRAINT) {
+        if (offset.x > DRAG_THRESHOLD) {
             props.onSwipeRight(props.data);
-        } else if (offset.x < -DRAG_CONSTRAINT) {
-            animate(posX, -DRAG_CONSTRAINT * 2, { duration: 0.2 }).then(props.onSwipeLeft);
-        } else {
-            animate(posX, 0);
-        } 
+        } else if (offset.x < -DRAG_THRESHOLD) {
+            props.onSwipeLeft();
+        }         
     };
 
     return {
         cardData,
-        dragDirection,
-        dragIndicatorColor,
-        dynamicStyles,
-        dragConstraints,
+        styles,
         handleCardDragEnd
     }
 }

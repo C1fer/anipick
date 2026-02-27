@@ -37,12 +37,7 @@ export const CardStack = (props: CardStackProps): React.ReactElement => {
     }
 
     return (
-        <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="flex flex-col items-center justify-center w-full h-auto max-w-md"
-        >
+        <div className="flex flex-col items-center justify-center w-full h-auto max-w-md">
             <div className="flex px-3 items-center w-full justify-between">
                 <button 
                     className="cursor-pointer p-2.5 rounded-lg text-text-muted hover:bg-accent-indigo hover:text-white transition-all" 
@@ -61,6 +56,6 @@ export const CardStack = (props: CardStackProps): React.ReactElement => {
             <div className="grid columns-3 grid-rows-1">
                 {picks.map(renderCards)} 
             </div>
-        </motion.div>
+        </div>
     )
 }

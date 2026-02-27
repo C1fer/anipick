@@ -3,6 +3,7 @@ import { CardStack } from "@/components/CardStack/CardStack";
 import { ResultView } from "@/components/ResultView/ResultView";
 import { useMediaPickerPage } from "./useMediaPickerPage";
 import type { MediaPickerPageProps } from "./MediaPickerPage-def";
+import { AnimatePresence, motion } from "motion/react";
 
 export const MediaPickerPage = ({ mediaType }: MediaPickerPageProps) => {
     const { 
@@ -15,31 +16,56 @@ export const MediaPickerPage = ({ mediaType }: MediaPickerPageProps) => {
     const renderView = () => {
         switch (viewState.phase) {
             case "filter":
-                return mediaType === "anime" ? <AnimeFilterView onFilterSuccess={goToPick} /> : null;
+                return (
+                    <motion.div
+                        key="filters"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                    >
+                        {mediaType === "anime" ? <AnimeFilterView onFilterSuccess={goToPick} /> : null}
+                    </motion.div>
+                )
             case "pick":
                 return (
-                    <CardStack
-                        mediaType={mediaType}
-                        onGoBack={goToFilter}
-                        onPickSelection={goToResult}
-                        onPicksExhausted={() => goToResult(null)}
-                    />
+                    <motion.div
+                        key="pick"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 20 }}
+                    >
+                        <CardStack
+                            mediaType={mediaType}
+                            onGoBack={goToFilter}
+                            onPickSelection={goToResult}
+                            onPicksExhausted={() => goToResult(null)}
+                        />
+                    </motion.div> 
                 );
             case "result": {
                 return (
-                    <ResultView 
-                        selection={viewState.selection} 
-                        onGoBack={goToFilter}
-                        onRedrawPicks={goToPick}
-                    />
-                );
+                    <motion.div 
+                        key="result"
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                    >
+                        <ResultView 
+                            selection={viewState.selection} 
+                            onGoBack={goToFilter}
+                            onRedrawPicks={goToPick}
+                        />
+                    </motion.div>
+                )
             }
         }
     }
 
     return (
         <div className="flex justify-center items-start h-screen w-full">
-            {mediaType === "anime" ? renderView(): <span> Manga picking coming soon! </span>}
+            <AnimatePresence mode="wait">
+                {renderView()}
+            </AnimatePresence>
         </div>
     );
 }

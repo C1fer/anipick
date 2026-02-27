@@ -21,9 +21,7 @@ export const AnimeFilterView = (props: AnimeFilterViewProps) => {
     } = useAnimeFilterView(props);
 
     return (
-        <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+        <motion.div
             className="flex flex-col items-center justify-center w-full max-w-md">
             <div className="flex-col flex w-full gap-6 bg-card-dark rounded-xl border border-border-dark p-6 shadow-xl">
                 <ToggleRadio 
