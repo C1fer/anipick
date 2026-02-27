@@ -66,3 +66,8 @@ export type MALRating =
     | "R - 17+ (violence & profanity)"
     | "R+ - Mild Nudity"
     | "Rx - Hentai";
+
+export type MALStreamingOption = {
+    name: string;
+    url: string;
+}

@@ -60,11 +60,11 @@ export const ResultView = (props: ResultViewProps ) => {
                     </span>
                     <span className="col-start-2 flex items-center gap-2">
                         <Clock className="w-4 h-4" />
-                        {selection.episodes} episodes
+                        {selection.episodes ? `${selection.episodes} episodes` : "Unknown episodes"}
                     </span>
                     <span className="flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
-                        {selection.year}
+                        {selection.year || selection.aired.prop.from.year || "Unknown"}
                     </span>
                     <span className="flex items-center gap-2">
                         <Building2 className="w-4 h-4" />

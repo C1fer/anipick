@@ -10,14 +10,18 @@ const dragConstraints = { left: -DRAG_CONSTRAINT, right: DRAG_CONSTRAINT };
 
 export const useSwipeableCard = (props: SwipeableCardProps) => {
     const [dragDirection, setDragDirection] = useState<"left" | "right" | null>(null);
+
+     const episodeCount = props.mediaType === "anime" 
+        ? props.data.episodes ? `${props.data.episodes} episodes` : "Unknown (Airing)" 
+        : props.data.volumes;
     
     const cardData: SwipeableCardData = {
         title: props.data.title,
-        episodeCount: props.data.episodes ?? null,
+        episodeCount: episodeCount,
         imgUri: props.data.images.webp.large_image_url,
         releaseType: props.data.type,
         score: props.data.score ?? null,
-        releaseYear: props.data.year,
+        releaseYear: props.data.year || props.data.aired.prop.from.year || null,
         genres: props.data.genres.slice(0, 3).map((g: MALEntity) => g.name),
         demographic: props.data.demographics.length > 0 ? props.data.demographics[0].name : null
     }

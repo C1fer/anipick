@@ -25,9 +25,9 @@ export type Lists = {
 }
 
 export type AnimeFilterOptions = {
-    releaseType: string;
-    status: string;
-    minEpisodes: string;
+    releaseType: "tv" | "movie" | "any";
+    status: "complete" | "airing" | "any";
+    minEpisodes: "13" | "25" | "26" | "0";
     genres: SelectableOption[];
     demographics: SelectableOption[];
     sfw: boolean;

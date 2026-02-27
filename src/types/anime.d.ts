@@ -1,3 +1,5 @@
+import type { MALAired, MALBroadcast, MALEntity, MALTrailer, MALImages, MALRating, MALTitle, M } from "./mal";
+
 export type MALAnimeReleaseType = 
     |"TV"
     |"OVA"

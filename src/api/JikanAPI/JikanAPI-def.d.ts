@@ -1,14 +1,5 @@
 import type { MALAnime } from "@/types/anime";
-
-export interface SearchAnimeRequest {
-    limit?: number;
-    type?: string;
-    status?: string;
-    genres?: string
-    sfw?: boolean;
-    order_by?: string;
-    sort?: 'desc' | 'asc';
-}
+import type { MALStreamingOption } from "@/types/mal";
 
 export type MALPagination = {
     last_visible_page: number;
@@ -21,8 +12,27 @@ export type MALPagination = {
     };
 };
 
+export interface SearchAnimeRequest {
+    limit?: number;
+    type?: string;
+    status?: string;
+    genres?: string
+    sfw?: boolean;
+    order_by?: string;
+    sort?: 'desc' | 'asc';
+    page?: number;
+}
+
 export interface SearchAnimeResponse {
     pagination: MALPagination;
     data: MALAnime[];
 };
 
+export type GetAnimeStreamingRequest = {
+    id: number;
+}
+
+
+export type GetAnimeStreamingResponse = {
+    data: MALStreamingOption[];
+}

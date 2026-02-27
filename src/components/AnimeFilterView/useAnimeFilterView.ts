@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Constants } from "../../utils/constants";
 import type { AnimeFilterViewProps, AnimeFilterOptions, SelectableOption, UseAnimeFilterViewResult } from "./AnimeFilterView-def";
 import { useFilters } from "@/context/FiltersContext";
+import { usePicks } from "@/context/PicksContext";
 
 const DEFAULT_FILTER_OPTIONS: AnimeFilterOptions = {
     releaseType: 'any',
@@ -22,8 +23,8 @@ const ANIME_MAX_EPISODES: SelectableOption[] = [
 ]
 
 const ANIME_STATUS: SelectableOption[] = [
-    { label: "Finished", value: "finished" },
-    { label: "Airing", value: "ongoing" },
+    { label: "Finished", value: "complete" },
+    { label: "Airing", value: "airing" },
     { label: "Any", value: "any" },
 ]
 
@@ -46,6 +47,7 @@ const DEMOGRAPHICS: SelectableOption[] = Constants.demographics.map((demo) => ({
 
 export const useAnimeFilterView = (props: AnimeFilterViewProps): UseAnimeFilterViewResult => {
     const { filterOptions: globalFilters, setFilterOptions: setGlobalFilters } = useFilters();
+    const { queuedPicks, setQueuedPicks } = usePicks();
     
     const [ filterOptions, setAnimeFilterOptions ] = useState<AnimeFilterOptions>(globalFilters || DEFAULT_FILTER_OPTIONS);
     const [ isLoading, setIsLoading ] = useState<boolean>(false);
@@ -76,13 +78,30 @@ export const useAnimeFilterView = (props: AnimeFilterViewProps): UseAnimeFilterV
         }
     }
 
+    const haveFiltersChanged = (): boolean => {
+        if (!globalFilters) return true; 
+        
+        return Boolean(
+            filterOptions.releaseType !== globalFilters.releaseType ||
+            filterOptions.status !== globalFilters.status ||
+            filterOptions.minEpisodes !== globalFilters.minEpisodes ||
+            filterOptions.sfw !== globalFilters.sfw ||
+            filterOptions.genres.some(g => !globalFilters.genres.some(gg => gg.value === g.value)) ||
+            filterOptions.demographics.some(d => !globalFilters.demographics.some(dd => dd.value === d.value))
+        );
+    }
+    
     const onSubmit = async () => {
+        setIsLoading(true);
         try {
-            setIsLoading(true);
-            setGlobalFilters(filterOptions);
-            const response = await AnimeService.getPicksFromFilters(filterOptions);
-            if (response.length > 0) {
-                props.onFilterSuccess(response);
+            const hasNewFilters = haveFiltersChanged();
+            if (hasNewFilters) {
+                setGlobalFilters(filterOptions);
+            }
+            const { picks, toQueue } = await AnimeService.getPicksFromFilters(filterOptions, hasNewFilters ? [] : queuedPicks);
+            if (picks.length > 0) {
+                setQueuedPicks(toQueue);
+                props.onFilterSuccess(picks);
             }
         } catch (error) {
             console.error("Error fetching anime picks:", error);

@@ -5,12 +5,15 @@ import './index.css'
 import { Toaster } from 'sonner';
 import { AppRouter } from './pages/router';
 import { FiltersProvider } from './context/FiltersContext';
+import { PicksProvider } from './context/PicksContext';
 
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <FiltersProvider>
-      <AppRouter />
+      <PicksProvider>
+          <AppRouter />
+      </PicksProvider>
     </FiltersProvider>
     <Toaster richColors position="top-right" />
   </StrictMode>

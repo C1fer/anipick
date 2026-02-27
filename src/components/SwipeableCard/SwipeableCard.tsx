@@ -81,7 +81,7 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
                 <div className="flex items-center gap-3 text-text-muted text-sm">
                     <span className="flex items-center gap-1">
                         <Hash className="w-4 h-4" />
-                        {`${cardData.episodeCount} eps`}
+                        {cardData.episodeCount }
                     </span>
                     <span>{cardData.releaseYear}</span>
                 </div>
