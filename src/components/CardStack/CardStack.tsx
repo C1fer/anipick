@@ -1,9 +1,10 @@
+import type { MALAnime } from "@/types/anime";
+import type { MALManga } from "@/types/manga";
 import { ArrowLeft } from "lucide-react";
-import type {  CardStackProps } from "./CardStack-def"
-import { useAnimeCardStack } from "./useCardStack"
-import type { MALAnime } from "@/types/mal";
-import { AnimatePresence, motion } from "motion/react"
+import { AnimatePresence, motion } from "motion/react";
 import { SwipeableCard } from "../SwipeableCard/SwipeableCard";
+import type { CardStackProps } from "./CardStack-def";
+import { useAnimeCardStack } from "./useCardStack";
 
 export const CardStack = (props: CardStackProps): React.ReactElement => {
     const { 
@@ -12,7 +13,7 @@ export const CardStack = (props: CardStackProps): React.ReactElement => {
         onCardPicked
     } = useAnimeCardStack(props);
 
-    const renderCards = (pick: MALAnime, idx: number): React.ReactElement => {
+    const renderCards = (pick: MALAnime | MALManga, idx: number): React.ReactElement => {
         const isDisplaying: boolean = idx === currentPickIdx;
         const isNextInStack: boolean = Math.min(currentPickIdx + 1, props.picks.length - 1) === idx;
         
@@ -22,7 +23,8 @@ export const CardStack = (props: CardStackProps): React.ReactElement => {
                 mode="wait" 
             >
                 {isDisplaying || isNextInStack ? (
-                    <SwipeableCard 
+                    <SwipeableCard
+                        mediaType={props.mediaType} 
                         data={pick}
                         onSwipeLeft={onCardSkipped}
                         onSwipeRight={() => onCardPicked(pick)}

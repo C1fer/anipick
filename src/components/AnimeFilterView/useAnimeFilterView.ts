@@ -1,9 +1,8 @@
+import { AnimeService } from "@/services/AnimeService";
+import { triggerErrorToast } from "@/utils/ToastUtils";
 import { useState } from "react";
 import { Constants } from "../../utils/constants";
 import type { AnimeFilterViewProps, FilterOptions, SelectableOption, UseAnimeFilterViewResult } from "./AnimeFilterView-def";
-import { JikanAPI } from "@/api/JikanAPI/JikanAPI";
-import { toast } from "sonner";
-import { mockData } from "@/utils/MockData";
 
 const DEFAULT_FILTER_OPTIONS: FilterOptions = {
     releaseType: 'any',
@@ -74,31 +73,15 @@ export const useAnimeFilterView = (props: AnimeFilterViewProps): UseAnimeFilterV
     }
 
     const onSubmit = async () => {
-        const { releaseType, status, genres, demographics, sfw } = filterOptions;
-
         try {
             setIsLoading(true);
-            // const malGenresAndDemos : string = Array.from([...genres, ...demographics], (x => x.value)).join(",");
-            const response = mockData;
+            const response = await AnimeService.getPicksFromFilters(filterOptions);
             if (response.length > 0) {
                 props.onFilterSuccess(response);
             }
-            
-            // const response = await JikanAPI.searchAnime({
-            //     type: releaseType !== "any" ? releaseType : undefined,
-            //     status: status !== "any" ? status : undefined,
-            //     genres: malGenresAndDemos.length ? malGenresAndDemos : undefined,
-            //     sfw: sfw,
-            //     limit: 5,
-            //     order_by: "score",
-            //     sort: "desc",
-            // });
         } catch (error) {
-            toast.error("An error ocurred. Please try again.", 
-                { 
-                    position: 'top-center', 
-                    style: { background: "var(--color-destructive-red)", color: "white", borderColor: "transparent" } 
-                });
+            console.error("Error fetching anime picks:", error);
+            triggerErrorToast();
         } finally {
             setIsLoading(false);
         }

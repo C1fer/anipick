@@ -1,4 +1,4 @@
-import type { MALAnime } from "@/types/mal";
+import type { MALAnime } from "@/types/anime";
 
 export interface SearchAnimeRequest {
     limit?: number;

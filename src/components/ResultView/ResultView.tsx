@@ -1,4 +1,4 @@
-import type { MALAnime } from "@/types/mal";
+import type { MALAnime } from "@/types/anime";
 import { Constants } from "@/utils/constants";
 import { Building2, Calendar, CirclePlay, Clock, ExternalLink, Frown, RotateCcw, Tv } from "lucide-react";
 import { motion } from "motion/react";

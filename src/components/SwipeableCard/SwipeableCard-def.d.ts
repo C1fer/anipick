@@ -1,10 +1,13 @@
 import type { MALAnime } from "@/types/mal";
+import type { MALManga } from "@/types/manga";
+import type { MediaType } from "@/types/media";
 
 export interface SwipeableCardProps {
-    data: MALAnime;
+    mediaType: MediaType
+    data: MALAnime | MALManga;
     displayedAtTop?: boolean;
     onSwipeLeft: () => void;
-    onSwipeRight: (value: MALAnime) => void;
+    onSwipeRight: (value: MALAnime | MALManga) => void;
 }
 
 type SwipeableCardData = {

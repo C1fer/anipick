@@ -1,5 +1,6 @@
 import { animate, useMotionValue, useMotionValueEvent, useTransform, type PanInfo } from "motion/react"
 import type { SwipeableCardData, SwipeableCardProps } from "./SwipeableCard-def";
+import type { MALEntity } from "@/types/mal";
 import { useState } from "react";
 
 const DRAG_CONSTRAINT: number = 150;
@@ -17,7 +18,7 @@ export const useSwipeableCard = (props: SwipeableCardProps) => {
         releaseType: props.data.type,
         score: props.data.score ?? null,
         releaseYear: props.data.year,
-        genres: props.data.genres.slice(0, 3).map(g => g.name),
+        genres: props.data.genres.slice(0, 3).map((g: MALEntity) => g.name),
         demographic: props.data.demographics.length > 0 ? props.data.demographics[0].name : null
     }
 
@@ -59,7 +60,6 @@ export const useSwipeableCard = (props: SwipeableCardProps) => {
             animate(posX, 0);
         } 
     };
-
 
     return {
         cardData,

@@ -20,7 +20,6 @@ export const AnimeFilterView = (props: AnimeFilterViewProps) => {
         onSubmit,
     } = useAnimeFilterView(props);
 
-        
     return (
         <motion.div 
             initial={{ opacity: 0 }}

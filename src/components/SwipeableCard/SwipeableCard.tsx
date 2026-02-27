@@ -5,7 +5,7 @@ import type { SwipeableCardProps } from "./SwipeableCard-def"
 import { motion } from "motion/react"
 
 export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => {
-    const { displayedAtTop } = props;
+    const { displayedAtTop, mediaType } = props;
 
     const {
         cardData,
@@ -15,6 +15,18 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
         dragConstraints,
         handleCardDragEnd,
     } = useSwipeableCard(props);
+
+    const getReleaseTypeIcon = (type: string) => {
+        switch (type.toLowerCase()) {
+            case "tv":
+                return <Tv className="w-3 h-3" />;
+            case "movie":
+                return <Film className="w-3 h-3" />;
+            default:
+                return null;
+        }
+
+    }
 
    const renderGenreDemoBadge = (gd: string) => (
         <Badge
@@ -51,7 +63,7 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
                 />
                 <div className="absolute top-3 left-3">
                     <Badge className="bg-primary/90 text-primary-foreground border-0 gap-1">
-                        {cardData.releaseType === 'TV' ? <Tv className="w-3 h-3" /> : <Film className="w-3 h-3" />}
+                        {getReleaseTypeIcon(cardData.releaseType)}
                         {cardData.releaseType}
                     </Badge>
                 </div>
@@ -69,7 +81,7 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
                 <div className="flex items-center gap-3 text-text-muted text-sm">
                     <span className="flex items-center gap-1">
                         <Hash className="w-4 h-4" />
-                        {cardData.episodeCount} eps
+                        {`${cardData.episodeCount} eps`}
                     </span>
                     <span>{cardData.releaseYear}</span>
                 </div>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { CardStackProps } from "./CardStack-def"
-import type { MALAnime } from "@/types/mal";
+import type { MALAnime } from "@/types/anime";
+import type { MALManga } from "@/types/manga";
 
 
 export const useAnimeCardStack = (props: CardStackProps) => {
@@ -13,7 +14,7 @@ export const useAnimeCardStack = (props: CardStackProps) => {
             props.onPicksExhausted();
         }
     };
-    const onCardPicked = (value: MALAnime) => {
+    const onCardPicked = (value: MALAnime | MALManga) => {
         props.onPickSelection(value);
     };
 
