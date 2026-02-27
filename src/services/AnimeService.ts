@@ -1,9 +1,9 @@
 import { JikanAPI } from "@/api/JikanAPI/JikanAPI";
-import type { FilterOptions } from "@/components/AnimeFilterView/AnimeFilterView-def"
+import type { AnimeFilterOptions } from "@/components/AnimeFilterView/AnimeFilterView-def"
 import type { MALAnime } from "@/types/anime";
 import { mockData } from "@/utils/MockData";
 
-const getPicksFromFilters = async (filters: FilterOptions): Promise<MALAnime[]> => {
+const getPicksFromFilters = async (filters: AnimeFilterOptions | null): Promise<MALAnime[]> => {
     return mockData;
     
     const malGenresAndDemos : string = Array.from(

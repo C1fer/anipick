@@ -4,11 +4,14 @@ import './index.css'
 
 import { Toaster } from 'sonner';
 import { AppRouter } from './pages/router';
+import { FiltersProvider } from './context/FiltersContext';
 
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Toaster visibleToasts={1} theme='dark'/>
-    <AppRouter />
+    <FiltersProvider>
+      <AppRouter />
+    </FiltersProvider>
+    <Toaster richColors position="top-right" />
   </StrictMode>
 )

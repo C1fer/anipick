@@ -1,20 +1,21 @@
 import type { MALAnime } from "@/types/anime";
 import { Constants } from "@/utils/constants";
-import { Building2, Calendar, CirclePlay, Clock, ExternalLink, Frown, RotateCcw, Tv } from "lucide-react";
+import { Building2, Calendar, CirclePlay, Clock, ExternalLink, Frown, RotateCcw, Sparkles, Tv } from "lucide-react";
 import { motion } from "motion/react";
 import { Button } from "../ui/button";
 import { Spinner } from "../ui/spinner";
 import type { ResultViewProps } from "./ResultView-def";
+import { useResultView } from "./useResultView";
 
 export const ResultView = (props: ResultViewProps ) => {
+    const { isRedrawing, handleRedraw } = useResultView(props);
 
     const renderRedrawButton = (label: string) => (
         <Button 
             className="py-6 cursor-pointer bg-accent-indigo text-white hover:bg-accent-indigo/90 gap-4 "
-            // onClick={onSubmit}
+            onClick={handleRedraw}
         >
-            {/* {isLoading ? <Spinner/> : <Sparkles size={40} color="white"/>} */}
-            <RotateCcw/>
+            {isRedrawing ? <Spinner/> : <RotateCcw size={40} color="white"/>}
             <span className="text-text-off-white">{label}</span>
         </Button>
     )

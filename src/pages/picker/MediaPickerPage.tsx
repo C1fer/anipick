@@ -31,6 +31,7 @@ export const MediaPickerPage = ({ mediaType }: MediaPickerPageProps) => {
                     <ResultView 
                         selection={viewState.selection} 
                         onGoBack={goToFilter}
+                        onRedrawPicks={goToPick}
                     />
                 );
             }

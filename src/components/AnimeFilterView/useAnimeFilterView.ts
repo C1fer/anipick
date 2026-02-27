@@ -2,9 +2,10 @@ import { AnimeService } from "@/services/AnimeService";
 import { triggerErrorToast } from "@/utils/ToastUtils";
 import { useState } from "react";
 import { Constants } from "../../utils/constants";
-import type { AnimeFilterViewProps, FilterOptions, SelectableOption, UseAnimeFilterViewResult } from "./AnimeFilterView-def";
+import type { AnimeFilterViewProps, AnimeFilterOptions, SelectableOption, UseAnimeFilterViewResult } from "./AnimeFilterView-def";
+import { useFilters } from "@/context/FiltersContext";
 
-const DEFAULT_FILTER_OPTIONS: FilterOptions = {
+const DEFAULT_FILTER_OPTIONS: AnimeFilterOptions = {
     releaseType: 'any',
     status: 'any',
     minEpisodes: "0",
@@ -44,11 +45,14 @@ const DEMOGRAPHICS: SelectableOption[] = Constants.demographics.map((demo) => ({
 
 
 export const useAnimeFilterView = (props: AnimeFilterViewProps): UseAnimeFilterViewResult => {
-    const [ filterOptions, setFilterOptions ] = useState<FilterOptions>(DEFAULT_FILTER_OPTIONS);
+    const { filterOptions: globalFilters, setFilterOptions: setGlobalFilters } = useFilters();
+    
+    const [ filterOptions, setAnimeFilterOptions ] = useState<AnimeFilterOptions>(globalFilters || DEFAULT_FILTER_OPTIONS);
     const [ isLoading, setIsLoading ] = useState<boolean>(false);
 
-    const handleChange = <K extends keyof FilterOptions>(key: K, value: FilterOptions[K]) => {
-        setFilterOptions((prev) => ({
+
+    const handleChange = <K extends keyof AnimeFilterOptions>(key: K, value: AnimeFilterOptions[K]) => {
+        setAnimeFilterOptions((prev) => ({
             ...prev,
             [key]: value,
         }))
@@ -75,6 +79,7 @@ export const useAnimeFilterView = (props: AnimeFilterViewProps): UseAnimeFilterV
     const onSubmit = async () => {
         try {
             setIsLoading(true);
+            setGlobalFilters(filterOptions);
             const response = await AnimeService.getPicksFromFilters(filterOptions);
             if (response.length > 0) {
                 props.onFilterSuccess(response);

@@ -8,8 +8,8 @@ export type AnimeFilterViewProps = {
 export type UseAnimeFilterViewResult = {
     isLoading: boolean;
     lists: Lists;
-    state: FilterOptions;
-    handleChange: <K extends keyof FilterOptions>(key: K, value: FilterOptions[K]) => void;
+    state: AnimeFilterOptions;
+    handleChange: <K extends keyof AnimeFilterOptions>(key: K, value: AnimeFilterOptions[K]) => void;
     onToggleSFW: () => void;
     onSelectGenre: (genre: SelectableOption) => void;
     onSelectDemographic: (demographic: SelectableOption) => void;
@@ -24,7 +24,7 @@ export type Lists = {
     demographics: SelectableOption[];
 }
 
-export type FilterOptions = {
+export type AnimeFilterOptions = {
     releaseType: string;
     status: string;
     minEpisodes: string;
