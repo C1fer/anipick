@@ -12,6 +12,8 @@ export interface SwipeableCardProps {
 
 type SwipeableCardData = {
     title: string;
+    titleLocalized: string | null;
+    synopsis?: string | null;
     episodeCount: number | null;
     imgUri: string;
     releaseType: string;

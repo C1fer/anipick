@@ -2,11 +2,10 @@ import { useAnimeFilterView } from "./useAnimeFilterView"
 import { ToggleRadio } from "../ToggleRadio/ToggleRadio";
 import { CustomDropdown } from "../CustomDropdown/CustomDropdown";
 import { NSFWToggle } from "../NSFWToggle/NSFWToggle";
-import { Button } from "../ui/button";
-import { Spinner } from "../ui/spinner";
 import { Sparkles } from "lucide-react";
 import type { AnimeFilterViewProps } from "./AnimeFilterView-def";
 import { motion } from "motion/react"
+import { AnimatedButton } from "../AnimatedButton/AnimatedButton";
 
 export const AnimeFilterView = (props: AnimeFilterViewProps) => {
     const {
@@ -21,9 +20,8 @@ export const AnimeFilterView = (props: AnimeFilterViewProps) => {
     } = useAnimeFilterView(props);
 
     return (
-        <motion.div
-            className="flex flex-col items-center justify-center w-full max-w-md">
-            <div className="flex-col flex w-full gap-6 bg-card-dark rounded-xl border border-border-dark p-6 shadow-xl">
+        <motion.div className="flex flex-col items-center justify-center w-full mx-auto">
+            <div className="flex-col flex w-full gap-6 bg-card/50 border border-border/50 p-6 rounded-xl shadow-xl " >
                 <ToggleRadio 
                     headerTitle="Release Type" 
                     options={lists.releaseType} 
@@ -61,13 +59,14 @@ export const AnimeFilterView = (props: AnimeFilterViewProps) => {
                     onToggle={onToggleSFW}
                 />
             </div>
-            <Button 
-                className="w-full mt-6 py-8 cursor-pointer bg-accent-indigo text-white hover:bg-accent-indigo/90 gap-4 "
+            <AnimatedButton
+                className="font-semibold h-14 mt-6"
+                leftIcon={<Sparkles className="w-4 h-4"/>}
+                label="Find Picks"
+                variant="primary"
+                isLoading={isLoading}
                 onClick={onSubmit}
-            >
-                {isLoading ? <Spinner/> : <Sparkles size={40} color="white"/>}
-                <span className="text-text-off-white">Find my Anime</span>
-            </Button>
+            />
         </motion.div>
        
 

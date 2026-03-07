@@ -7,17 +7,17 @@ type NSFWToggleProps = {
 }
 
 export const NSFWToggle = (props: NSFWToggleProps): React.ReactElement => (
-        <div className="flex items-center justify-between gap-4 p-5 bg-background-ultra-dark rounded-md border border-border-dark ">
+        <div className="flex items-center justify-between gap-4 p-5 q border border-border/50 rounded-md bg-background/90">
             <div className="flex items-center gap-3">
-                <TriangleAlert className="text-accent-indigo w-7 h-7" strokeWidth={2}/>
+                <TriangleAlert className="text-action w-7 h-7" strokeWidth={2}/>
                 <div className="flex-col">
-                    <p className="text-text-off-white font-bold text-sm">NSFW Content</p>
-                    <p className="text-text-muted text-xs">Show mature and R-rated series</p>
+                    <p className="text-foreground font-bold text-sm">NSFW Content</p>
+                    <p className="text-muted-foreground text-xs">Show mature and R-rated series</p>
                 </div>
             </div>
             
             <Switch 
-                className="cursor-pointer data-[state=unchecked]:bg-border-dark data-[state=checked]:bg-accent-indigo"
+                className="cursor-pointer data-[state=unchecked]:bg-muted/50 data-[state=checked]:bg-primary/65"
                 onClick={props.onToggle} 
                 checked={props.isChecked}
             />

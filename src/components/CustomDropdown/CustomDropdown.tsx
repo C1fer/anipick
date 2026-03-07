@@ -1,61 +1,73 @@
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuCheckboxItem } from "../ui/dropdown-menu"
+import { ChevronDown, X } from "lucide-react"
+import { Badge } from "../ui/badge"
 import { Button } from "../ui/button"
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import type { CustomDropdownProps } from "./CustomDropdown-def"
-import { ChevronDown } from "lucide-react"
-import { CustomBadge } from "../Badge/CustomBadge"
 
 export const CustomDropdown = (props: CustomDropdownProps): React.ReactElement => {
+    const {
+        label = "",
+        selectedValues = [],
+        options = [],
+        showSelectionBadges = true,
+        onSelected,
+    }   = props;
+
     let triggerLabel = "";
 
-    switch (props.selectedValues.length) {
+    switch (selectedValues.length) {
         case 0:
             triggerLabel = "Any";
             break;
         case 1:
-            triggerLabel = props.selectedValues[0].label;
+            triggerLabel = selectedValues[0].label;
             break;
         case 2:
-            triggerLabel = `${props.selectedValues[0].label}, ${props.selectedValues[1].label}`;
+            triggerLabel = `${selectedValues[0].label}, ${selectedValues[1].label}`;
             break;
         default:
-            triggerLabel = `${props.selectedValues[0].label}, ${props.selectedValues[1].label} +${props.selectedValues.length - 2}`;
+            triggerLabel = `${selectedValues[0].label}, ${selectedValues[1].label} +${selectedValues.length - 2}`;
     }
 
-     const showBadges = () => {
-            if (!props.showSelectionBadges || !props.selectedValues.length) return null;
-            
-            return (
-                <div className="flex flex-wrap gap-2 mt-2">
-                    {props.selectedValues.map((val, idx) => (
-                        <CustomBadge 
-                            key={idx} 
-                            label={val.label} 
-                            onRemove={() => props.onSelected(val)}
-                        />
-                    ))}
-                </div>
-            )
-        }
+    const showBadges = () => {
+        if (!showSelectionBadges || !selectedValues.length) return null;
+        
+        return (
+            <div className="flex flex-wrap gap-1.5 mt-2">
+                {selectedValues.map(val => (
+                    <Badge
+                        key={"badge-" + val.label}
+                        variant="secondary"
+                        className="bg-primary/20 text-primary border-primary/30 hover:bg-primary/30 cursor-pointer"
+                        onClick={() => onSelected(val)}
+                    >
+                        {val.label}
+                        <X className="w-3 h-3 ml-1" />
+                    </Badge>
+                ))}
+            </div>
+        )
+    }
 
     return (
         <div>
-            {props.label && <h3 className="text-text-muted text-xs font-bold uppercase tracking-wider mb-3">
-                {props.label}
+            {label && <h3 className="text-muted-foreground text-sm font-medium tracking-wider mb-3">
+                {label}
             </h3>}
             <DropdownMenu>
                 <DropdownMenuTrigger className="w-full focus:outline-none">
-                    <Button className="justify-between bg-background-ultra-dark border-border-dark border text-white font-medium cursor-pointer min-w-full">
+                    <Button className="justify-between border bg-background/90 border-border/50 hover:bg-muted cursor-pointer min-w-full">
                         <span className="truncate">{triggerLabel}</span>
-                        <ChevronDown className="w-4 h-4 ml-2 shrink-0" />
+                        <ChevronDown className="w-4 h-4 ml-2 shrink-0 text-muted-foreground" />
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-background-ultra-dark border-border-dark text-white max-h-80 overflow-y-auto">
-                    {props.options.map((option) => (
+                <DropdownMenuContent className="w-56 bg-popover border-border max-h-65 overflow-y-auto">
+                    {options.map((option) => (
                         <DropdownMenuCheckboxItem
-                            className="data-highlighted:bg-accent-indigo data-highlighted:text-white"
+                            className="data-highlighted:bg-action data-highlighted:text-white" // TODO: Change accent color
                             key={`dropdown-option-${option.value}`}
-                            checked={props.selectedValues.some((val) => val.value === option.value)}
-                            onCheckedChange={() => props.onSelected(option)}
+                            checked={selectedValues.some((val) => val.value === option.value)}
+                            onCheckedChange={() => onSelected(option)}
                         >
                             {option.label}
                         </DropdownMenuCheckboxItem>

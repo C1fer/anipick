@@ -5,20 +5,22 @@ import type { MALEntity } from "@/types/mal";
 const DRAG_THRESHOLD: number = 100;
 const TILT_THRESHOLD: number = DRAG_THRESHOLD * 2; // Adjust this value to control when the card starts tilting during drag
 
-export const useSwipeableCard = (props: SwipeableCardProps) => {
-     const episodeCount = props.mediaType === "anime" 
-        ? props.data.episodes ? `${props.data.episodes} episodes` : "Unknown (Airing)" 
-        : props.data.volumes;
+export const useSwipeableCard = ({ mediaType, data, onSwipeLeft, onSwipeRight}: SwipeableCardProps) => {
+    const episodeCount = mediaType === "anime" 
+        ? data.episodes ? `${data.episodes} episodes` : "Unknown (Airing)" 
+        : data.volumes;
+        
     
     const cardData: SwipeableCardData = {
-        title: props.data.title,
+        title: data.title,
+        titleLocalized: data.title_english || null,
         episodeCount: episodeCount,
-        imgUri: props.data.images.webp.large_image_url,
-        releaseType: props.data.type,
-        score: props.data.score ?? null,
-        releaseYear: props.data.year || props.data.aired.prop.from.year || null,
-        genres: props.data.genres.slice(0, 3).map((g: MALEntity) => g.name),
-        demographic: props.data.demographics.length > 0 ? props.data.demographics[0].name : null
+        imgUri: data.images.webp.large_image_url,
+        releaseType: data.type,
+        score: data.score ?? null,
+        releaseYear: data.year || data.aired.prop.from.year || null,
+        genres: data.genres.slice(0, 3).map((g: MALEntity) => g.name),
+        demographic: data.demographics.length > 0 ? data.demographics[0].name : null
     }
 
     const posX = useMotionValue(0);
@@ -43,9 +45,9 @@ export const useSwipeableCard = (props: SwipeableCardProps) => {
 
     const handleCardDragEnd = ({ offset }: PanInfo) => {
         if (offset.x > DRAG_THRESHOLD) {
-            props.onSwipeRight(props.data);
+            onSwipeRight(data);
         } else if (offset.x < -DRAG_THRESHOLD) {
-            props.onSwipeLeft();
+            onSwipeLeft();
         }         
     };
 

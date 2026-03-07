@@ -90,7 +90,7 @@ const THEMES: MALEntity[] = [
 ];
 
 const RATINGS: Record<MALRating, string> = {
-    "G - All Ages": "Suitable for all ages",
+    "G - All Ages": "All Ages",
     "PG - Children": "PG",
     "PG-13 - Teens 13 or older": "PG-13",
     "R - 17+ (violence & profanity)": "R-17+",

@@ -1,61 +1,78 @@
 import type { MALAnime } from "@/types/anime";
 import { Constants } from "@/utils/constants";
-import { Building2, Calendar, CirclePlay, Clock, ExternalLink, Frown, RotateCcw, Sparkles, Tv } from "lucide-react";
+import {  Building2, Calendar, ChevronFirst, CirclePlay, Clock, ExternalLink, Frown, MonitorPlay, RotateCcw, Star } from "lucide-react";
 import { motion } from "motion/react";
-import { Button } from "../ui/button";
-import { Spinner } from "../ui/spinner";
+import { AnimatedButton } from "../AnimatedButton/AnimatedButton";
+import { Badge } from "../ui/badge";
 import type { ResultViewProps } from "./ResultView-def";
 import { useResultView } from "./useResultView";
 
 export const ResultView = (props: ResultViewProps ) => {
     const { isRedrawing, handleRedraw } = useResultView(props);
 
-    const renderRedrawButton = (label: string) => (
-        <Button 
-            className="py-6 cursor-pointer bg-accent-indigo text-white hover:bg-accent-indigo/90 gap-4 "
-            onClick={handleRedraw}
-        >
-            {isRedrawing ? <Spinner/> : <RotateCcw size={40} color="white"/>}
-            <span className="text-text-off-white">{label}</span>
-        </Button>
-    )
-
-
     const renderEmptyState = () => (
-        <motion.div className="flex flex-col items-center justify-center gap-4">
+        <motion.div className="flex flex-col items-center justify-center gap-6 max-w-sm">
             <motion.div
-                className="bg-card-dark w-24 h-24 rounded-full flex items-center justify-center"
-                animate={{ y: [0, -15, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                className="bg-muted/50 w-24 h-24 rounded-full flex items-center justify-center"
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 2, repeat: Infinity }}
             >
-                <Frown className="text-text-muted w-12 h-12"/>
+                <Frown className="text-muted-foreground w-12 h-12"/>
             </motion.div>
-            
-            <div className="flex flex-col items-center gap-2">
-                <h2 className="text-2xl font-bold text-white">No luck?</h2>
-                <p className=" text-text-muted wrap text-center max-w-sm">
+            <div className="flex flex-col gap-2 text-center">
+                <h2 className="text-2xl font-bold text-foreground">No luck?</h2>
+                <p className="text-muted-foreground">
                     You've gone through all the picks. Want to try again with fresh options?
                 </p>
             </div>
-             {renderRedrawButton("Try Again")}
+            <AnimatedButton
+                className="w-40"
+                onClick={handleRedraw}
+                leftIcon={<RotateCcw className="w-4 h-4"/>}
+                label="Try Again"
+                variant="primary"
+                isLoading={isRedrawing}
+            />
         </motion.div>
     )
 
     const renderSelectionContent = (selection: MALAnime) => (
-        <div className="w-full rounded-2xl border border-border-dark/65 overflow-hidden shadow-xl gap">
-              <img 
+        <div className="bg-card rounded-2xl overflow-hidden media-card-shadow">
+            {/* Image & Score */}
+            <div className="relative aspect-video overflow-hidden">
+                <img 
                     src={selection.images.webp.large_image_url} 
                     alt={selection.title} 
-                    className="object-cover h-64 w-full"
+                    className="w-full h-full object-cover"
                     draggable={false}
                 />
-            <div className="flex flex-col justify-between bg-card-dark p-5 space-y-3">
-                <h2 className="text-white font-bold text-xl line-clamp-2">
-                    {selection.title}
-                </h2>
-                <div className="grid gap-y-3 justify-between text-text-muted text-sm max-w-2xs">
+                <div className="absolute inset-0 bg-linear-to-t from-card via-transparent to-transparent" /> {/* Gradient overlay */}
+                {selection.score && (
+                    <div className="absolute bottom-3 right-3">
+                    <Badge className="bg-accent/90 text-accent-foreground border-0 gap-1 text-lg px-3 py-1">
+                        <Star className="w-4 h-4 fill-current" />
+                        {selection.score.toFixed(2)}
+                    </Badge>
+                    </div>
+                )}
+            </div>
+            <div className="flex flex-col justify-between p-5 gap-4">
+                {/* Title */}
+                <div>
+                    <h2 className="text-foreground font-bold text-xl line-clamp-3">
+                        {selection.title}
+                    </h2>
+                    {selection.title_english && (
+                        <p className="text-muted-foreground text-sm mt-1 line-clamp-2" title={selection.title_english}>
+                            {selection.title_english}
+                        </p>
+                    )}
+                </div>
+                
+                {/* Meta Info */}
+                <div className="grid gap-y-3 justify-between text-muted-foreground text-sm max-w-2xs">
                     <span className="col-start-1 flex items-center gap-2">
-                        <Tv className="w-4 h-4" />
+                        <MonitorPlay className="w-4 h-4" />
                         {selection.type}
                     </span>
                     <span className="col-start-2 flex items-center gap-2">
@@ -68,29 +85,41 @@ export const ResultView = (props: ResultViewProps ) => {
                     </span>
                     <span className="flex items-center gap-2">
                         <Building2 className="w-4 h-4" />
-                        {selection.studios.map((studio) => studio.name).join(", ")}
+                        {selection.studios[0]?.name || "Unknown studio"}
                     </span>
                 </div>
-                {/* <div className="flex gap-2 mt-2 flex-wrap">
-                    {cardData.demographic && renderGenreDemoBadge(cardData.demographic)}
-                    {cardData.genres.map(renderGenreDemoBadge)}
-                </div> */}
-                <p className="mt-4 text-text-muted text-sm line-clamp-4">
+
+                {/* Genres */}
+                <div className="flex flex-wrap gap-1.5">
+                    {selection.genres.map((genre) => (
+                    <Badge
+                        key={`genre-${genre.mal_id}`}
+                        className="bg-primary/20 text-primary border-primary/30"
+                    >
+                        {genre.name}
+                    </Badge>
+                    ))}
+                </div>
+
+                {/* Synopsis */}
+                <p className="mt-4 text-sm text-muted-foreground leading-relaxed line-clamp-4">
                     {selection.synopsis}
                 </p>
+
                 <div className="flex justify-between">
                     {selection.rating && (
-                        <span className="text-text-off-white text-sm">
+                        <Badge variant="outline" className="text-xs border-border/50 text-muted-foreground px-3 py-1">
+                            {/* {selection.rating} */}
                             {Constants.ratings[selection.rating] ?? selection.rating}
-                        </span>
+                        </Badge>
                     )}
                     <a 
-                        className="flex items-center gap-2 text-sm text-accent-indigo-v2 hover:underline mt-2"
+                        className="flex items-center gap-2 text-sm text-action hover:underline mt-2"
                         href={selection.url} 
                         target="_blank" 
                         rel="noopener noreferrer" 
                     >
-                        <ExternalLink className="w-4 h-4" />
+                        <ExternalLink className="w-4 h-4 peer-hover: underline" />
                         View on MAL
                     </a>
                 </div>
@@ -99,19 +128,37 @@ export const ResultView = (props: ResultViewProps ) => {
     )
 
     const renderSelectionDetails = (value: MALAnime) => (
-        <motion.div className="flex flex-col items-center justify-center gap-6 w-md">
-            <h2 className="text-white font-bold text-2xl">Your Pick!</h2>
-            {renderSelectionContent(value)}
-            <div className="flex flex-col gap-3 items-stretch w-full max-w-md">
-                <Button 
-                    className="py-6 cursor-pointer bg-accent-indigo text-white hover:bg-accent-indigo/90 gap-4 "
-                    // onClick={onSubmit}
+        <motion.div className="flex flex-col items-center justify-center gap-6 max-w-md">
+            <motion.div 
+                className="flex items-center justify-between w-full gap-3"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+            >
+                <button 
+                    className="cursor-pointer p-1.5 text-muted-foreground rounded-lg hover:bg-action hover:text-foreground transition-all" 
+                    onClick={props.onGoBack}
                 >
-                    {/* {isLoading ? <Spinner/> : <Sparkles size={40} color="white"/>} */}
-                    <CirclePlay/>
-                    <span className="text-text-off-white">Watch Now</span>
-                </Button>
-                {renderRedrawButton("Redraw")}
+                   <ChevronFirst className="w-5 h-5" />
+                </button>
+                <h2 className="text-foreground font-bold text-2xl"> Your Pick!</h2>
+                <div className="w-10"/> {/* Spacer */}
+            </motion.div>
+            {renderSelectionContent(value)}
+            <div className="flex flex-col gap-3 items-stretch w-full">
+                <AnimatedButton
+                    onClick={handleRedraw}
+                    leftIcon={<CirclePlay className="w-4 h-4"/>}
+                    label="Watch Now"
+                    variant="primary"
+               />
+               <AnimatedButton
+                    onClick={handleRedraw}
+                    leftIcon={<RotateCcw className="w-4 h-4"/>}
+                    label="Redraw"
+                    variant="secondary"
+                    isLoading={isRedrawing}
+               />
             </div>
         </motion.div>
     )

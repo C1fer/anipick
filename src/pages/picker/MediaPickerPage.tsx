@@ -4,6 +4,7 @@ import { ResultView } from "@/components/ResultView/ResultView";
 import { useMediaPickerPage } from "./useMediaPickerPage";
 import type { MediaPickerPageProps } from "./MediaPickerPage-def";
 import { AnimatePresence, motion } from "motion/react";
+import { Logo } from "@/components/Logo/Logo";
 
 export const MediaPickerPage = ({ mediaType }: MediaPickerPageProps) => {
     const { 
@@ -23,6 +24,7 @@ export const MediaPickerPage = ({ mediaType }: MediaPickerPageProps) => {
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -20 }}
                     >
+                        <Logo />
                         {mediaType === "anime" ? <AnimeFilterView onFilterSuccess={goToPick} /> : null}
                     </motion.div>
                 )
@@ -46,6 +48,7 @@ export const MediaPickerPage = ({ mediaType }: MediaPickerPageProps) => {
                 return (
                     <motion.div 
                         key="result"
+                        className="h-full"
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
@@ -62,7 +65,7 @@ export const MediaPickerPage = ({ mediaType }: MediaPickerPageProps) => {
     }
 
     return (
-        <div className="flex justify-center items-start h-screen w-full">
+        <div className="flex justify-center items-start h-full w-full p-4 ">
             <AnimatePresence mode="wait">
                 {renderView()}
             </AnimatePresence>
