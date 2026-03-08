@@ -14,7 +14,7 @@ type SwipeableCardData = {
     title: string;
     titleLocalized: string | null;
     synopsis?: string | null;
-    episodeCount: number | null;
+    episodeCount: string;
     imgUri: string;
     releaseType: string;
     score: number | null;

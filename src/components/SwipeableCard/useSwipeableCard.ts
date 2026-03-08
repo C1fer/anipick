@@ -6,16 +6,19 @@ const DRAG_THRESHOLD: number = 100;
 const TILT_THRESHOLD: number = DRAG_THRESHOLD * 2; // Adjust this value to control when the card starts tilting during drag
 
 export const useSwipeableCard = ({ mediaType, data, onSwipeLeft, onSwipeRight}: SwipeableCardProps) => {
-    const episodeCount = mediaType === "anime" 
-        ? data.episodes ? `${data.episodes} episodes` : "Unknown (Airing)" 
-        : data.volumes;
-        
-    
+    const getEpisodeCount = (mediaType: string, episodes?: number | null ): string =>  {
+        if (mediaType === "anime") {
+            if (!episodes) return "Unknown (Airing)";
+            return episodes === 1 ? "1 episode" : `${episodes} episodes`;
+        }
+        return "Unknown";
+    };
+
     const cardData: SwipeableCardData = {
         title: data.title,
         titleLocalized: data.title_english || null,
-        episodeCount: episodeCount,
-        imgUri: data.images.webp.large_image_url,
+        episodeCount: getEpisodeCount(mediaType, data.episodes),
+        imgUri: data.images.jpg.large_image_url,
         releaseType: data.type,
         score: data.score ?? null,
         releaseYear: data.year || data.aired.prop.from.year || null,

@@ -65,7 +65,7 @@ export const MediaPickerPage = ({ mediaType }: MediaPickerPageProps) => {
     }
 
     return (
-        <div className="flex justify-center items-start h-full w-full p-4 ">
+        <div className="flex justify-center items-center h-full w-full p-4 ">
             <AnimatePresence mode="wait">
                 {renderView()}
             </AnimatePresence>

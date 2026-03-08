@@ -1,5 +1,5 @@
 import { Badge } from "../ui/badge"
-import { Disc2, Film, Hash, Star, Tv, TvMinimal } from "lucide-react"
+import { Disc2, Film, Hash, Info, Star, Tv, TvMinimal } from "lucide-react"
 import { useSwipeableCard } from "./useSwipeableCard"
 import type { SwipeableCardProps } from "./SwipeableCard-def"
 import { motion } from "motion/react"
@@ -88,20 +88,22 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
                 )} 
             </div>
             <div className="flex flex-col justify-between gap-3.5 p-4">
-                <div>
-                    <h2 
-                        className="text-foreground font-bold text-xl line-clamp-2 leading-tight hover:cursor-default" 
-                        title={cardData.title}
-                    >
-                        {cardData.title}
-                    </h2>
-                    {cardData.titleLocalized && (
-                    <p 
-                        className="text-muted-foreground text-sm mt-1 line-clamp-2" 
-                        title={cardData.titleLocalized}
-                    >
-                        {cardData.titleLocalized}
-                    </p>)}
+                <div className="">
+                    <div>
+                        <h2 
+                            className="text-foreground font-bold text-xl line-clamp-2 md:line-clamp-none leading-tight hover:cursor-default" 
+                            title={cardData.titleLocalized || cardData.title}
+                        >
+                            {cardData.titleLocalized || cardData.title}
+                        </h2>
+                    </div>
+                      {cardData.titleLocalized && cardData.title !== cardData.titleLocalized ?  (
+                        <p 
+                            className="text-muted-foreground text-sm mt-1 line-clamp-2 md:line-clamp-none" 
+                            title={cardData.title}
+                        >
+                            {cardData.title}
+                        </p> ) : null}
                 </div>
                 <div className="flex items-center gap-3 text-muted-foreground text-sm">
                     <span className="flex items-center gap-1">
@@ -121,22 +123,22 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
     return (
         <motion.div 
             key={`pick-card-${props.data.mal_id}`}
-            className="cursor-grab row-start-1 col-start-1"
-            style={{ x: styles.x, opacity: styles.cardOpacity, rotate: styles.rotate, zIndex: displayedAtTop ? 10 : 0  }}
+            className="cursor-grab row-start-1 col-start-1 self-center"
+            style={{ x: styles.x, opacity: styles.cardOpacity, rotate: styles.rotate, zIndex: displayedAtTop ? 10 : 0 }}
             drag={displayedAtTop ? 'x' : false}
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={0.8}
             whileDrag={{ cursor: "grabbing" }}
             onDragEnd={(_, info) => handleCardDragEnd(info)}
-            initial={{ scale: displayedAtTop ? 1 : 0.95 }}
-            animate={{ scale: displayedAtTop ? 1 : 0.95 }}
+            initial={{ scale: displayedAtTop ? 0.95 : 0.85 }}
+            animate={{ scale: displayedAtTop ? 0.95 : 0.85 }}
             exit={{ 
                 x: styles.x.get() > 0 ? 300 : -300,
                 opacity: 0,
                 transition: { duration: 0.3 }
             }}
         >   
-            <div className="relative bg-card rounded-2xl overflow-hidden media-card-shadow min-h-100">
+            <div className="relative bg-card rounded-2xl overflow-hidden media-card-shadow">
                 {renderDragIndicator()}
                 {renderCardContent()}
             </div>
