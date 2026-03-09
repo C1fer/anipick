@@ -36,17 +36,35 @@ export const ResultView = (props: ResultViewProps ) => {
         </motion.div>
     )
 
+    const renderActionButtons = () => (
+        <>
+            <AnimatedButton
+                onClick={handleRedraw}
+                leftIcon={<CirclePlay className="w-4 h-4"/>}
+                label="Watch Now"
+                variant="primary"
+            />
+            <AnimatedButton
+                onClick={handleRedraw}
+                leftIcon={<RotateCcw className="w-4 h-4"/>}
+                label="Redraw"
+                variant="secondary"
+                isLoading={isRedrawing}
+            />
+        </>
+    )
+
     const renderSelectionContent = (selection: MALAnime) => (
-        <div className="bg-card rounded-2xl overflow-hidden media-card-shadow">
-            {/* Image & Score */}
-            <div className="relative aspect-video overflow-hidden">
+        <div className="bg-card rounded-2xl overflow-hidden media-card-shadow md:landscape:flex md:landscape:flex-row">
+            {/* Left — Image & Score */}
+            <div className="relative aspect-video md:landscape:aspect-auto md:landscape:w-2/5 md:landscape:shrink-0 overflow-hidden">
                 <img 
-                    src={selection.images.webp.large_image_url} 
+                    src={selection.images.jpg.large_image_url} 
                     alt={selection.title} 
                     className="w-full h-full object-cover"
                     draggable={false}
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-card via-transparent to-transparent" /> {/* Gradient overlay */}
+                <div className="absolute inset-0 bg-linear-to-t from-card via-transparent to-transparent" />
                 {selection.score && (
                     <div className="absolute bottom-3 right-3">
                     <Badge className="bg-accent/90 text-accent-foreground border-0 gap-1 text-lg px-3 py-1">
@@ -56,7 +74,9 @@ export const ResultView = (props: ResultViewProps ) => {
                     </div>
                 )}
             </div>
-            <div className="flex flex-col justify-between p-5 gap-4">
+
+            {/* Right — Details */}
+            <div className="flex flex-col justify-between p-5 gap-4 md:landscape:overflow-y-auto md:landscape:max-h-[calc(100dvh-8rem)] scrollbar-subtle">
                 {/* Title */}
                 <div>
                     <h2 className="text-foreground font-bold text-xl line-clamp-3">
@@ -70,7 +90,7 @@ export const ResultView = (props: ResultViewProps ) => {
                 </div>
                 
                 {/* Meta Info */}
-                <div className="grid gap-y-3 justify-between text-muted-foreground text-sm max-w-2xs">
+                <div className="grid gap-y-3 justify-between text-muted-foreground text-sm max-w-xs">
                     <span className="col-start-1 flex items-center gap-2">
                         <MonitorPlay className="w-4 h-4" />
                         {selection.type}
@@ -102,33 +122,37 @@ export const ResultView = (props: ResultViewProps ) => {
                 </div>
 
                 {/* Synopsis */}
-                <p className="mt-4 text-sm text-muted-foreground leading-relaxed line-clamp-4">
+                <p className="text-sm text-muted-foreground text-justify max-h-25 overflow-y-auto scrollbar-subtle landscape:max-h-50">
                     {selection.synopsis}
                 </p>
 
                 <div className="flex justify-between">
                     {selection.rating && (
                         <Badge variant="outline" className="text-xs border-border/50 text-muted-foreground px-3 py-1">
-                            {/* {selection.rating} */}
                             {Constants.ratings[selection.rating] ?? selection.rating}
                         </Badge>
                     )}
                     <a 
-                        className="flex items-center gap-2 text-sm text-action hover:underline mt-2"
+                        className="flex items-center gap-2 text-sm text-action hover:underline"
                         href={selection.url} 
                         target="_blank" 
                         rel="noopener noreferrer" 
                     >
-                        <ExternalLink className="w-4 h-4 peer-hover: underline" />
+                        <ExternalLink className="w-4 h-4" />
                         View on MAL
                     </a>
+                </div>
+
+                {/* Buttons — landscape only (always visible in right column) */}
+                <div className="hidden md:landscape:flex gap-3">
+                   {renderActionButtons()}
                 </div>
             </div>
         </div>
     )
 
     const renderSelectionDetails = (value: MALAnime) => (
-        <motion.div className="flex flex-col items-center justify-center gap-6 max-w-md">
+        <motion.div className="flex flex-col items-center justify-center gap-6 w-full max-w-lg md:landscape:max-w-4xl">
             <motion.div 
                 className="flex items-center justify-between w-full gap-3"
                 initial={{ opacity: 0, y: -20 }}
@@ -141,24 +165,13 @@ export const ResultView = (props: ResultViewProps ) => {
                 >
                    <ChevronFirst className="w-5 h-5" />
                 </button>
-                <h2 className="text-foreground font-bold text-2xl"> Your Pick!</h2>
+                <h2 className="text-foreground font-bold text-2xl">Your Pick!</h2>
                 <div className="w-10"/> {/* Spacer */}
             </motion.div>
             {renderSelectionContent(value)}
-            <div className="flex flex-col gap-3 items-stretch w-full">
-                <AnimatedButton
-                    onClick={handleRedraw}
-                    leftIcon={<CirclePlay className="w-4 h-4"/>}
-                    label="Watch Now"
-                    variant="primary"
-               />
-               <AnimatedButton
-                    onClick={handleRedraw}
-                    leftIcon={<RotateCcw className="w-4 h-4"/>}
-                    label="Redraw"
-                    variant="secondary"
-                    isLoading={isRedrawing}
-               />
+            {/* Buttons — portrait only (landscape renders them inside the card) */}
+            <div className="flex flex-col gap-3 items-stretch w-full md:landscape:hidden">
+                {renderActionButtons()}
             </div>
         </motion.div>
     )

@@ -161,4 +161,19 @@
       0 2px 4px -2px hsl(0 0% 0% / 0.2),
       0 0 0 1px hsl(240 10% 20% / 0.5);
   }
+
+  .scrollbar-subtle {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(240 5% 60% / 0.3) transparent;
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 9999px;
+      background: hsl(240 5% 60% / 0.3);
+    }
+  }
 }
