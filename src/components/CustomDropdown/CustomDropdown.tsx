@@ -55,13 +55,13 @@ export const CustomDropdown = (props: CustomDropdownProps): React.ReactElement =
                 {label}
             </h3>}
             <DropdownMenu>
-                <DropdownMenuTrigger className="w-full focus:outline-none">
+                <DropdownMenuTrigger className="w-full" asChild>
                     <Button className="justify-between border bg-background/90 border-border/50 hover:bg-muted cursor-pointer min-w-full">
                         <span className="truncate">{triggerLabel}</span>
                         <ChevronDown className="w-4 h-4 ml-2 shrink-0 text-muted-foreground" />
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56 bg-popover border-border max-h-65 overflow-y-auto">
+                <DropdownMenuContent className="w-56 bg-popover border-border max-h-65 overflow-y-auto scrollbar-subtle">
                     {options.map((option) => (
                         <DropdownMenuCheckboxItem
                             className="data-highlighted:bg-action data-highlighted:text-white" // TODO: Change accent color

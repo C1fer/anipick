@@ -5,6 +5,7 @@ import { useMediaPickerPage } from "./useMediaPickerPage";
 import type { MediaPickerPageProps } from "./MediaPickerPage-def";
 import { AnimatePresence, motion } from "motion/react";
 import { Logo } from "@/components/Logo/Logo";
+import { Footer } from "@/components/Footer";
 
 export const MediaPickerPage = ({ mediaType }: MediaPickerPageProps) => {
     const { 
@@ -19,6 +20,7 @@ export const MediaPickerPage = ({ mediaType }: MediaPickerPageProps) => {
             case "filter":
                 return (
                     <motion.div
+                        className="max-w-full "
                         key="filters"
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -26,11 +28,13 @@ export const MediaPickerPage = ({ mediaType }: MediaPickerPageProps) => {
                     >
                         <Logo />
                         {mediaType === "anime" ? <AnimeFilterView onFilterSuccess={goToPick} /> : null}
+                        <Footer className="mt-10" />
                     </motion.div>
                 )
             case "pick":
                 return (
                     <motion.div
+                        className="max-w-full"
                         key="pick"
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -48,7 +52,7 @@ export const MediaPickerPage = ({ mediaType }: MediaPickerPageProps) => {
                 return (
                     <motion.div 
                         key="result"
-                        className="h-full"
+                        className="max-w-full"
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
@@ -65,7 +69,7 @@ export const MediaPickerPage = ({ mediaType }: MediaPickerPageProps) => {
     }
 
     return (
-        <div className="flex justify-center items-center h-full w-full p-4 ">
+        <div className="flex justify-center items-start h-full w-full overflow-y-auto scrollbar-subtle md:items-center p-5 md:p-0">
             <AnimatePresence mode="wait">
                 {renderView()}
             </AnimatePresence>

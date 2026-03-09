@@ -16,7 +16,7 @@ const VARIANT_STYLES = {
     secondary: "border border-border/50 hover:bg-muted/50",
 }
 
-const BASE_STYLE = "flex items-center justify-center gap-2 w-full h-12 text-sm font-medium rounded-md transition-opacity cursor-pointer";
+const BASE_STYLE = "flex items-center justify-center gap-2 w-full h-12 text-sm font-medium rounded-md transition-opacity";
 
 export const AnimatedButton = (props: AnimatedButtonProps) => {
     const {
@@ -41,6 +41,7 @@ export const AnimatedButton = (props: AnimatedButtonProps) => {
             whileTap={{ scale: 0.98 }}
             onClick={_handleClick}
             className={_style}
+            style={{ cursor: isLoading ? 'wait' : 'pointer'}}
         >
             {isLoading ? <Spinner className="w-4 h-4"/> : leftIcon}
             {label}

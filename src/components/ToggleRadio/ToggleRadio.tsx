@@ -13,7 +13,7 @@ export const ToggleRadio = (props: ToggleRadioProps) : React.ReactElement => {
                     {props.headerTitle}
                 </h3>
             )}
-            <div className="flex p-1 rounded-lg bg-background/90 border border-border/50">
+            <div className="flex p-1 rounded-lg bg-background/90 border border-border/50 ">
                 {props.options.map((option) => (
                     <label key={`radio-option-${option.value}`} className="flex-1">
                         <input 
@@ -23,7 +23,7 @@ export const ToggleRadio = (props: ToggleRadioProps) : React.ReactElement => {
                             value={option.value} 
                             checked={props.selectedValue === option.value} 
                             onChange={() => handleChange(option.value)} />
-                        <div className="flex h-10 items-center justify-center rounded-md text-sm font-medium text-muted-foreground/70 transition peer-checked:bg-action peer-checked:text-foreground hover:bg-muted peer-checked:hover:bg-action cursor-pointer peer-checked:cursor-default">
+                        <div className="flex py-2.5 px-4 items-center justify-center rounded-md text-sm font-medium text-muted-foreground/70 transition peer-checked:bg-action peer-checked:text-foreground hover:bg-muted peer-checked:hover:bg-action cursor-pointer peer-checked:cursor-default">
                             {option.label}
                         </div>
                     </label>

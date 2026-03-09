@@ -1,5 +1,5 @@
 import { AnimeService } from "@/services/AnimeService";
-import { triggerErrorToast } from "@/utils/ToastUtils";
+import { triggerErrorToast, triggerWarningToast } from "@/utils/ToastUtils";
 import { useState } from "react";
 import { Constants } from "../../utils/constants";
 import type { AnimeFilterViewProps, AnimeFilterOptions, SelectableOption, UseAnimeFilterViewResult } from "./AnimeFilterView-def";
@@ -30,6 +30,7 @@ const ANIME_STATUS: SelectableOption[] = [
 
 const ANIME_RELEASE_TYPE: SelectableOption[] = [
     { label: "TV", value: "tv" },
+    { label: "ONA", value: "ona" },
     { label: "Movie", value: "movie" },
     { label: "Any", value: "any" },
 ]
@@ -103,6 +104,8 @@ export const useAnimeFilterView = (props: AnimeFilterViewProps): UseAnimeFilterV
                 setQueuedPicks(toQueue);
                 setCurrentPicks(picks);
                 props.onFilterSuccess();
+            } else {
+                triggerWarningToast("No picks found with the selected filters. Try relaxing your criteria!");
             }
         } catch (error) {
             console.error("Error fetching anime picks:", error);

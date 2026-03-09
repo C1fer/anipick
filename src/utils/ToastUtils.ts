@@ -7,7 +7,7 @@ export const triggerErrorToast = (message: string | null = "An error occurred. P
         {
             position: 'top-center',
             style: { 
-                background: "var(--color-destructive-red)", 
+                background: "var(--color-destructive)", 
                 color: "white", 
                 borderColor: "transparent" 
             },
@@ -22,7 +22,7 @@ export const triggerWarningToast = (message: string, toastProps?: ToasterProps) 
         {
             position: 'top-center',
             style: { 
-                background: "var(--color-destructive-red)", 
+                background: "var(--color-warning)", 
                 color: "white", 
                 borderColor: "transparent" 
             },

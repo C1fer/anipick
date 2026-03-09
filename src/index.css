@@ -30,6 +30,8 @@
   --color-destructive: hsl(0 84% 60%);
   --color-destructive-foreground: hsl(0 0% 100%);
 
+  --color-warning: hsl(45 84% 60%);
+
   --color-border: hsl(240 10% 20%);
   --color-input: hsl(240 10% 20%);
   --color-ring: hsl(280 100% 65%);
