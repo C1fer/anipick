@@ -52,7 +52,7 @@ export const CardStack = (props: CardStackProps): React.ReactElement => {
                 <div className="w-10"/> {/* Spacer */}
             </div>
             {/* Card Stack */}
-            <div className="grid w-sm md:w-md">
+            <div className="grid w-[350px] md:w-[400px]">
                 {picks.map(renderCards)} 
             </div>
         </div>
