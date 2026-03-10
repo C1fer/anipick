@@ -80,13 +80,13 @@ export const ResultView = (props: ResultViewProps ) => {
                 {/* Title */}
                 <div>
                     <h2 className="text-foreground font-bold text-xl line-clamp-3">
-                        {selection.title}
+                        {selection.title_english || selection.title}
                     </h2>
-                    {selection.title_english && (
-                        <p className="text-muted-foreground text-sm mt-1 line-clamp-2" title={selection.title_english}>
-                            {selection.title_english}
+                    {selection.title_english && selection.title_english !== selection.title ? (
+                        <p className="text-muted-foreground text-sm mt-1 line-clamp-2" title={selection.title}>
+                            {selection.title}
                         </p>
-                    )}
+                    ) : null}
                 </div>
                 
                 {/* Meta Info */}
