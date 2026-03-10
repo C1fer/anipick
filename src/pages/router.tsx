@@ -6,9 +6,9 @@ export const AppRouter = () => (
   <BrowserRouter>
     <Routes>
       <Route path="/" Component={Root}>
-        <Route index={true} element={<MediaPickerPage mediaType="anime" />} />
-        <Route path='anime' element={<MediaPickerPage mediaType="anime" />} />
-        <Route path='manga' element={<MediaPickerPage mediaType="manga" />} />
+        <Route index={true} element={<MediaPickerPage />} />
+        <Route path='anime' element={<MediaPickerPage />} />
+        <Route path='manga' element={<MediaPickerPage />} />
       </Route>
     </Routes>
   </BrowserRouter>

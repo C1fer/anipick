@@ -3,10 +3,13 @@ import type { ViewState } from "./MediaPickerPage-def";
 import type { MALAnime } from "@/types/anime";
 import type { MALManga } from "@/types/manga";
 import { usePicks } from "@/context/PicksContext";
+import { useMediaType } from "@/context/MediaTypeContext";
 
 export const useMediaPickerPage = () => {
-    const [viewState, setViewState] = useState<ViewState>({ phase: "filter" });
+    const [ viewState, setViewState ] = useState<ViewState>({ phase: "filter" });
     const { currentPicks, queuedPicks, setQueuedPicks } = usePicks();
+
+    const { mediaType } = useMediaType();
 
     const goToFilter = () => setViewState({ phase: "filter" });
 
@@ -28,6 +31,7 @@ export const useMediaPickerPage = () => {
     }
     
     return { 
+        mediaType,
         viewState, 
         goToFilter, 
         goToPick, 

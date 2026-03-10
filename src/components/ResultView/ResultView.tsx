@@ -8,7 +8,12 @@ import type { ResultViewProps } from "./ResultView-def";
 import { useResultView } from "./useResultView";
 
 export const ResultView = (props: ResultViewProps ) => {
-    const { isRedrawing, handleRedraw } = useResultView(props);
+    const { 
+        mediaType,
+        isRedrawing, 
+        handleRedraw,
+        handleWatchNow
+    } = useResultView(props);
 
     const renderEmptyState = () => (
         <motion.div className="flex flex-col items-center justify-center gap-6 max-w-sm">
@@ -39,7 +44,7 @@ export const ResultView = (props: ResultViewProps ) => {
     const renderActionButtons = () => (
         <>
             <AnimatedButton
-                onClick={handleRedraw}
+                onClick={handleWatchNow}
                 leftIcon={<CirclePlay className="w-4 h-4"/>}
                 label="Watch Now"
                 variant="primary"

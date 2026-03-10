@@ -2,13 +2,13 @@ import { AnimeFilterView } from "@/components/AnimeFilterView/AnimeFilterView";
 import { CardStack } from "@/components/CardStack/CardStack";
 import { ResultView } from "@/components/ResultView/ResultView";
 import { useMediaPickerPage } from "./useMediaPickerPage";
-import type { MediaPickerPageProps } from "./MediaPickerPage-def";
 import { AnimatePresence, motion } from "motion/react";
 import { Logo } from "@/components/Logo/Logo";
 import { Footer } from "@/components/Footer";
 
-export const MediaPickerPage = ({ mediaType }: MediaPickerPageProps) => {
+export const MediaPickerPage = () => {
     const { 
+        mediaType,
         viewState, 
         goToFilter, 
         goToPick, 
@@ -41,7 +41,6 @@ export const MediaPickerPage = ({ mediaType }: MediaPickerPageProps) => {
                         exit={{ opacity: 0, x: 20 }}
                     >
                         <CardStack
-                            mediaType={mediaType}
                             onGoBack={goToFilter}
                             onPickSelection={goToResult}
                             onPicksExhausted={() => goToResult(null)}

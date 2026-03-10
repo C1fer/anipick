@@ -4,11 +4,16 @@ import { triggerErrorToast } from "@/utils/ToastUtils";
 import { useState } from "react";
 import type { ResultViewProps } from "./ResultView-def";
 import { usePicks } from "@/context/PicksContext";
+import { useMediaType } from "@/context/MediaTypeContext";
+import type { MALStreamingOption } from "@/types/mal";
 
-export const useResultView = ({ onRedrawPicks }: ResultViewProps) => {
+export const useResultView = ({ selection, onRedrawPicks }: ResultViewProps) => {
     const [ isRedrawing, setIsRedrawing ] = useState(false);
+    const [streamingOptions, setStreamingOptions] = useState<MALStreamingOption[]>([]);
+
     const { filterOptions: globalFilters } = useFilters();
     const { queuedPicks, setQueuedPicks, setCurrentPicks } = usePicks();
+    const { mediaType } = useMediaType();   
 
     const handleRedraw = async () => {
         try {
@@ -27,21 +32,21 @@ export const useResultView = ({ onRedrawPicks }: ResultViewProps) => {
         }
     }
 
-    const getStreamingOptions = async (id: number) => {
+    const handleWatchNow = async () => {
         try {
-            const response = await AnimeService.getStreamingOptions(id);
-            return response;
+            const response = await AnimeService.getStreamingOptions(selection.mal_id);
+            setStreamingOptions(response);
         } catch (error) {
             console.error("Error fetching streaming options:", error);
             triggerErrorToast();
-            return [];
         }
     }
-     
 
     return { 
+        mediaType,
+        streamingOptions,
         isRedrawing,
         handleRedraw,
-        getStreamingOptions,
+        handleWatchNow,
     };
 }

@@ -25,7 +25,6 @@ export const CardStack = (props: CardStackProps): React.ReactElement => {
             >
                 {isDisplaying || isNextInStack ? (
                     <SwipeableCard
-                        mediaType={props.mediaType} 
                         data={pick}
                         onSwipeLeft={onCardSkipped}
                         onSwipeRight={() => onCardPicked(pick)}

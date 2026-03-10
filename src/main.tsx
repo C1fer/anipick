@@ -6,15 +6,18 @@ import { Toaster } from 'sonner';
 import { AppRouter } from './pages/router';
 import { FiltersProvider } from './context/FiltersContext';
 import { PicksProvider } from './context/PicksContext';
+import { MediaTypeProvider } from './context/MediaTypeContext';
 
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <FiltersProvider>
-      <PicksProvider>
-          <AppRouter />
-      </PicksProvider>
-    </FiltersProvider>
+    <MediaTypeProvider>
+      <FiltersProvider>
+        <PicksProvider>
+            <AppRouter />
+        </PicksProvider>
+      </FiltersProvider>
+    </MediaTypeProvider>
     <Toaster richColors position="top-right" />
   </StrictMode>
 )

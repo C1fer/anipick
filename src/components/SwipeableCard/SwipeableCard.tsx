@@ -1,13 +1,14 @@
 import { Badge } from "../ui/badge"
-import { Disc2, Film, Hash, Info, Star, Tv, TvMinimal } from "lucide-react"
+import { Disc2, Film, Hash, Star, Tv, TvMinimal } from "lucide-react"
 import { useSwipeableCard } from "./useSwipeableCard"
 import type { SwipeableCardProps } from "./SwipeableCard-def"
 import { motion } from "motion/react"
 
 export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => {
-    const { displayedAtTop, mediaType } = props;
+    const { displayedAtTop } = props;
 
     const {
+        mediaType,
         cardData,
         styles,
         handleCardDragEnd,

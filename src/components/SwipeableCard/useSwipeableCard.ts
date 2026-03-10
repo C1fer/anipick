@@ -1,11 +1,14 @@
 import { useMotionValue, useTransform, type PanInfo } from "motion/react"
 import type { SwipeableCardData, SwipeableCardProps } from "./SwipeableCard-def";
 import type { MALEntity } from "@/types/mal";
+import { useMediaType } from "@/context/MediaTypeContext";
 
 const DRAG_THRESHOLD: number = 100;
 const TILT_THRESHOLD: number = DRAG_THRESHOLD * 2; // Adjust this value to control when the card starts tilting during drag
 
-export const useSwipeableCard = ({ mediaType, data, onSwipeLeft, onSwipeRight}: SwipeableCardProps) => {
+export const useSwipeableCard = ({ data, onSwipeLeft, onSwipeRight}: SwipeableCardProps) => {
+    const { mediaType } = useMediaType();
+
     const getEpisodeCount = (mediaType: string, episodes?: number | null ): string =>  {
         if (mediaType === "anime") {
             if (!episodes) return "Unknown (Airing)";
@@ -55,6 +58,7 @@ export const useSwipeableCard = ({ mediaType, data, onSwipeLeft, onSwipeRight}: 
     };
 
     return {
+        mediaType,
         cardData,
         styles,
         handleCardDragEnd
