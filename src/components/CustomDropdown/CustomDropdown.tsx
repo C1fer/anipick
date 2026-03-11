@@ -1,9 +1,10 @@
 import { ChevronDown, X } from "lucide-react"
+import { twMerge } from "tailwind-merge"
 import { Badge } from "../ui/badge"
 import { Button } from "../ui/button"
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import type { CustomDropdownProps } from "./CustomDropdown-def"
-import { twMerge } from "tailwind-merge"
+import { useCustomDropdown } from "./useCustomDropdown"
 
 export const CustomDropdown = (props: CustomDropdownProps): React.ReactElement => {
     const {
@@ -14,23 +15,15 @@ export const CustomDropdown = (props: CustomDropdownProps): React.ReactElement =
         onSelected,
     }   = props;
 
-    let triggerLabel = "";
-    const triggerLabelColor = selectedValues.length ? "text-foreground" : "text-muted-foreground/70";
-
-    switch (selectedValues.length) {
-        case 0:
-            triggerLabel = "Any";
-            break;
-        case 1:
-            triggerLabel = selectedValues[0].label;
-            break;
-        case 2:
-            triggerLabel = `${selectedValues[0].label}, ${selectedValues[1].label}`;
-            break;
-        default:
-            triggerLabel = `${selectedValues[0].label}, ${selectedValues[1].label} +${selectedValues.length - 2}`;
-    }
-
+    const {
+        triggerLabel, 
+        showPlaceholder,
+        showOptions,
+        setShowOptions,
+        handlePointerStart,
+        handlePointerEnd
+    } = useCustomDropdown(props);
+       
     const showBadges = () => {
         if (!showSelectionBadges || !selectedValues.length) return null;
         
@@ -51,22 +44,31 @@ export const CustomDropdown = (props: CustomDropdownProps): React.ReactElement =
         )
     }
 
+    const triggerLabelStyle = twMerge(
+        "transition-colors duration-250 truncate motion-reduce:duration-0", 
+        showPlaceholder ? "text-muted-foreground/70" : "text-foreground"
+    );
+
     return (
         <div>
             {label && <h3 className="text-muted-foreground text-sm font-medium tracking-wider mb-3">
                 {label}
             </h3>}
-            <DropdownMenu>
+            <DropdownMenu open={showOptions} onOpenChange={setShowOptions}>
                 <DropdownMenuTrigger className="w-full" asChild>
-                    <Button className="justify-between border bg-background/90 border-border/50 hover:bg-muted cursor-pointer min-w-full">
-                        <span className={twMerge("transition-colors duration-250 truncate motion-reduce:duration-0", triggerLabelColor)}>{triggerLabel}</span>
+                    <Button
+                        className="justify-between border bg-background/90 border-border/50 hover:bg-muted cursor-pointer min-w-full"
+                        onPointerDown={handlePointerStart}
+                        onPointerUp={handlePointerEnd}
+                    >
+                        <span className={triggerLabelStyle}>{triggerLabel}</span>
                         <ChevronDown className="w-4 h-4 ml-2 shrink-0 text-muted-foreground" />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56 bg-popover border-border max-h-65 overflow-y-auto scrollbar-subtle">
                     {options.map((option) => (
                         <DropdownMenuCheckboxItem
-                            className="data-highlighted:bg-action data-highlighted:text-white" // TODO: Change accent color
+                            className="data-highlighted:bg-action data-highlighted:text-foreground" 
                             key={`dropdown-option-${option.value}`}
                             checked={selectedValues.some((val) => val.value === option.value)}
                             onCheckedChange={() => onSelected(option)}
