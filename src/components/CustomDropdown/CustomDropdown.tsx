@@ -3,6 +3,7 @@ import { Badge } from "../ui/badge"
 import { Button } from "../ui/button"
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import type { CustomDropdownProps } from "./CustomDropdown-def"
+import { twMerge } from "tailwind-merge"
 
 export const CustomDropdown = (props: CustomDropdownProps): React.ReactElement => {
     const {
@@ -14,6 +15,7 @@ export const CustomDropdown = (props: CustomDropdownProps): React.ReactElement =
     }   = props;
 
     let triggerLabel = "";
+    const triggerLabelColor = selectedValues.length ? "text-foreground" : "text-muted-foreground/70";
 
     switch (selectedValues.length) {
         case 0:
@@ -57,7 +59,7 @@ export const CustomDropdown = (props: CustomDropdownProps): React.ReactElement =
             <DropdownMenu>
                 <DropdownMenuTrigger className="w-full" asChild>
                     <Button className="justify-between border bg-background/90 border-border/50 hover:bg-muted cursor-pointer min-w-full">
-                        <span className="truncate">{triggerLabel}</span>
+                        <span className={twMerge("transition-colors duration-250 truncate motion-reduce:duration-0", triggerLabelColor)}>{triggerLabel}</span>
                         <ChevronDown className="w-4 h-4 ml-2 shrink-0 text-muted-foreground" />
                     </Button>
                 </DropdownMenuTrigger>

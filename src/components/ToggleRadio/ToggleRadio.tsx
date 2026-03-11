@@ -23,7 +23,7 @@ export const ToggleRadio = (props: ToggleRadioProps) : React.ReactElement => {
                             value={option.value} 
                             checked={props.selectedValue === option.value} 
                             onChange={() => handleChange(option.value)} />
-                        <div className="flex py-2.5 px-4 items-center justify-center rounded-md text-sm font-medium text-muted-foreground/70 transition peer-checked:bg-action peer-checked:text-foreground hover:bg-muted peer-checked:hover:bg-action cursor-pointer peer-checked:cursor-default">
+                        <div className="flex py-2.5 px-4 items-center justify-center rounded-md text-sm font-medium text-muted-foreground/70 transition-colors duration-250 motion-reduce:duration-0 peer-checked:bg-action peer-checked:text-foreground hover:bg-muted peer-checked:hover:bg-action cursor-pointer peer-checked:cursor-default">
                             {option.label}
                         </div>
                     </label>
