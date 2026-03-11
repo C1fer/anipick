@@ -1,5 +1,4 @@
 import { CirclePlay, ExternalLink, X } from "lucide-react";
-import { Fragment } from "react/jsx-runtime";
 import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import type { MALStreamingOption } from "@/types/mal";
 
@@ -25,9 +24,9 @@ export const StreamingOptionsDialog = ({ streamingOptions, showModal, setShowMod
                     </button>
                 </DialogClose>
             </DialogHeader>
-            <div className="flex flex-col px-2">
+            <ul className="flex flex-col px-2">
                 {streamingOptions?.map((option, index) => (
-                    <Fragment key={option.name}>
+                    <li key={`streaming-option-${option.name}`} className="w-full first:pt-0 last:pb-0">
                         {index > 0 && <hr className="border-border/50 my-2" />}
                         <a
                             href={option.url}
@@ -41,9 +40,9 @@ export const StreamingOptionsDialog = ({ streamingOptions, showModal, setShowMod
                             </div>
                             <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-action transition-colors" />
                         </a>
-                    </Fragment>
+                    </li>
                 ))}
-            </div>
+            </ul>
         </DialogContent>
     </Dialog>
 )
