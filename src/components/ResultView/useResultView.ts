@@ -1,6 +1,6 @@
 import { useFilters } from "@/context/FiltersContext";
 import { AnimeService } from "@/services/AnimeService";
-import { triggerErrorToast } from "@/utils/ToastUtils";
+import { triggerErrorToast, triggerWarningToast } from "@/utils/ToastUtils";
 import { useState } from "react";
 import type { ResultViewProps } from "./ResultView-def";
 import { usePicks } from "@/context/PicksContext";
@@ -9,11 +9,13 @@ import type { MALStreamingOption } from "@/types/mal";
 
 export const useResultView = ({ selection, onRedrawPicks }: ResultViewProps) => {
     const [ isRedrawing, setIsRedrawing ] = useState(false);
-    const [streamingOptions, setStreamingOptions] = useState<MALStreamingOption[]>([]);
+    const [ isLoadingStreams, setIsLoadingStreams ] = useState(false);
+    const [ streamingOptions, setStreamingOptions ] = useState<MALStreamingOption[] | null>(null);
+    const [ showModal, setShowModal ] = useState(false);
 
     const { filterOptions: globalFilters } = useFilters();
     const { queuedPicks, setQueuedPicks, setCurrentPicks } = usePicks();
-    const { mediaType } = useMediaType();   
+    const { mediaType } = useMediaType();  
 
     const handleRedraw = async () => {
         try {
@@ -34,18 +36,36 @@ export const useResultView = ({ selection, onRedrawPicks }: ResultViewProps) => 
 
     const handleWatchNow = async () => {
         try {
+            if (streamingOptions) {
+                setShowModal(true);
+                return;
+            }
+
+            setIsLoadingStreams(true);
             const response = await AnimeService.getStreamingOptions(selection.mal_id);
-            setStreamingOptions(response);
+            setStreamingOptions(response ?? []);
+
+            if (!response || response.length === 0) {
+                triggerWarningToast("No streaming options found for this title.");
+                return;
+            }
+
+            setShowModal(true);
         } catch (error) {
             console.error("Error fetching streaming options:", error);
             triggerErrorToast();
+        } finally {
+            setIsLoadingStreams(false);
         }
     }
 
     return { 
         mediaType,
+        showModal,
         streamingOptions,
         isRedrawing,
+        isLoadingStreams,
+        setShowModal,
         handleRedraw,
         handleWatchNow,
     };

@@ -3,11 +3,12 @@ import { twMerge } from "tailwind-merge";
 import { Spinner } from '../ui/spinner';
 
 type AnimatedButtonProps = {
-    onClick: () => void;
-    leftIcon: React.ReactNode | null;
-    label: string;
+    onClick?: () => void;
+    leftIcon?: React.ReactNode | null;
+    disabled?: boolean;
+    label?: string;
     isLoading?: boolean;
-    variant: "primary" | "secondary";
+    variant?: "primary" | "secondary";
     className? : string;
 }
 
@@ -16,12 +17,13 @@ const VARIANT_STYLES = {
     secondary: "border border-border/50 hover:bg-muted/50",
 }
 
-const BASE_STYLE = "flex items-center justify-center gap-2 w-full h-12 text-sm font-medium rounded-md transition-opacity";
+const BASE_STYLE = "flex items-center justify-center gap-2 w-full h-12 text-sm font-semibold rounded-md transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer";
 
 export const AnimatedButton = (props: AnimatedButtonProps) => {
     const {
         onClick,
         leftIcon,
+        disabled = false,
         label,
         isLoading = false,
         variant = "primary",
@@ -30,7 +32,7 @@ export const AnimatedButton = (props: AnimatedButtonProps) => {
 
     const _handleClick = () => {
         if (isLoading) return;
-        onClick();
+        onClick?.();
     }
 
     const _style: string = twMerge(BASE_STYLE, VARIANT_STYLES[variant], className)
@@ -41,7 +43,8 @@ export const AnimatedButton = (props: AnimatedButtonProps) => {
             whileTap={{ scale: 0.98 }}
             onClick={_handleClick}
             className={_style}
-            style={{ cursor: isLoading ? 'wait' : 'pointer'}}
+            style={isLoading ? { pointerEvents: "none" } : {}}
+            disabled={disabled}
         >
             {isLoading ? <Spinner className="w-4 h-4"/> : leftIcon}
             {label}

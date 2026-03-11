@@ -73,7 +73,7 @@ export const AnimeFilterView = (props: AnimeFilterViewProps) => {
                 />
             </div>
             <AnimatedButton
-                className="font-semibold h-14 mt-6 shrink-0"
+                className="h-14 mt-6 shrink-0"
                 leftIcon={<Sparkles className="w-4 h-4"/>}
                 label="Find Picks"
                 variant="primary"

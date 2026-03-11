@@ -1,8 +1,9 @@
 import type { MALAnime } from "@/types/anime";
 import { Constants } from "@/utils/constants";
-import {  Building2, Calendar, ChevronFirst, CirclePlay, Clock, ExternalLink, Frown, MonitorPlay, RotateCcw, Star } from "lucide-react";
+import { Building2, Calendar, ChevronFirst, Clock, ExternalLink, Frown, MonitorPlay, Play, RotateCcw, Star } from "lucide-react";
 import { motion } from "motion/react";
 import { AnimatedButton } from "../AnimatedButton/AnimatedButton";
+import { StreamingOptionsDialog } from "../StreamingDialog/StreamingOptionsDialog";
 import { Badge } from "../ui/badge";
 import type { ResultViewProps } from "./ResultView-def";
 import { useResultView } from "./useResultView";
@@ -10,9 +11,13 @@ import { useResultView } from "./useResultView";
 export const ResultView = (props: ResultViewProps ) => {
     const { 
         mediaType,
-        isRedrawing, 
+        showModal,
+        streamingOptions,
+        isRedrawing,
+        isLoadingStreams,
+        setShowModal,
         handleRedraw,
-        handleWatchNow
+        handleWatchNow,
     } = useResultView(props);
 
     const renderEmptyState = () => (
@@ -43,12 +48,23 @@ export const ResultView = (props: ResultViewProps ) => {
 
     const renderActionButtons = () => (
         <>
-            <AnimatedButton
-                onClick={handleWatchNow}
-                leftIcon={<CirclePlay className="w-4 h-4"/>}
-                label="Watch Now"
-                variant="primary"
-            />
+            {mediaType === "anime" && (
+                <>
+                    <StreamingOptionsDialog
+                        streamingOptions={streamingOptions}
+                        showModal={showModal}
+                        setShowModal={setShowModal}
+                    />
+                    <AnimatedButton
+                        onClick={handleWatchNow}
+                        disabled={Array.isArray(streamingOptions) && streamingOptions.length === 0}
+                        leftIcon={<Play className="w-4 h-4"/>}
+                        label="Watch Now"
+                        variant="primary"
+                        isLoading={isLoadingStreams}
+                    />
+                </>
+            )}
             <AnimatedButton
                 onClick={handleRedraw}
                 leftIcon={<RotateCcw className="w-4 h-4"/>}
@@ -147,7 +163,6 @@ export const ResultView = (props: ResultViewProps ) => {
                         View on MAL
                     </a>
                 </div>
-
                 {/* Buttons — landscape only (always visible in right column) */}
                 <div className="hidden md:landscape:flex gap-3">
                    {renderActionButtons()}
