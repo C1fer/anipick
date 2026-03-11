@@ -6,8 +6,9 @@ import type { ResultViewProps } from "./ResultView-def";
 import { usePicks } from "@/context/PicksContext";
 import { useMediaType } from "@/context/MediaTypeContext";
 import type { MALStreamingOption } from "@/types/mal";
+import { useWebHaptics } from "web-haptics/react";
 
-export const useResultView = ({ selection, onRedrawPicks }: ResultViewProps) => {
+export const useResultView = ({ selection, onRedrawPicks, onGoBack }: ResultViewProps) => {
     const [ isRedrawing, setIsRedrawing ] = useState(false);
     const [ isLoadingStreams, setIsLoadingStreams ] = useState(false);
     const [ streamingOptions, setStreamingOptions ] = useState<MALStreamingOption[] | null>(null);
@@ -16,6 +17,8 @@ export const useResultView = ({ selection, onRedrawPicks }: ResultViewProps) => 
     const { filterOptions: globalFilters } = useFilters();
     const { queuedPicks, setQueuedPicks, setCurrentPicks } = usePicks();
     const { mediaType } = useMediaType();  
+
+    const { trigger } = useWebHaptics();
 
     const handleRedraw = async () => {
         try {
@@ -59,6 +62,11 @@ export const useResultView = ({ selection, onRedrawPicks }: ResultViewProps) => 
         }
     }
 
+    const handleGoBack = () => {
+        trigger("light");
+        onGoBack()
+    }
+
     return { 
         mediaType,
         showModal,
@@ -68,5 +76,6 @@ export const useResultView = ({ selection, onRedrawPicks }: ResultViewProps) => 
         setShowModal,
         handleRedraw,
         handleWatchNow,
+        handleGoBack
     };
 }

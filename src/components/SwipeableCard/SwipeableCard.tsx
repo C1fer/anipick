@@ -1,5 +1,5 @@
 import { Badge } from "../ui/badge"
-import { Building2, Disc2, Film, Hash, Star, Tv, TvMinimal, Calendar } from "lucide-react"
+import { Disc2, Film, Star, Tv, TvMinimal } from "lucide-react"
 import { useSwipeableCard } from "./useSwipeableCard"
 import type { SwipeableCardProps } from "./SwipeableCard-def"
 import { motion } from "motion/react"

@@ -18,6 +18,7 @@ export const ResultView = (props: ResultViewProps ) => {
         setShowModal,
         handleRedraw,
         handleWatchNow,
+        handleGoBack
     } = useResultView(props);
 
     const renderEmptyState = () => (
@@ -181,7 +182,7 @@ export const ResultView = (props: ResultViewProps ) => {
             >
                 <button 
                     className="cursor-pointer p-1.5 text-muted-foreground rounded-lg hover:bg-action hover:text-foreground transition-all" 
-                    onClick={props.onGoBack}
+                    onClick={handleGoBack}
                 >
                    <ChevronFirst className="w-5 h-5" />
                 </button>

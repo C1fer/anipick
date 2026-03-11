@@ -12,17 +12,18 @@ export const CustomDropdown = (props: CustomDropdownProps): React.ReactElement =
         selectedValues = [],
         options = [],
         showSelectionBadges = true,
-        onSelected,
-    }   = props;
+    }  = props;
 
     const {
         triggerLabel, 
         showPlaceholder,
         showOptions,
         setShowOptions,
+        onValueChange,
         handlePointerStart,
         handlePointerEnd
     } = useCustomDropdown(props);
+
        
     const showBadges = () => {
         if (!showSelectionBadges || !selectedValues.length) return null;
@@ -34,7 +35,7 @@ export const CustomDropdown = (props: CustomDropdownProps): React.ReactElement =
                         key={"badge-" + val.label}
                         variant="secondary"
                         className="bg-primary/20 text-primary border-primary/30 hover:bg-primary/30 cursor-pointer"
-                        onClick={() => onSelected(val)}
+                        onClick={() => onValueChange(val)}
                     >
                         {val.label}
                         <X className="w-3 h-3 ml-1" />
@@ -71,7 +72,7 @@ export const CustomDropdown = (props: CustomDropdownProps): React.ReactElement =
                             className="data-highlighted:bg-action data-highlighted:text-foreground" 
                             key={`dropdown-option-${option.value}`}
                             checked={selectedValues.some((val) => val.value === option.value)}
-                            onCheckedChange={() => onSelected(option)}
+                            onCheckedChange={() => onValueChange(option)}
                         >
                             {option.label}
                         </DropdownMenuCheckboxItem>

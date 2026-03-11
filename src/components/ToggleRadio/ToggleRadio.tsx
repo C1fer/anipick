@@ -1,8 +1,12 @@
 import type { ToggleRadioProps } from "./ToggleRadio-def"
+import { useWebHaptics } from "web-haptics/react";
 
 export const ToggleRadio = (props: ToggleRadioProps) : React.ReactElement => {
+    const { trigger } = useWebHaptics();
+
     const handleChange = (value: string) => {
         if (props.selectedValue !== value) {
+            trigger("selection");
             props.onSelected(value)
         }
     }

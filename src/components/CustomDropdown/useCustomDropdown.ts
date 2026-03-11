@@ -1,8 +1,11 @@
 import { useState } from "react";
-import type { CustomDropdownProps } from "./CustomDropdown-def";
+import { useWebHaptics } from "web-haptics/react";
+import type { CustomDropdownProps, SelectableOption } from "./CustomDropdown-def";
 
-export const useCustomDropdown = ({ selectedValues }: CustomDropdownProps) => {
+export const useCustomDropdown = ({ selectedValues, onSelected }: CustomDropdownProps) => {
     const [ showOptions, setShowOptions] = useState(false);
+
+    const { trigger } = useWebHaptics();
 
     let triggerLabel = "";
 
@@ -28,8 +31,14 @@ export const useCustomDropdown = ({ selectedValues }: CustomDropdownProps) => {
 
     const handlePointerEnd = (e: React.PointerEvent) => {
         if (e.pointerType === 'touch') {
+            trigger("selection");
             setShowOptions(o => !o); // Show popup on finger lift (confirmed tap)
         }
+    }
+
+    const onValueChange = (value: SelectableOption) => {
+        trigger("selection");
+        onSelected(value);
     }
 
     return {
@@ -37,6 +46,7 @@ export const useCustomDropdown = ({ selectedValues }: CustomDropdownProps) => {
         showPlaceholder: !selectedValues.length,
         showOptions,
         setShowOptions,
+        onValueChange,
         handlePointerStart,
         handlePointerEnd
     }

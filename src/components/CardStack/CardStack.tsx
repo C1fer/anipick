@@ -11,7 +11,8 @@ export const CardStack = (props: CardStackProps): React.ReactElement => {
         picks,
         currentPickIdx,
         onCardSkipped,
-        onCardPicked
+        onCardPicked,
+        handleGoBack
     } = useAnimeCardStack(props);
 
     const renderCards = (pick: MALAnime | MALManga, idx: number): React.ReactElement => {
@@ -41,7 +42,7 @@ export const CardStack = (props: CardStackProps): React.ReactElement => {
             <div className="flex items-center w-full justify-between">
                 <button 
                     className="cursor-pointer p-2.5 rounded-lg text-muted-foreground hover:bg-action hover:text-foreground transition-all" 
-                    onClick={props.onGoBack}
+                    onClick={handleGoBack}
                 >
                    <ChevronLeft className="w-5 h-5" />
                 </button>
