@@ -20,7 +20,7 @@ export const AnimeFilterView = (props: AnimeFilterViewProps) => {
     } = useAnimeFilterView(props);
 
     return (
-        <motion.div className="flex flex-col items-center w-full">
+        <motion.div className="flex flex-col items-center w-full md:w-xl">
             <div className="flex-col flex w-full gap-6 bg-card/50 border border-border/50 p-6 rounded-xl shadow-xl " >
                 <ToggleRadio 
                     headerTitle="Release Type" 
