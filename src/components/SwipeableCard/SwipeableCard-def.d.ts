@@ -19,4 +19,5 @@ type SwipeableCardData = {
     releaseYear: number | null;
     genres: string[];
     demographic: string | null;
+    studio: string | null;
 }

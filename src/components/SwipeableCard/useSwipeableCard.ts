@@ -26,7 +26,8 @@ export const useSwipeableCard = ({ data, onSwipeLeft, onSwipeRight}: SwipeableCa
         score: data.score ?? null,
         releaseYear: data.year || data.aired.prop.from.year || null,
         genres: data.genres.slice(0, 3).map((g: MALEntity) => g.name),
-        demographic: data.demographics.length > 0 ? data.demographics[0].name : null
+        demographic: data.demographics.length > 0 ? data.demographics[0].name : null,
+        studio: data.studios.length > 0 ? data.studios[0].name : null
     }
 
     const posX = useMotionValue(0);

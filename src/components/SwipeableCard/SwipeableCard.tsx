@@ -1,5 +1,5 @@
 import { Badge } from "../ui/badge"
-import { Disc2, Film, Hash, Star, Tv, TvMinimal } from "lucide-react"
+import { Building2, Disc2, Film, Hash, Star, Tv, TvMinimal, Calendar } from "lucide-react"
 import { useSwipeableCard } from "./useSwipeableCard"
 import type { SwipeableCardProps } from "./SwipeableCard-def"
 import { motion } from "motion/react"
@@ -63,8 +63,27 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
         </>
     )
 
+    const renderMetaInfo = () => (
+       <div className="flex flex-wrap items-center gap-2 text-muted-foreground text-sm">
+            {[
+                mediaType === "anime" && cardData.studio,
+                cardData.episodeCount,
+                cardData.releaseYear,
+            ]
+                .filter(Boolean)
+                .map((item, i, arr) => (
+                    <span key={i} className="flex items-center gap-2">
+                        {item}
+                        {i < arr.length - 1 && <span className="text-muted-foreground/40 font-2xl">•</span>}
+                    </span>
+                ))
+            }
+        </div>
+    )
+
     const renderCardContent = () => (
         <>
+            {/* Image and Release Type/Score */}
             <div className="relative aspect-3/4 overflow-hidden">
                 <img 
                     src={cardData.imgUri} 
@@ -89,30 +108,25 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
                 )} 
             </div>
             <div className="flex flex-col justify-between gap-3.5 p-4">
-                <div className="">
-                    <div>
-                        <h2 
-                            className="text-foreground font-bold text-xl line-clamp-2 md:line-clamp-none leading-tight hover:cursor-default" 
-                            title={cardData.titleLocalized || cardData.title}
-                        >
-                            {cardData.titleLocalized || cardData.title}
-                        </h2>
-                    </div>
-                      {cardData.titleLocalized && cardData.title !== cardData.titleLocalized ?  (
+                {/* Titltes */}
+                <div >
+                    <h2 
+                        className="text-foreground font-bold text-xl line-clamp-2 md:line-clamp-none leading-tight hover:cursor-default" 
+                        title={cardData.titleLocalized || cardData.title}
+                    >
+                        {cardData.titleLocalized || cardData.title}
+                    </h2>
+                    {cardData.titleLocalized && cardData.title !== cardData.titleLocalized ?  (
                         <p 
                             className="text-muted-foreground text-sm mt-1 line-clamp-2 md:line-clamp-none" 
                             title={cardData.title}
                         >
                             {cardData.title}
-                        </p> ) : null}
+                        </p> 
+                    ) : null}
                 </div>
-                <div className="flex items-center gap-3 text-muted-foreground text-sm">
-                    <span className="flex items-center gap-1">
-                        <Hash className="w-4 h-4" />
-                        {cardData.episodeCount}
-                    </span>
-                    <span>{cardData.releaseYear}</span>
-                </div>
+                {renderMetaInfo()}
+                {/* Genres & Demographic */}
                 <div className="flex gap-1.5 flex-wrap">
                     {cardData.demographic && renderGenreDemoBadge(cardData.demographic)}
                     {cardData.genres.length > 0 && cardData.genres.map(renderGenreDemoBadge)}
