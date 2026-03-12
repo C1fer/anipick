@@ -7,6 +7,9 @@ import { usePicks } from "@/context/PicksContext";
 import { useMediaType } from "@/context/MediaTypeContext";
 import type { MALStreamingOption } from "@/types/mal";
 import { useWebHaptics } from "web-haptics/react";
+import { MangaService } from "@/services/MangaService";
+import type { MALAnime } from "@/types/anime";
+import type { MALManga } from "@/types/manga";
 
 export const useResultView = ({ selection, onRedrawPicks, onGoBack }: ResultViewProps) => {
     const [ isRedrawing, setIsRedrawing ] = useState(false);
@@ -23,14 +26,18 @@ export const useResultView = ({ selection, onRedrawPicks, onGoBack }: ResultView
     const handleRedraw = async () => {
         try {
             setIsRedrawing(true);
-            const { picks, toQueue } = await AnimeService.getPicksFromFilters(globalFilters, queuedPicks);
+            
+            const { picks, toQueue } = mediaType === "anime" 
+                ? await AnimeService.getPicksFromFilters(globalFilters, queuedPicks as MALAnime[])
+                : await MangaService.getPicksFromFilters(globalFilters, queuedPicks as MALManga[]) ;
+                
             if (picks.length > 0) {
                 setQueuedPicks(toQueue);
                 setCurrentPicks(picks);
                 onRedrawPicks();
             }
         } catch (error) {
-            console.error("Error fetching anime picks:", error);
+            console.error("Error fetching " + mediaType + " picks:", error);
             triggerErrorToast();
         } finally {
             setIsRedrawing(false);
@@ -55,7 +62,7 @@ export const useResultView = ({ selection, onRedrawPicks, onGoBack }: ResultView
 
             setShowModal(true);
         } catch (error) {
-            console.error("Error fetching streaming options:", error);
+            console.error("Error fetching anime streaming options:", error);
             triggerErrorToast();
         } finally {
             setIsLoadingStreams(false);

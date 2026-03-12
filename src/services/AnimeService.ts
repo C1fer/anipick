@@ -1,5 +1,5 @@
 import { JikanAPI } from "@/api/JikanAPI/JikanAPI";
-import type { AnimeFilterOptions } from "@/components/AnimeFilterView/AnimeFilterView-def"
+import type { FilterOptions } from "@/components/MediaFilterView/MediaFilterView-def"
 import type { MALAnime } from "@/types/anime";
 import type { MALStreamingOption } from "@/types/mal";
 import { mockDataV2, mockDataV3 } from "@/utils/MockData";
@@ -10,7 +10,7 @@ type PicksFromFilters = {
     toQueue: MALAnime[];
 }
 
-const getPicksFromFilters = async (filters: AnimeFilterOptions | null, queuedPicks: MALAnime[] = []): Promise<PicksFromFilters> => {
+const getPicksFromFilters = async (filters: FilterOptions | null, queuedPicks: MALAnime[] = []): Promise<PicksFromFilters> => {
     if (!filters) return { picks: [], toQueue: [] };
 
     if (queuedPicks.length > 0) {

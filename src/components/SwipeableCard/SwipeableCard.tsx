@@ -1,5 +1,5 @@
 import { Badge } from "../ui/badge"
-import { Disc2, Film, Star, Tv, TvMinimal } from "lucide-react"
+import { BookOpen, BookOpenText, Disc2, Film, Star, Tv, TvMinimal } from "lucide-react"
 import { useSwipeableCard } from "./useSwipeableCard"
 import type { SwipeableCardProps } from "./SwipeableCard-def"
 import { motion } from "motion/react"
@@ -16,6 +16,10 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
 
     const getReleaseTypeIcon = (type: string) => {
         const iconStyle = "w-3 h-3";
+        if (mediaType === "manga") {
+            return <BookOpenText className={iconStyle} />;
+        }
+
         switch (type.toLowerCase()) {
             case "tv":
             case "tv special":
@@ -66,7 +70,8 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
     const renderMetaInfo = () => (
        <div className="flex flex-wrap items-center gap-2 text-muted-foreground text-sm">
             {[
-                mediaType === "anime" && cardData.studio,
+                cardData.author,
+                cardData.studio,
                 cardData.episodeCount,
                 cardData.releaseYear,
             ]

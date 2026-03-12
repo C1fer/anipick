@@ -1,12 +1,14 @@
 import type { MALAnime } from "@/types/anime";
 import { Constants } from "@/utils/constants";
-import { Building2, Calendar, ChevronFirst, Clock, ExternalLink, Frown, MonitorPlay, Play, RotateCcw, Star } from "lucide-react";
+import { Book, Building2, Calendar, ChevronFirst, Clock, ExternalLink, Frown, MonitorPlay, Pencil, Play, RotateCcw, Star } from "lucide-react";
 import { motion } from "motion/react";
 import { AnimatedButton } from "../AnimatedButton/AnimatedButton";
 import { StreamingOptionsDialog } from "../StreamingDialog/StreamingOptionsDialog";
 import { Badge } from "../ui/badge";
 import type { ResultViewProps } from "./ResultView-def";
 import { useResultView } from "./useResultView";
+import type { MALEntity } from "@/types/mal";
+import type { MALManga } from "@/types/manga";
 
 export const ResultView = (props: ResultViewProps ) => {
     const { 
@@ -76,7 +78,7 @@ export const ResultView = (props: ResultViewProps ) => {
         </>
     )
 
-    const renderSelectionContent = (selection: MALAnime) => (
+    const renderSelectionContent = (selection: MALAnime | MALManga) => (
         <div className="bg-card rounded-2xl overflow-hidden media-card-shadow md:landscape:flex md:landscape:flex-row">
             {/* Left — Image & Score */}
             <div className="relative aspect-video md:landscape:aspect-auto md:landscape:w-2/5 md:landscape:shrink-0 overflow-hidden">
@@ -112,28 +114,29 @@ export const ResultView = (props: ResultViewProps ) => {
                 </div>
                 
                 {/* Meta Info */}
+                {/* TODO: Set picks data from services*/ }
                 <div className="grid gap-y-3 justify-between text-muted-foreground text-sm max-w-xs">
                     <span className="col-start-1 flex items-center gap-2">
-                        <MonitorPlay className="w-4 h-4" />
+                        {mediaType === "manga" ? <Book className="w-4 h-4" /> : <MonitorPlay className="w-4 h-4" />}
                         {selection.type}
                     </span>
                     <span className="col-start-2 flex items-center gap-2">
                         <Clock className="w-4 h-4" />
-                        {selection.episodes ? `${selection.episodes} episodes` : "Unknown episodes"}
+                        {mediaType === "anime" ? selection?.episodes ? `${selection.episodes} episodes` : "Unknown episodes" : selection?.chapters ? `${selection.chapters} chapters` : "Unknown chapters"}
                     </span>
                     <span className="flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
-                        {selection.year || selection.aired.prop.from.year || "Unknown"}
+                        {mediaType === "anime" ? selection?.aired?.prop?.from?.year : selection?.published?.prop?.from?.year ??  "Unknown"}
                     </span>
                     <span className="flex items-center gap-2">
-                        <Building2 className="w-4 h-4" />
-                        {selection.studios[0]?.name || "Unknown studio"}
+                        {mediaType === "anime" ? <Building2 className="w-4 h-4" /> : <Pencil className="w-4 h-4"/> }
+                        {mediaType === "anime" ? selection.studios[0]?.name : selection?.authors[0]?.name ?? "Unknown studio"}
                     </span>
                 </div>
 
                 {/* Genres */}
                 <div className="flex flex-wrap gap-1.5">
-                    {selection.genres.map((genre) => (
+                    {selection.genres.map((genre: MALEntity) => (
                     <Badge
                         key={`genre-${genre.mal_id}`}
                         className="bg-primary/20 text-primary border-primary/30"

@@ -2,11 +2,22 @@ import { AnimeService } from "@/services/AnimeService";
 import { triggerErrorToast, triggerWarningToast } from "@/utils/ToastUtils";
 import { useState } from "react";
 import { Constants } from "../../utils/constants";
-import type { AnimeFilterViewProps, AnimeFilterOptions, SelectableOption, UseAnimeFilterViewResult } from "./AnimeFilterView-def";
+import type { SelectableOption, MediaFilterViewProps, FilterOptions } from "./MediaFilterView-def";
 import { useFilters } from "@/context/FiltersContext";
 import { usePicks } from "@/context/PicksContext";
+import { useMediaType } from "@/context/MediaTypeContext";
+import { MangaService } from "@/services/MangaService";
+import type { MALManga } from "@/types/manga";
+import type { MALAnime } from "@/types/anime";
+import { BookOpen, Tv } from "lucide-react";
+import { useWebHaptics } from "web-haptics/react";
 
-const DEFAULT_FILTER_OPTIONS: AnimeFilterOptions = {
+const MEDIA_TYPE_OPTIONS = [
+    { label: "Anime", value: "anime", icon: Tv },
+    { label: "Manga", value: "manga", icon: BookOpen },
+]
+
+const DEFAULT_FILTER_OPTIONS: FilterOptions = {
     releaseType: 'any',
     status: 'any',
     minEpisodes: "0",
@@ -35,6 +46,26 @@ const ANIME_RELEASE_TYPE: SelectableOption[] = [
     { label: "Any", value: "any" },
 ]
 
+const MANGA_MAX_CHAPTERS: SelectableOption[] = [
+    { label: "Short", value: "50" },
+    { label: "Medium", value: "150" },
+    { label: "Long", value: "250" },
+    { label: "Any", value: "0" },
+]
+
+const MANGA_STATUS: SelectableOption[] = [
+    { label: "Complete", value: "complete" },
+    { label: "Publishing", value: "publishing" },
+    { label: "Any", value: "any" },
+]
+
+const MANGA_RELEASE_TYPE: SelectableOption[] = [
+    { label: "Manga", value: "manga" },
+    { label: "Manwha", value: "manhwa" },
+    { label: "Light Novel", value: "lightnovel" },
+    { label: "Any", value: "any" },
+]
+
 const GENRES: SelectableOption[] = Constants.genres.map((genre) => ({
     label: genre.name,
     value: String(genre.mal_id),
@@ -46,16 +77,18 @@ const DEMOGRAPHICS: SelectableOption[] = Constants.demographics.map((demo) => ({
 }))
 
 
-export const useAnimeFilterView = (props: AnimeFilterViewProps): UseAnimeFilterViewResult => {
+export const useMediaFilterView = (props: MediaFilterViewProps) => {
     const { filterOptions: globalFilters, setFilterOptions: setGlobalFilters } = useFilters();
     const { queuedPicks, setQueuedPicks, setCurrentPicks } = usePicks();
+    const { mediaType, setMediaType } = useMediaType();
     
-    const [ filterOptions, setAnimeFilterOptions ] = useState<AnimeFilterOptions>(globalFilters || DEFAULT_FILTER_OPTIONS);
+    const [ filterOptions, setFilterOptions ] = useState<FilterOptions>(globalFilters || DEFAULT_FILTER_OPTIONS);
     const [ isLoading, setIsLoading ] = useState<boolean>(false);
 
+    const { trigger } = useWebHaptics();
 
-    const handleChange = <K extends keyof AnimeFilterOptions>(key: K, value: AnimeFilterOptions[K]) => {
-        setAnimeFilterOptions((prev) => ({
+    const handleChange = <K extends keyof FilterOptions>(key: K, value: FilterOptions[K]) => {
+        setFilterOptions((prev) => ({
             ...prev,
             [key]: value,
         }))
@@ -99,7 +132,11 @@ export const useAnimeFilterView = (props: AnimeFilterViewProps): UseAnimeFilterV
             if (hasNewFilters) {
                 setGlobalFilters(filterOptions);
             }
-            const { picks, toQueue } = await AnimeService.getPicksFromFilters(filterOptions, hasNewFilters ? [] : queuedPicks);
+            const pendingPicks = hasNewFilters ? [] : queuedPicks;
+            const { picks, toQueue } = mediaType === "anime" 
+                ? await AnimeService.getPicksFromFilters(filterOptions, pendingPicks as MALAnime[])
+                : await MangaService.getPicksFromFilters(filterOptions, pendingPicks as MALManga[]) ;
+
             if (picks.length > 0) {
                 setQueuedPicks(toQueue);
                 setCurrentPicks(picks);
@@ -108,19 +145,33 @@ export const useAnimeFilterView = (props: AnimeFilterViewProps): UseAnimeFilterV
                 triggerWarningToast("No picks found with the selected filters. Try relaxing your criteria!");
             }
         } catch (error) {
-            console.error("Error fetching anime picks:", error);
+            console.error(`Error fetching ${mediaType} picks:`, error);
             triggerErrorToast();
         } finally {
             setIsLoading(false);
         }
     }
+
+    const handleMediaTypeChange = (value: string) => {
+       if (value === mediaType) return;
+
+       trigger("medium");
+
+       setMediaType(value);
+       setFilterOptions(DEFAULT_FILTER_OPTIONS);
+       setQueuedPicks([]);
+    }
+    
  
     return {
+        
+        mediaType,
         isLoading,
         lists: {
-            releaseType: ANIME_RELEASE_TYPE,
-            status: ANIME_STATUS,
-            minEpisodes: ANIME_MAX_EPISODES,
+            mediaTypes: MEDIA_TYPE_OPTIONS,
+            releaseType: mediaType === "anime" ? ANIME_RELEASE_TYPE : MANGA_RELEASE_TYPE,
+            status: mediaType === "anime" ? ANIME_STATUS : MANGA_STATUS,
+            minEpisodes: mediaType === "anime" ? ANIME_MAX_EPISODES : MANGA_MAX_CHAPTERS,
             genres: GENRES,
             demographics: DEMOGRAPHICS,
         },
@@ -130,5 +181,6 @@ export const useAnimeFilterView = (props: AnimeFilterViewProps): UseAnimeFilterV
         onSelectGenre,
         onSelectDemographic,
         onSubmit,
+        handleMediaTypeChange
     }
 }

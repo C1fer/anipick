@@ -1,15 +1,15 @@
-import type { AnimeFilterOptions } from "@/components/AnimeFilterView/AnimeFilterView-def";
+import type { FilterOptions } from "@/components/MediaFilterView/MediaFilterView-def";
 import { createContext, useContext, useState, type ReactNode } from "react";
 
 type FiltersContextType = {
-    filterOptions: AnimeFilterOptions | null;
-    setFilterOptions: (options: AnimeFilterOptions) => void;
+    filterOptions: FilterOptions | null;
+    setFilterOptions: (options: FilterOptions ) => void;
 }
 
 const FiltersContext = createContext<FiltersContextType | null>(null);
 
 export const FiltersProvider = ({ children }: { children: ReactNode}) =>  {
-    const [filterOptions, setFilterOptions] = useState<AnimeFilterOptions | null>(null);
+    const [filterOptions, setFilterOptions] = useState<FilterOptions | null>(null);
 
     return (
         <FiltersContext.Provider value={{ filterOptions, setFilterOptions }}>

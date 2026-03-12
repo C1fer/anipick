@@ -1,18 +1,19 @@
 import type { MALAnime } from "@/types/anime";
+import type { MALManga } from "@/types/manga";
 import { createContext, useContext, useState } from "react";
 
 type PicksContextType = {
-    currentPicks: MALAnime[];
-    queuedPicks: MALAnime[];
-    setCurrentPicks: (picks: MALAnime[]) => void;
-    setQueuedPicks: (picks: MALAnime[]) => void;
+    currentPicks: MALAnime[] | MALManga[];
+    queuedPicks: MALAnime[] | MALManga[];
+    setCurrentPicks: (picks: MALAnime[] | MALManga[]) => void;
+    setQueuedPicks: (picks: MALAnime[] | MALManga[]) => void;
 }
 
 const PicksContext = createContext<PicksContextType | null>(null);
 
 export function PicksProvider({ children }: { children: React.ReactNode }) {
-    const [currentPicks, setCurrentPicks] = useState<MALAnime[]>([]);
-    const [queuedPicks, setQueuedPicks] = useState<MALAnime[]>([]);
+    const [currentPicks, setCurrentPicks] = useState<MALAnime[] | MALManga[]>([]);
+    const [queuedPicks, setQueuedPicks] = useState<MALAnime[] | MALManga[]>([]);
     
     return (
       <PicksContext.Provider value={{ queuedPicks, currentPicks, setCurrentPicks, setQueuedPicks }}>

@@ -4,7 +4,7 @@ type ToggleRadioOption = {
 }
 
 export interface ToggleRadioProps {
-    headerTitle: string;
+    headerTitle?: string;
     options: ToggleRadioOption[];
     onSelected: (value: string) => void;
     selectedValue: string;

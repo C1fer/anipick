@@ -1,4 +1,4 @@
-import { AnimeFilterView } from "@/components/AnimeFilterView/AnimeFilterView";
+import { MediaFilterView } from "@/components/MediaFilterView/MediaFilterView";
 import { CardStack } from "@/components/CardStack/CardStack";
 import { ResultView } from "@/components/ResultView/ResultView";
 import { useMediaPickerPage } from "./useMediaPickerPage";
@@ -27,7 +27,7 @@ export const MediaPickerPage = () => {
                         exit={{ opacity: 0, x: -20 }}
                     >
                         <Logo />
-                        {mediaType === "anime" ? <AnimeFilterView onFilterSuccess={goToPick} /> : null}
+                        <MediaFilterView onFilterSuccess={goToPick}/>
                         <Footer className="mt-10" />
                     </motion.div>
                 )

@@ -61,21 +61,30 @@ export const useSwipeableCard = ({ data, onSwipeLeft, onSwipeRight}: SwipeableCa
         if (mediaType === "anime") {
             if (!episodes) return "Unknown (Airing)";
             return episodes === 1 ? "1 episode" : `${episodes} episodes`;
+        } else if (mediaType === "manga") {
+            if (!episodes) return "Unknown (Publishing)";
+            return episodes === 1 ? "1 chapter" : `${episodes} chapters`;
         }
         return "Unknown";
     };
 
+    const getMangaAuthor = (authors: MALEntity[] | undefined): string | null => {
+        if (!authors || authors.length === 0) return null;
+        return authors[0].name.split(",").reverse().join(" ").trim(); // Convert "Last, First" to "First Last"
+    }
+
     const cardData: SwipeableCardData = {
         title: data.title,
         titleLocalized: data.title_english || null,
-        episodeCount: getEpisodeCount(mediaType, data.episodes),
+        episodeCount: getEpisodeCount(mediaType, mediaType === "anime" ? data.episodes : data.chapters),
         imgUri: data.images.jpg.large_image_url,
         releaseType: data.type,
         score: data.score ?? null,
-        releaseYear: data.year || data.aired.prop.from.year || null,
+        releaseYear: data.aired?.prop?.from?.year || data.published?.prop?.from?.year || null,
         genres: data.genres.slice(0, 3).map((g: MALEntity) => g.name),
         demographic: data.demographics.length > 0 ? data.demographics[0].name : null,
-        studio: data.studios.length > 0 ? data.studios[0].name : null
+        studio: data?.studios?.length > 0 ? data.studios[0].name : null,
+        author: mediaType === "manga" ? getMangaAuthor(data.authors) : null
     }
 
     return {
