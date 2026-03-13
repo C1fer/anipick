@@ -6,7 +6,7 @@ export type MediaPick = {
     id: number;
     title: string;
     titleLocalized: string | null;
-    synopsis?: string | null;
+    synopsis: string | null;
     episodeCount: string | null;
     imgUri: string;
     releaseType: string;

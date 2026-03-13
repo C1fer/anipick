@@ -40,7 +40,7 @@ const getPicksFromFilters = async (mediaType: MediaType, filters: FilterOptions 
 
 
 const getShuffledPicks = (queuedPicks: MediaPick[]): PicksFromFilters => {
-    const shuffledPicks = queuedPicks.sort(() => Math.random() - 0.5);
+    const shuffledPicks = Array.from(queuedPicks).sort(() => Math.random() - 0.5);
     const picks = shuffledPicks.slice(0, 5);
 
     return {

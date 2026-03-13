@@ -69,8 +69,8 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
     const renderMetaInfo = () => (
        <div className="flex flex-wrap items-center gap-2 text-muted-foreground text-sm">
             {[
-                data.author,
-                data.studio,
+                data?.authors?.length ? data.authors[0] : null,
+                data?.studio,
                 data.episodeCount,
                 data.releaseYear,
             ]

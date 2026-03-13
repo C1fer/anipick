@@ -8,12 +8,10 @@ const getEpisodeCount = (count?: number | null ): string =>  {
     return count === 1 ? "1 chapter" : `${count} chapters`;
 };
 
-
 const getMangaAuthor = (authors: MALEntity[] | undefined): string[] => {
     if (!authors || authors.length === 0) return [];
     return authors.map(a => a.name.split(",").reverse().join(" ").trim()); // Convert "Last, First" to "First Last"
 }
-
 
 const getPicksData = (filters: FilterOptions | null, data: MALManga[]): MediaPick[] => {
     const filteredData = data.filter((media) => {

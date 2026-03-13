@@ -45,7 +45,7 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
     )
 
     return (
-        <motion.div className="flex flex-col items-center w-full md:max-w-2xl" layout >
+        <motion.div className="flex flex-col items-center w-full max-w-2xl md:min-w-xl" layout >
             {renderMediaTypeToggle()}
             <div className="flex-col flex w-full gap-6 bg-card/50 border border-border/50 p-6 rounded-xl shadow-xl " >
                 {/* TODO: Use CusomtSelect for manga release types*/}

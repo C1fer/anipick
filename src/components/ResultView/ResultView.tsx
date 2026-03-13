@@ -1,3 +1,5 @@
+import type { MediaPick } from "@/types/media";
+import { StringUtils } from "@/utils/StringUtils";
 import { Book, Building2, Calendar, ChevronFirst, Clock, ExternalLink, Frown, MonitorPlay, Pencil, Play, RotateCcw, Star } from "lucide-react";
 import { motion } from "motion/react";
 import { AnimatedButton } from "../AnimatedButton/AnimatedButton";
@@ -5,7 +7,6 @@ import { StreamingOptionsDialog } from "../StreamingDialog/StreamingOptionsDialo
 import { Badge } from "../ui/badge";
 import type { ResultViewProps } from "./ResultView-def";
 import { useResultView } from "./useResultView";
-import type { MediaPick } from "@/types/media";
 
 export const ResultView = (props: ResultViewProps ) => {
     const { 
@@ -75,7 +76,19 @@ export const ResultView = (props: ResultViewProps ) => {
         </>
     )
 
-    const renderSelectionContent = (selection: MediaPick) => (
+    const renderGenreDemoBadge = (gd: string) => (
+        <Badge
+            key={`genre-badge-${gd}`}
+            className="bg-primary/20 text-primary border-primary/30"
+        >
+            {gd}
+        </Badge>
+    )
+
+    const renderSelectionContent = (selection: MediaPick) => {
+        const cleanedSynopsis = StringUtils.cleanSynopsis(selection.synopsis);
+
+        return (
         <div className="bg-card rounded-2xl overflow-hidden media-card-shadow md:landscape:flex md:landscape:flex-row">
             {/* Left — Image & Score */}
             <div className="relative aspect-video md:landscape:aspect-auto md:landscape:w-2/5 md:landscape:shrink-0 overflow-hidden">
@@ -97,7 +110,7 @@ export const ResultView = (props: ResultViewProps ) => {
             </div>
 
             {/* Right — Details */}
-            <div className="flex flex-col justify-between p-5 gap-4 md:landscape:overflow-y-auto md:landscape:max-h-[calc(100dvh-8rem)] scrollbar-subtle">
+            <div className="flex flex-col p-5 gap-4 w-full md:landscape:overflow-y-auto md:landscape:max-h-[calc(100dvh-8rem)] scrollbar-subtle">
                 {/* Title */}
                 <div>
                     <h2 className="text-foreground font-bold text-xl line-clamp-3">
@@ -132,44 +145,40 @@ export const ResultView = (props: ResultViewProps ) => {
 
                 {/* Genres */}
                 <div className="flex flex-wrap gap-1.5">
-                    {selection.genres.map((genre) => (
-                    <Badge
-                        key={`genre-badge-${genre}`}
-                        className="bg-primary/20 text-primary border-primary/30"
-                    >
-                        {genre}
-                    </Badge>
-                    ))}
+                    {selection.demographic && renderGenreDemoBadge(selection.demographic)}
+                    {selection.genres.length > 0 && selection.genres.map(renderGenreDemoBadge)}
                 </div>
 
                 {/* Synopsis */}
-                <p className="text-sm text-muted-foreground text-justify max-h-25 overflow-y-auto scrollbar-subtle landscape:max-h-50">
-                    {selection.synopsis || "No synopsis available."}
-                </p>
+                <div className="min-h-24 max-h-32 overflow-y-auto scrollbar-subtle rounded-lg bg-muted/25 px-3 py-2 landscape:max-h-50">
+                    <p className={`text-sm ${cleanedSynopsis ? "text-muted-foreground text-justify" : "text-muted-foreground/80 italic"}`}>
+                        {cleanedSynopsis ?? "No synopsis available."}
+                    </p>
+                </div>
 
-                <div className="flex justify-between">
-                    {selection.rating && (
-                        <Badge variant="outline" className="text-xs border-border/50 text-muted-foreground px-3 py-1">
-                            {selection.rating}
-                        </Badge>
-                    )}
-                    <a 
-                        className="flex items-center gap-2 text-sm text-action hover:underline"
-                        href={selection.url} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                    >
-                        <ExternalLink className="w-4 h-4" />
-                        View on MAL
-                    </a>
-                </div>
-                {/* Buttons — landscape only (always visible in right column) */}
-                <div className="hidden md:landscape:flex gap-3">
-                   {renderActionButtons()}
-                </div>
+            <div className="flex justify-between w-full">
+                {selection.rating ? (
+                    <Badge variant="outline" className="text-xs border-border/50 text-muted-foreground px-3 py-1">
+                        {selection.rating}
+                    </Badge>
+                ): <div/>}
+                <a 
+                    className="flex items-center justify-end gap-2 text-sm mt-2 text-action hover:underline"
+                    href={selection.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                >
+                    <ExternalLink className="w-4 h-4" />
+                    View on MAL
+                </a>
+            </div>
+            {/* Buttons — landscape only*/}
+            <div className="hidden md:landscape:flex gap-3">
+                {renderActionButtons()}
+            </div>
             </div>
         </div>
-    )
+    )}
 
     const renderSelectionDetails = (value: MediaPick) => (
         <motion.div className="flex flex-col items-center justify-center gap-6 w-full max-w-lg md:landscape:max-w-4xl">
@@ -189,7 +198,7 @@ export const ResultView = (props: ResultViewProps ) => {
                 <div className="w-10"/> {/* Spacer */}
             </motion.div>
             {renderSelectionContent(value)}
-            {/* Buttons — portrait only (landscape renders them inside the card) */}
+            {/* Buttons — portrait only*/}
             <div className="flex flex-col gap-3 items-stretch w-full md:landscape:hidden">
                 {renderActionButtons()}
             </div>
