@@ -7,14 +7,17 @@ import type { MediaFilterViewProps } from "./MediaFilterView-def";
 import { AnimatePresence, motion } from "motion/react"
 import { AnimatedButton } from "../AnimatedButton/AnimatedButton";
 import { twMerge } from "tailwind-merge";
+import { CustomSelect } from "../CustomSelect/CustomSelect";
 
 export const MediaFilterView = (props: MediaFilterViewProps) => {
     const {
         mediaType,
+        showStatusLengthSection,
         isLoading,
         state,
         lists,
         handleChange,
+        onSelectReleaseType,
         onToggleSFW,
         onSelectGenre,
         onSelectDemographic,
@@ -48,22 +51,31 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
         <motion.div className="flex flex-col items-center w-full max-w-2xl md:min-w-xl" layout >
             {renderMediaTypeToggle()}
             <div className="flex-col flex w-full gap-6 bg-card/50 border border-border/50 p-6 rounded-xl shadow-xl " >
-                {/* TODO: Use CusomtSelect for manga release types*/}
-                <ToggleRadio 
-                    headerTitle="Release Type" 
-                    options={lists.releaseType} 
-                    selectedValue={state.releaseType} 
-                    onSelected={(value) => handleChange('releaseType', value)}
-                />
+                {mediaType === "anime" ? (
+                    <ToggleRadio 
+                        headerTitle="Release Type" 
+                        options={lists.releaseType} 
+                        selectedValue={state.releaseType} 
+                        onSelected={(value) => onSelectReleaseType(value)}
+                    />) 
+                    : (
+                    <CustomSelect
+                        label="Release Type"
+                        options={lists.releaseType}
+                        selectedValue={state.releaseType}
+                        onSelected={(value) => onSelectReleaseType(value)}
+                    />
+                )}
                 <AnimatePresence mode="wait">
-                    {(mediaType === "anime" && state.releaseType !== 'movie') || mediaType === "manga" ? (
+                    {showStatusLengthSection ? (
                         <motion.div 
                             key="status-length"
                             className="flex flex-col gap-6 md:flex-row"
-                            initial={mediaType === "manga" ?  {} : { opacity: 0, y: 20 }}
-                            animate={mediaType === "manga" ?  {} : { opacity: 1, y: 0 }}
-                            exit={mediaType === "manga" ?  {} : { opacity: 0, y: -20 }}
-                            transition={mediaType === "manga" ?  {} : { duration: 0.3 }}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.3 }}
+                            layout
                         >
                             <ToggleRadio 
                                 headerTitle="Status" 
@@ -71,6 +83,7 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
                                 selectedValue={state.status} 
                                 onSelected={(value) => handleChange('status', value)} 
                             />
+
                             <ToggleRadio 
                                 headerTitle="Length" 
                                 options={lists.minEpisodes} 
@@ -108,7 +121,5 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
                 onClick={onSubmit}
             />
         </motion.div>
-       
-
     )
 }

@@ -6,5 +6,6 @@ type SelectableOption = {
 export interface CustomSelectProps {
     label: string;
     options: SelectableOption[];
+    selectedValue: string;
     onSelected: (value: string) => void;
 }

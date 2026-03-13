@@ -58,10 +58,11 @@ const MANGA_STATUS: SelectableOption[] = [
 ]
 
 const MANGA_RELEASE_TYPE: SelectableOption[] = [
+    { label: "Any", value: "any" },
+    { label: "Light Novel", value: "lightnovel" },
     { label: "Manga", value: "manga" },
     { label: "Manwha", value: "manhwa" },
-    { label: "Light Novel", value: "lightnovel" },
-    { label: "Any", value: "any" },
+    { label: "One-shot", value: "oneshot" },
 ]
 
 const GENRES: SelectableOption[] = Constants.genres.map((genre) => ({
@@ -90,6 +91,19 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
             ...prev,
             [key]: value,
         }))
+    }
+
+    const onSelectReleaseType = (value: string) => {
+        if (value === "movie" || value === "oneshot") {
+           setFilterOptions((prev) => ({
+                ...prev,
+                releaseType: value,
+                minEpisodes: "0",
+                status: "any",
+            }))
+        } else {
+            handleChange('releaseType', value);
+        }
     }
 
     const onToggleSFW = () => handleChange('sfw', !filterOptions.sfw);
@@ -159,10 +173,14 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
        setQueuedPicks([]);
     }
     
+    const showStatusLengthSection = Boolean(
+        mediaType === "anime" && filterOptions.releaseType !== 'movie'
+        || mediaType === "manga" && filterOptions.releaseType !== 'oneshot'
+    )
  
     return {
-        
         mediaType,
+        showStatusLengthSection,
         isLoading,
         lists: {
             mediaTypes: MEDIA_TYPE_OPTIONS,
@@ -174,6 +192,7 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
         },
         state: filterOptions,
         handleChange,
+        onSelectReleaseType,
         onToggleSFW,
         onSelectGenre,
         onSelectDemographic,
