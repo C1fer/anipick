@@ -1,10 +1,10 @@
-import type { MALAnime } from "@/types/anime";
-import type { MALManga } from "@/types/manga";
+
 import { ChevronLeft } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import { SwipeableCard } from "../SwipeableCard/SwipeableCard";
 import type { CardStackProps } from "./CardStack-def";
 import { useAnimeCardStack } from "./useCardStack";
+import type { MediaPick } from "@/types/media";
 
 export const CardStack = (props: CardStackProps): React.ReactElement => {
     const { 
@@ -15,13 +15,13 @@ export const CardStack = (props: CardStackProps): React.ReactElement => {
         handleGoBack
     } = useAnimeCardStack(props);
 
-    const renderCards = (pick: MALAnime | MALManga, idx: number): React.ReactElement => {
+    const renderCards = (pick: MediaPick, idx: number): React.ReactElement => {
         const isDisplaying: boolean = idx === currentPickIdx;
         const isNextInStack: boolean = Math.min(currentPickIdx + 1, picks.length - 1) === idx;
         
         return (
             <AnimatePresence 
-                key={`pick-card-${pick.mal_id}`}
+                key={`pick-card-${pick.id}`}
                 mode="wait" 
             >
                 {isDisplaying || isNextInStack ? (

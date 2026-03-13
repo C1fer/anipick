@@ -1,15 +1,14 @@
 import { Badge } from "../ui/badge"
-import { BookOpen, BookOpenText, Disc2, Film, Star, Tv, TvMinimal } from "lucide-react"
+import { BookOpenText, Disc2, Film, Star, Tv, TvMinimal } from "lucide-react"
 import { useSwipeableCard } from "./useSwipeableCard"
 import type { SwipeableCardProps } from "./SwipeableCard-def"
 import { motion } from "motion/react"
 
 export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => {
-    const { displayedAtTop } = props;
+    const { displayedAtTop, data } = props;
 
     const {
         mediaType,
-        cardData,
         styles,
         handleCardDragEnd,
     } = useSwipeableCard(props);
@@ -38,7 +37,7 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
 
    const renderGenreDemoBadge = (gd: string) => (
         <Badge
-            key={`${cardData.title}-${gd}`}
+            key={`${data.title}-${gd}`}
             variant="outline"
             className="bg-muted/50 border-border/50 text-muted-foreground text-xs"
         >
@@ -70,10 +69,10 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
     const renderMetaInfo = () => (
        <div className="flex flex-wrap items-center gap-2 text-muted-foreground text-sm">
             {[
-                cardData.author,
-                cardData.studio,
-                cardData.episodeCount,
-                cardData.releaseYear,
+                data.author,
+                data.studio,
+                data.episodeCount,
+                data.releaseYear,
             ]
                 .filter(Boolean)
                 .map((item, i, arr) => (
@@ -91,23 +90,23 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
             {/* Image and Release Type/Score */}
             <div className="relative aspect-3/4 overflow-hidden">
                 <img 
-                    src={cardData.imgUri} 
-                    alt={cardData.title} 
+                    src={data.imgUri} 
+                    alt={data.title} 
                     className="w-full h-auto object-cover"
                     draggable={false}
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-card via-card/20 to-transparent" />
                 <div className="absolute top-3 left-3">
                     <Badge className="bg-primary/90 text-primary-foreground border-0 gap-1">
-                        {getReleaseTypeIcon(cardData.releaseType)}
-                        {cardData.releaseType}
+                        {getReleaseTypeIcon(data.releaseType)}
+                        {data.releaseType}
                     </Badge>
                 </div>
                 {props.data.score && (
                     <div className="absolute top-3 right-3">
                         <Badge className="bg-accent/90 text-accent-foreground border-0 gap-1">
                             <Star className="w-3 h-3 fill-current" />
-                            {cardData.score}
+                            {data.score}
                         </Badge>
                     </div>
                 )} 
@@ -117,24 +116,24 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
                 <div >
                     <h2 
                         className="text-foreground font-bold text-xl line-clamp-2 md:line-clamp-none leading-tight hover:cursor-default" 
-                        title={cardData.titleLocalized || cardData.title}
+                        title={data.titleLocalized || data.title}
                     >
-                        {cardData.titleLocalized || cardData.title}
+                        {data.titleLocalized || data.title}
                     </h2>
-                    {cardData.titleLocalized && cardData.title !== cardData.titleLocalized ?  (
+                    {data.titleLocalized && data.title !== data.titleLocalized ?  (
                         <p 
                             className="text-muted-foreground text-sm mt-1 line-clamp-2 md:line-clamp-none" 
-                            title={cardData.title}
+                            title={data.title}
                         >
-                            {cardData.title}
+                            {data.title}
                         </p> 
                     ) : null}
                 </div>
                 {renderMetaInfo()}
                 {/* Genres & Demographic */}
                 <div className="flex gap-1.5 flex-wrap">
-                    {cardData.demographic && renderGenreDemoBadge(cardData.demographic)}
-                    {cardData.genres.length > 0 && cardData.genres.map(renderGenreDemoBadge)}
+                    {data.demographic && renderGenreDemoBadge(data.demographic)}
+                    {data.genres.length > 0 && data.genres.map(renderGenreDemoBadge)}
                 </div>
             </div>
         </>
@@ -142,7 +141,7 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
 
     return (
         <motion.div 
-            key={`pick-card-${props.data.mal_id}`}
+            key={`pick-card-${data.id}`}
             className="cursor-grab row-start-1 col-start-1 self-center"
             style={{ x: styles.x, opacity: styles.cardOpacity, rotate: styles.rotate, zIndex: displayedAtTop ? 10 : 0 }}
             drag={displayedAtTop ? 'x' : false}

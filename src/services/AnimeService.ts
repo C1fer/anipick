@@ -2,57 +2,42 @@ import { JikanAPI } from "@/api/JikanAPI/JikanAPI";
 import type { FilterOptions } from "@/components/MediaFilterView/MediaFilterView-def"
 import type { MALAnime } from "@/types/anime";
 import type { MALStreamingOption } from "@/types/mal";
-import { mockDataV2, mockDataV3 } from "@/utils/MockData";
+import type { MediaPick } from "@/types/media";
+import { Constants } from "@/utils/constants";
 
-type PicksFromFilters = {
-    
-    picks: MALAnime[];
-    toQueue: MALAnime[];
-}
-
-const getPicksFromFilters = async (filters: FilterOptions | null, queuedPicks: MALAnime[] = []): Promise<PicksFromFilters> => {
-    if (!filters) return { picks: [], toQueue: [] };
-
-    if (queuedPicks.length > 0) {
-        return getShuffledPicks(queuedPicks);
-    }
-
-    const response = { data: mockDataV3 }
-    // const malGenresAndDemos : string = Array.from(
-    //     [...filters.genres, ...filters.demographics], 
-    //     (x => x.value)
-    // ).join(",");
-
-    // const response = await JikanAPI.searchAnime({
-    //     type: filters.releaseType !== "any" ? filters.releaseType : undefined,
-    //     status: filters.status !== "any" ? filters.status : undefined,
-    //     genres: malGenresAndDemos.length ? malGenresAndDemos : undefined,
-    //     sfw: filters.sfw,
-    //     limit: 25,
-    //     order_by: "score",
-    //     sort: "desc",
-    //     page: Math.floor(Math.random() * 10) + 1, // Randomizing requested page since Jikan API does not expose a random endpoint.
-    // });
-
-    if (filters.minEpisodes === "0" || filters.releaseType === "movie") {
-        return getShuffledPicks(response.data);
-    } 
-        return getShuffledPicks(response.data.filter((anime) => {
-            if (filters.status === "airing") {
-                return anime.episodes === null || anime.episodes >= parseInt(filters.minEpisodes);
-            }
-            return (anime.episodes ?? 0) >= parseInt(filters.minEpisodes);
-        }));
+const getEpisodeCount = (count?: number | null ): string =>  {
+    if (!count) return "Unknown (Airing)";
+    return count === 1 ? "1 episode" : `${count} episodes`;
 };
 
-const getShuffledPicks  = (queuedPicks: MALAnime[]): PicksFromFilters => {
-    const shuffledPicks = queuedPicks.sort(() => Math.random() - 0.5);
-    const picks = shuffledPicks.slice(0, 10);
+const getPicksData = (filters: FilterOptions | null, data: MALAnime[]): MediaPick[] => {
+    const filteredData = data.filter((media) => {
+        if (filters?.minEpisodes === "0" || filters?.releaseType === "movie") {
+            return true;
+        } 
+        if (filters?.status === "airing" || filters?.status === "publishing") {
+            return media.episodes === null || media.episodes >= parseInt(filters.minEpisodes);
+        }
+        return (media.episodes ?? 0) >= parseInt(filters?.minEpisodes ?? "0");
+    });
 
-    return {
-        picks,
-        toQueue: shuffledPicks.slice(picks.length),
-    }
+    return filteredData.map((media) => ({
+        type: "anime",
+        id: media.mal_id,
+        title: media.title,
+        titleLocalized: media.title_english || null,
+        synopsis: media.synopsis || null,
+        episodeCount: getEpisodeCount(media.episodes),
+        imgUri: media.images.jpg.large_image_url,
+        releaseType: media.type || "Unknown",
+        score: media.score || null,
+        releaseYear: String(media.aired?.prop?.from?.year) || "Unknown",
+        genres: media.genres.slice(0, 3).map((g) => g.name),
+        demographic: media.demographics.length > 0 ? media.demographics[0].name : null,
+        url: media.url, 
+        rating: media.rating ? Constants.ratings[media.rating] ?? media.rating : null,
+        studio: media?.studios?.length > 0 ? media.studios[0].name : "Unknown studio",
+    }));
 }
 
 const getStreamingOptions = async (id: number): Promise<MALStreamingOption[]> => {
@@ -62,6 +47,6 @@ const getStreamingOptions = async (id: number): Promise<MALStreamingOption[]> =>
 
 
 export const AnimeService = {
-    getPicksFromFilters,
-    getStreamingOptions,
+   getPicksData,
+   getStreamingOptions
 }

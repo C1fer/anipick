@@ -1,24 +1,8 @@
-import type { MALAnime } from "@/types/mal";
-import type { MALManga } from "@/types/manga";
+import type { MediaPick } from "@/types/media";
 
 export interface SwipeableCardProps {
-    data: MALAnime | MALManga;
+    data: MediaPick;
     displayedAtTop?: boolean;
     onSwipeLeft: () => void;
-    onSwipeRight: (value: MALAnime | MALManga) => void;
-}
-
-type SwipeableCardData = {
-    title: string;
-    titleLocalized: string | null;
-    synopsis?: string | null;
-    episodeCount: string;
-    imgUri: string;
-    releaseType: string;
-    score: number | null;
-    releaseYear: number | null;
-    genres: string[];
-    demographic: string | null;
-    studio?: string | null;
-    author?: string | null;
+    onSwipeRight: (value: MediaPick) => void;
 }

@@ -1,9 +1,8 @@
 import { useState } from "react";
 import type { CardStackProps } from "./CardStack-def"
-import type { MALAnime } from "@/types/anime";
-import type { MALManga } from "@/types/manga";
 import { usePicks } from "@/context/PicksContext";
 import { useWebHaptics } from "web-haptics/react";
+import type { MediaPick } from "@/types/media";
 
 export const useAnimeCardStack = (props: CardStackProps) => {
     const [currentPickIdx, setCurrentPickIndex] = useState<number>(0);
@@ -21,7 +20,7 @@ export const useAnimeCardStack = (props: CardStackProps) => {
         }
     };
 
-    const onCardPicked = (value: MALAnime | MALManga) => {
+    const onCardPicked = (value: MediaPick) => {
         props.onPickSelection(value);
     };
 

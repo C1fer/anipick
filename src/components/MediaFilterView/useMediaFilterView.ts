@@ -1,4 +1,4 @@
-import { AnimeService } from "@/services/AnimeService";
+import { MediaService } from "@/services/MediaService";
 import { triggerErrorToast, triggerWarningToast } from "@/utils/ToastUtils";
 import { useState } from "react";
 import { Constants } from "../../utils/constants";
@@ -6,11 +6,9 @@ import type { SelectableOption, MediaFilterViewProps, FilterOptions } from "./Me
 import { useFilters } from "@/context/FiltersContext";
 import { usePicks } from "@/context/PicksContext";
 import { useMediaType } from "@/context/MediaTypeContext";
-import { MangaService } from "@/services/MangaService";
-import type { MALManga } from "@/types/manga";
-import type { MALAnime } from "@/types/anime";
 import { BookOpen, Tv } from "lucide-react";
 import { useWebHaptics } from "web-haptics/react";
+import type { MediaType } from "@/types/media";
 
 const MEDIA_TYPE_OPTIONS = [
     { label: "Anime", value: "anime", icon: Tv },
@@ -132,10 +130,9 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
             if (hasNewFilters) {
                 setGlobalFilters(filterOptions);
             }
+
             const pendingPicks = hasNewFilters ? [] : queuedPicks;
-            const { picks, toQueue } = mediaType === "anime" 
-                ? await AnimeService.getPicksFromFilters(filterOptions, pendingPicks as MALAnime[])
-                : await MangaService.getPicksFromFilters(filterOptions, pendingPicks as MALManga[]) ;
+            const { picks, toQueue } = await MediaService.getPicksFromFilters(mediaType, filterOptions, pendingPicks);
 
             if (picks.length > 0) {
                 setQueuedPicks(toQueue);
@@ -152,7 +149,7 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
         }
     }
 
-    const handleMediaTypeChange = (value: string) => {
+    const handleMediaTypeChange = (value: MediaType) => {
        if (value === mediaType) return;
 
        trigger("medium");

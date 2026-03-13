@@ -20,7 +20,7 @@ export interface SearchRequest {
     genres?: string
     sfw?: boolean;
     order_by?: string;
-    sort?: 'desc' | 'asc';
+    sort?: string;
     page?: number;
 }
 

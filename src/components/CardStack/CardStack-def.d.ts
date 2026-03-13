@@ -1,9 +1,8 @@
-import type { MALAnime } from "@/types/anime"
-import type { MALManga } from "@/types/manga";
+import type { MediaPick } from "@/types/media";
 
 export type CardStackProps = {
     onGoBack: () => void;
-    onPickSelection: (value: MALAnime | MALManga) => void;
+    onPickSelection: (value: MediaPick) => void;
     onPicksExhausted: () => void;
 }
 

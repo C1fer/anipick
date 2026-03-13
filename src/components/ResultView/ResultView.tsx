@@ -1,5 +1,3 @@
-import type { MALAnime } from "@/types/anime";
-import { Constants } from "@/utils/constants";
 import { Book, Building2, Calendar, ChevronFirst, Clock, ExternalLink, Frown, MonitorPlay, Pencil, Play, RotateCcw, Star } from "lucide-react";
 import { motion } from "motion/react";
 import { AnimatedButton } from "../AnimatedButton/AnimatedButton";
@@ -7,8 +5,7 @@ import { StreamingOptionsDialog } from "../StreamingDialog/StreamingOptionsDialo
 import { Badge } from "../ui/badge";
 import type { ResultViewProps } from "./ResultView-def";
 import { useResultView } from "./useResultView";
-import type { MALEntity } from "@/types/mal";
-import type { MALManga } from "@/types/manga";
+import type { MediaPick } from "@/types/media";
 
 export const ResultView = (props: ResultViewProps ) => {
     const { 
@@ -78,12 +75,12 @@ export const ResultView = (props: ResultViewProps ) => {
         </>
     )
 
-    const renderSelectionContent = (selection: MALAnime | MALManga) => (
+    const renderSelectionContent = (selection: MediaPick) => (
         <div className="bg-card rounded-2xl overflow-hidden media-card-shadow md:landscape:flex md:landscape:flex-row">
             {/* Left — Image & Score */}
             <div className="relative aspect-video md:landscape:aspect-auto md:landscape:w-2/5 md:landscape:shrink-0 overflow-hidden">
                 <img 
-                    src={selection.images.jpg.large_image_url} 
+                    src={selection.imgUri} 
                     alt={selection.title} 
                     className="w-full h-full object-cover"
                     draggable={false}
@@ -104,9 +101,9 @@ export const ResultView = (props: ResultViewProps ) => {
                 {/* Title */}
                 <div>
                     <h2 className="text-foreground font-bold text-xl line-clamp-3">
-                        {selection.title_english || selection.title}
+                        {selection.titleLocalized || selection.title}
                     </h2>
-                    {selection.title_english && selection.title_english !== selection.title ? (
+                    {selection.titleLocalized && selection.titleLocalized !== selection.title ? (
                         <p className="text-muted-foreground text-sm mt-1 line-clamp-2" title={selection.title}>
                             {selection.title}
                         </p>
@@ -114,47 +111,46 @@ export const ResultView = (props: ResultViewProps ) => {
                 </div>
                 
                 {/* Meta Info */}
-                {/* TODO: Set picks data from services*/ }
                 <div className="grid gap-y-3 justify-between text-muted-foreground text-sm max-w-xs">
                     <span className="col-start-1 flex items-center gap-2">
                         {mediaType === "manga" ? <Book className="w-4 h-4" /> : <MonitorPlay className="w-4 h-4" />}
-                        {selection.type}
+                        {selection.releaseType}
                     </span>
                     <span className="col-start-2 flex items-center gap-2">
                         <Clock className="w-4 h-4" />
-                        {mediaType === "anime" ? selection?.episodes ? `${selection.episodes} episodes` : "Unknown episodes" : selection?.chapters ? `${selection.chapters} chapters` : "Unknown chapters"}
+                        {selection.episodeCount}
                     </span>
                     <span className="flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
-                        {mediaType === "anime" ? selection?.aired?.prop?.from?.year : selection?.published?.prop?.from?.year ??  "Unknown"}
+                        {selection.releaseYear}
                     </span>
                     <span className="flex items-center gap-2">
                         {mediaType === "anime" ? <Building2 className="w-4 h-4" /> : <Pencil className="w-4 h-4"/> }
-                        {mediaType === "anime" ? selection.studios[0]?.name : selection?.authors[0]?.name ?? "Unknown studio"}
+                        {selection.studio || selection.authors?.[0]}
                     </span>
                 </div>
 
                 {/* Genres */}
                 <div className="flex flex-wrap gap-1.5">
-                    {selection.genres.map((genre: MALEntity) => (
+                    {selection.genres.map((genre) => (
                     <Badge
-                        key={`genre-${genre.mal_id}`}
+                        key={`genre-badge-${genre}`}
                         className="bg-primary/20 text-primary border-primary/30"
                     >
-                        {genre.name}
+                        {genre}
                     </Badge>
                     ))}
                 </div>
 
                 {/* Synopsis */}
                 <p className="text-sm text-muted-foreground text-justify max-h-25 overflow-y-auto scrollbar-subtle landscape:max-h-50">
-                    {selection.synopsis}
+                    {selection.synopsis || "No synopsis available."}
                 </p>
 
                 <div className="flex justify-between">
                     {selection.rating && (
                         <Badge variant="outline" className="text-xs border-border/50 text-muted-foreground px-3 py-1">
-                            {Constants.ratings[selection.rating] ?? selection.rating}
+                            {selection.rating}
                         </Badge>
                     )}
                     <a 
@@ -175,7 +171,7 @@ export const ResultView = (props: ResultViewProps ) => {
         </div>
     )
 
-    const renderSelectionDetails = (value: MALAnime) => (
+    const renderSelectionDetails = (value: MediaPick) => (
         <motion.div className="flex flex-col items-center justify-center gap-6 w-full max-w-lg md:landscape:max-w-4xl">
             <motion.div 
                 className="flex items-center justify-between w-full gap-3"

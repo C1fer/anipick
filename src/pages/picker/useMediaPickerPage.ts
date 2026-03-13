@@ -1,9 +1,8 @@
-import {  useState } from "react";
-import type { ViewState } from "./MediaPickerPage-def";
-import type { MALAnime } from "@/types/anime";
-import type { MALManga } from "@/types/manga";
-import { usePicks } from "@/context/PicksContext";
 import { useMediaType } from "@/context/MediaTypeContext";
+import { usePicks } from "@/context/PicksContext";
+import type { MediaPick } from "@/types/media";
+import { useState } from "react";
+import type { ViewState } from "./MediaPickerPage-def";
 
 export const useMediaPickerPage = () => {
     const [ viewState, setViewState ] = useState<ViewState>({ phase: "filter" });
@@ -15,13 +14,13 @@ export const useMediaPickerPage = () => {
 
     const goToPick = () => setViewState({ phase: "pick" });
 
-    const goToResult = (selection: MALAnime | MALManga | null) => {
+    const goToResult = (selection: MediaPick | null) => {
         if (!selection) {
             setViewState({ phase: "result", selection: null });
             return;
         }
         
-        const remainingFromSwipe = currentPicks.slice(currentPicks.findIndex((p) => p.mal_id === selection.mal_id) + 1);
+        const remainingFromSwipe = currentPicks.slice(currentPicks.findIndex((p) => p.id === selection.id) + 1);
 
         if (remainingFromSwipe.length > 0) {
             setQueuedPicks([...queuedPicks, ...remainingFromSwipe]);

@@ -1,5 +1,5 @@
 import { useFilters } from "@/context/FiltersContext";
-import { AnimeService } from "@/services/AnimeService";
+import { MediaService } from "@/services/MediaService";
 import { triggerErrorToast, triggerWarningToast } from "@/utils/ToastUtils";
 import { useState } from "react";
 import type { ResultViewProps } from "./ResultView-def";
@@ -7,9 +7,7 @@ import { usePicks } from "@/context/PicksContext";
 import { useMediaType } from "@/context/MediaTypeContext";
 import type { MALStreamingOption } from "@/types/mal";
 import { useWebHaptics } from "web-haptics/react";
-import { MangaService } from "@/services/MangaService";
-import type { MALAnime } from "@/types/anime";
-import type { MALManga } from "@/types/manga";
+import { AnimeService } from "@/services/AnimeService";
 
 export const useResultView = ({ selection, onRedrawPicks, onGoBack }: ResultViewProps) => {
     const [ isRedrawing, setIsRedrawing ] = useState(false);
@@ -27,9 +25,7 @@ export const useResultView = ({ selection, onRedrawPicks, onGoBack }: ResultView
         try {
             setIsRedrawing(true);
             
-            const { picks, toQueue } = mediaType === "anime" 
-                ? await AnimeService.getPicksFromFilters(globalFilters, queuedPicks as MALAnime[])
-                : await MangaService.getPicksFromFilters(globalFilters, queuedPicks as MALManga[]) ;
+            const { picks, toQueue } = await MediaService.getPicksFromFilters(mediaType, globalFilters, queuedPicks);
                 
             if (picks.length > 0) {
                 setQueuedPicks(toQueue);
@@ -52,7 +48,7 @@ export const useResultView = ({ selection, onRedrawPicks, onGoBack }: ResultView
             }
 
             setIsLoadingStreams(true);
-            const response = await AnimeService.getStreamingOptions(selection.mal_id);
+            const response = await AnimeService.getStreamingOptions(selection.id);
             setStreamingOptions(response ?? []);
 
             if (!response || response.length === 0) {

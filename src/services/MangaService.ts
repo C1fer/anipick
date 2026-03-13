@@ -1,61 +1,48 @@
-import { JikanAPI } from "@/api/JikanAPI/JikanAPI";
-import type { FilterOptions } from "@/components/MediaFilterView/MediaFilterView-def";
+import type { FilterOptions } from "@/components/MediaFilterView/MediaFilterView-def"
+import type { MALEntity } from "@/types/mal";
 import type { MALManga } from "@/types/manga";
-import { mockManga } from "@/utils/MockData";
+import type { MediaPick } from "@/types/media";
 
-type PicksFromFilters = {
-    
-    picks: MALManga[];
-    toQueue: MALManga[];
-}
-
-const getPicksFromFilters = async (filters: FilterOptions | null, queuedPicks: MALManga[] = []): Promise<PicksFromFilters> => {
-    if (!filters) return { picks: [], toQueue: [] };
-
-    if (queuedPicks.length > 0) {
-        return getShuffledPicks(queuedPicks);
-    }
-
-    await new Promise((resolve) => setTimeout(resolve, 200)); // Simulating network delay
-
-    // const response = { data: mockManga }
-    const malGenresAndDemos : string = Array.from(
-        [...filters.genres, ...filters.demographics], 
-        (x => x.value)
-    ).join(",");
-
-    const response = await JikanAPI.searchManga({
-        type: filters.releaseType !== "any" ? filters.releaseType : undefined,
-        status: filters.status !== "any" ? filters.status : undefined,
-        genres: malGenresAndDemos.length ? malGenresAndDemos : undefined,
-        sfw: filters.sfw,
-        limit: 25,
-        order_by: "score",
-        sort: "desc",
-        page: Math.floor(Math.random() * 10) + 1, // Randomizing requested page since Jikan API does not expose a random endpoint.
-    });
-
-    if (filters.minEpisodes === "0" || filters.releaseType === "movie") {
-        return getShuffledPicks(response.data);
-    } 
-        return getShuffledPicks(response.data.filter((manga: MALManga) => {
-            if (filters.status === "publishing") {
-                return manga.chapters === null || manga.chapters >= parseInt(filters.minEpisodes);
-            }
-            return (manga.chapters ?? 0) >= parseInt(filters.minEpisodes);
-        }));
+const getEpisodeCount = (count?: number | null ): string =>  {
+    if (!count) return "Unknown (Publishing)";
+    return count === 1 ? "1 chapter" : `${count} chapters`;
 };
 
-const getShuffledPicks  = (queuedPicks: MALManga[]): PicksFromFilters => {
-    const shuffledPicks = queuedPicks.sort(() => Math.random() - 0.5);
-    const picks = shuffledPicks.slice(0, 10);
 
-    return {
-        picks,
-        toQueue: shuffledPicks.slice(picks.length),
-    }
+const getMangaAuthor = (authors: MALEntity[] | undefined): string[] => {
+    if (!authors || authors.length === 0) return [];
+    return authors.map(a => a.name.split(",").reverse().join(" ").trim()); // Convert "Last, First" to "First Last"
 }
 
-export const MangaService = Object.freeze({
-    getPicksFromFilters,
-});
+
+const getPicksData = (filters: FilterOptions | null, data: MALManga[]): MediaPick[] => {
+    const filteredData = data.filter((media) => {
+        if (filters?.minEpisodes === "0") return true;
+
+        if (filters?.status === "publishing") {
+            return media.chapters === null || media.chapters >= parseInt(filters.minEpisodes);
+        }
+        return (media.chapters ?? 0) >= parseInt(filters?.minEpisodes ?? "0");
+    });
+
+    return filteredData.map((media) => ({
+        type: "manga",
+        id: media.mal_id,
+        title: media.title,
+        titleLocalized: media.title_english || null,
+        synopsis: media.synopsis || null,
+        episodeCount: getEpisodeCount(media.chapters),
+        imgUri: media.images.jpg.large_image_url,
+        releaseType: media.type || "Unknown",
+        score: media.score || null,
+        releaseYear: String(media.published?.prop?.from?.year) || "Unknown",
+        genres: media.genres.slice(0, 3).map((g) => g.name),
+        demographic: media.demographics.length > 0 ? media.demographics[0].name : null,
+        url: media.url, 
+        authors: getMangaAuthor(media.authors),
+    }));
+}
+
+export const MangaService = {
+   getPicksData,
+}
