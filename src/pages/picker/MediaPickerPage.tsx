@@ -8,7 +8,6 @@ import { Footer } from "@/components/Footer";
 
 export const MediaPickerPage = () => {
     const { 
-        mediaType,
         viewState, 
         goToFilter, 
         goToPick, 

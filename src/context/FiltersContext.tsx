@@ -1,3 +1,4 @@
+import { MediaConfig } from "@/services/Media/MediaConfig";
 import type { FilterOptions } from "@/types/filters";
 import { createContext, useContext, useState, type ReactNode } from "react";
 
@@ -6,20 +7,15 @@ type FiltersContextType = {
     setFilterOptions: (options: FilterOptions ) => void;
 }
 
-const DEFAULT_FILTER_OPTIONS: FilterOptions = {
-    releaseType: 'any',
-    status: 'any',
-    mediaLength: "any",
-    genres: [],
-    demographics: [],
-    sfw: true,
-}
-
-
 const FiltersContext = createContext<FiltersContextType | null>(null);
 
 export const FiltersProvider = ({ children }: { children: ReactNode}) =>  {
-    const [filterOptions, setFilterOptions] = useState<FilterOptions>(DEFAULT_FILTER_OPTIONS);
+    const initFilters = {
+        ...MediaConfig.defaultFilters,
+        mediaType: window.location.pathname === "manga" ? "manga" : "anime" as FilterOptions["mediaType"],
+    };
+
+    const [filterOptions, setFilterOptions] = useState<FilterOptions>(initFilters);
 
     return (
         <FiltersContext.Provider value={{ filterOptions, setFilterOptions }}>

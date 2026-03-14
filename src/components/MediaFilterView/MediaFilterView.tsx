@@ -11,7 +11,6 @@ import { CustomSelect } from "../CustomSelect/CustomSelect";
 
 export const MediaFilterView = (props: MediaFilterViewProps) => {
     const {
-        mediaType,
         showStatusLengthSection,
         isLoading,
         state,
@@ -22,7 +21,6 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
         onSelectGenre,
         onSelectDemographic,
         onSubmit,
-        handleMediaTypeChange,
     } = useMediaFilterView(props);
         
     const renderMediaTypeToggle = () => (
@@ -31,10 +29,10 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
                 {lists.mediaTypes.map(({ label, value, icon: Icon }) => (
                     <motion.button
                         key={`media-type-toggle-${value}`}
-                        onClick={() => handleMediaTypeChange(value as 'anime' | 'manga')}
+                        onClick={() => handleChange('mediaType', value)}
                         className={twMerge([
                             'flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer',
-                            mediaType === value ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/25' : 'text-muted-foreground hover:text-foreground hover:bg-muted/80'
+                            state.mediaType === value ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/25' : 'text-muted-foreground hover:text-foreground hover:bg-muted/80'
                         ])}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
@@ -51,7 +49,7 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
         <motion.div className="flex flex-col items-center w-full max-w-2xl md:min-w-xl" layout >
             {renderMediaTypeToggle()}
             <div className="flex-col flex w-full gap-6 bg-card/50 border border-border/50 p-6 rounded-xl shadow-xl " >
-                {mediaType === "anime" ? (
+                {state.mediaType === "anime" ? (
                     <ToggleRadio 
                         headerTitle="Release Type" 
                         options={lists.releaseType} 

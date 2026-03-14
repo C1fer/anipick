@@ -1,10 +1,9 @@
 import { useFilters } from "@/context/FiltersContext";
-import { MediaService } from "@/services/MediaService";
+import { MediaService } from "@/services/Media/MediaService";
 import { triggerErrorToast, triggerWarningToast } from "@/utils/ToastUtils";
 import { useState } from "react";
 import type { ResultViewProps } from "./ResultView-def";
 import { usePicks } from "@/context/PicksContext";
-import { useMediaType } from "@/context/MediaTypeContext";
 import type { MALStreamingOption } from "@/types/mal";
 import { useWebHaptics } from "web-haptics/react";
 import { AnimeService } from "@/services/AnimeService";
@@ -17,15 +16,13 @@ export const useResultView = ({ selection, onRedrawPicks, onGoBack }: ResultView
 
     const { filterOptions: globalFilters } = useFilters();
     const { queuedPicks, setQueuedPicks, setCurrentPicks, lastVisibleResultsPage, setLastVisibleResultsPage } = usePicks();
-    const { mediaType } = useMediaType();  
-
     const { trigger } = useWebHaptics();
 
     const handleRedraw = async () => {
         try {
             setIsRedrawing(true);
             
-            const { picks, toQueue, lastVisiblePageFromApi } = await MediaService.getPicksFromFilters(mediaType, globalFilters, queuedPicks, lastVisibleResultsPage);
+            const { picks, toQueue, lastVisiblePageFromApi } = await MediaService.getPicksFromFilters(globalFilters.mediaType, globalFilters, queuedPicks, lastVisibleResultsPage);
                 
             if (picks.length > 0) {
                 setQueuedPicks(toQueue);
@@ -36,7 +33,7 @@ export const useResultView = ({ selection, onRedrawPicks, onGoBack }: ResultView
                 onRedrawPicks();
             }
         } catch (error) {
-            console.error("Error fetching " + mediaType + " picks:", error);
+            console.error("Error fetching " + globalFilters.mediaType + " picks:", error);
             triggerErrorToast();
         } finally {
             setIsRedrawing(false);
@@ -74,7 +71,7 @@ export const useResultView = ({ selection, onRedrawPicks, onGoBack }: ResultView
     }
 
     return { 
-        mediaType,
+        mediaType: globalFilters.mediaType,
         showModal,
         streamingOptions,
         isRedrawing,

@@ -5,6 +5,7 @@ export type MediaFilterViewProps = {
 }
 
 export type Lists = {
+    mediaTypes: MediaTypeOptions[];
     releaseType: ToggleRadioOption[];
     status: ToggleRadioOption[];
     mediaLength:ToggleRadioOption[];
@@ -15,4 +16,8 @@ export type Lists = {
 export type SelectableOption = {
     label: string;
     value: string;
+}
+
+export interface MediaTypeOptions extends SelectableOption {
+    icon: React.ComponentType<{ className?: string; size?: number }>;
 }

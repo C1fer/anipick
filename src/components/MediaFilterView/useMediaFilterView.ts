@@ -1,17 +1,17 @@
-import { MediaService } from "@/services/MediaService";
+import { MediaService } from "@/services/Media/MediaService";
 import { triggerErrorToast, triggerWarningToast } from "@/utils/ToastUtils";
 import { useState } from "react";
 import { Constants } from "../../utils/constants";
-import type { SelectableOption, MediaFilterViewProps } from "./MediaFilterView-def";
+import type { SelectableOption, MediaFilterViewProps, MediaTypeOptions } from "./MediaFilterView-def";
 import { useFilters } from "@/context/FiltersContext";
 import { usePicks } from "@/context/PicksContext";
-import { useMediaType } from "@/context/MediaTypeContext";
 import { BookOpen, Tv } from "lucide-react";
 import { useWebHaptics } from "web-haptics/react";
 import type { MediaType } from "@/types/media";
 import type { FilterOptions } from "@/types/filters";
+import { MediaConfig } from "@/services/Media/MediaConfig";
 
-const MEDIA_TYPE_OPTIONS = [
+const MEDIA_TYPE_OPTIONS: MediaTypeOptions[] = [
     { label: "Anime", value: "anime", icon: Tv },
     { label: "Manga", value: "manga", icon: BookOpen },
 ]
@@ -70,12 +70,12 @@ const DEMOGRAPHICS: SelectableOption[] = Constants.demographics.map((demo) => ({
 export const useMediaFilterView = (props: MediaFilterViewProps) => {
     const { filterOptions: globalFilters, setFilterOptions: setGlobalFilters, } = useFilters();
     const { queuedPicks, setQueuedPicks, setCurrentPicks, lastVisibleResultsPage, setLastVisibleResultsPage  } = usePicks();
-    const { mediaType, setMediaType } = useMediaType();
     
     const [ filterOptions, setFilterOptions ] = useState<FilterOptions>(globalFilters);
     const [ isLoading, setIsLoading ] = useState<boolean>(false);
 
     const { trigger } = useWebHaptics();
+    
 
     const handleChange = <K extends keyof FilterOptions>(key: K, value: FilterOptions[K]) => {
         setFilterOptions((prev) => ({
@@ -119,6 +119,7 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
         if (!globalFilters) return true; 
         
         return Boolean(
+            filterOptions.mediaType !== globalFilters.mediaType ||
             filterOptions.releaseType !== globalFilters.releaseType ||
             filterOptions.status !== globalFilters.status ||
             filterOptions.mediaLength !== globalFilters.mediaLength ||
@@ -139,7 +140,7 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
             const pendingPicks = hasNewFilters ? [] : queuedPicks;
             const lastPage = hasNewFilters ? null : lastVisibleResultsPage;
 
-            const { picks, toQueue, lastVisiblePageFromApi } = await MediaService.getPicksFromFilters(mediaType, filterOptions, pendingPicks, lastPage);
+            const { picks, toQueue, lastVisiblePageFromApi } = await MediaService.getPicksFromFilters(filterOptions.mediaType, filterOptions, pendingPicks, lastPage);
 
             if (picks.length > 0) {
                 setQueuedPicks(toQueue);
@@ -152,7 +153,7 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
                 triggerWarningToast("No picks found with the selected filters. Try relaxing your criteria!");
             }
         } catch (error) {
-            console.error(`Error fetching ${mediaType} picks:`, error);
+            console.error(`Error fetching ${filterOptions.mediaType} picks:`, error);
             triggerErrorToast();
         } finally {
             setIsLoading(false);
@@ -160,32 +161,32 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
     }
 
     const handleMediaTypeChange = (value: MediaType) => {
-       if (value === mediaType) return;
+       if (value === filterOptions.mediaType) return;
 
        trigger("medium");
 
-       setMediaType(value);
-       setFilterOptions(DEFAULT_FILTER_OPTIONS);
+       setFilterOptions({ ...MediaConfig.defaultFilters, mediaType: value });
        setQueuedPicks([]);
     }
     
     const showStatusLengthSection = Boolean(
-        mediaType === "anime" && filterOptions.releaseType !== 'movie'
-        || mediaType === "manga" && filterOptions.releaseType !== 'oneshot'
+        filterOptions.mediaType === "anime" && filterOptions.releaseType !== 'movie'
+        || filterOptions.mediaType === "manga" && filterOptions.releaseType !== 'oneshot'
     )
+
+    const lists = {
+        mediaTypes: MEDIA_TYPE_OPTIONS,
+        releaseType: filterOptions.mediaType === "anime" ? ANIME_RELEASE_TYPE : MANGA_RELEASE_TYPE,
+        status: filterOptions.mediaType === "anime" ? ANIME_STATUS : MANGA_STATUS,
+        mediaLength: filterOptions.mediaType === "anime" ? ANIME_LENGTH : MANGA_LENGTH,
+        genres: GENRES,
+        demographics: DEMOGRAPHICS,
+    }
  
     return {
-        mediaType,
         showStatusLengthSection,
         isLoading,
-        lists: {
-            mediaTypes: MEDIA_TYPE_OPTIONS,
-            releaseType: mediaType === "anime" ? ANIME_RELEASE_TYPE : MANGA_RELEASE_TYPE,
-            status: mediaType === "anime" ? ANIME_STATUS : MANGA_STATUS,
-            mediaLength: mediaType === "anime" ? ANIME_LENGTH : MANGA_LENGTH,
-            genres: GENRES,
-            demographics: DEMOGRAPHICS,
-        },
+        lists,
         state: filterOptions,
         handleChange,
         onSelectReleaseType,

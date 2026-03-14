@@ -8,14 +8,13 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
     const { displayedAtTop, data } = props;
 
     const {
-        mediaType,
         styles,
         handleCardDragEnd,
     } = useSwipeableCard(props);
 
     const getReleaseTypeIcon = (type: string) => {
         const iconStyle = "w-3 h-3";
-        if (mediaType === "manga") {
+        if (data.type === "manga") {
             return <BookOpenText className={iconStyle} />;
         }
 

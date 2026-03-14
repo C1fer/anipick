@@ -1,6 +1,5 @@
 import { useMotionValue, useTransform, useMotionValueEvent, type PanInfo } from "motion/react"
 import type {  SwipeableCardProps } from "./SwipeableCard-def";
-import { useMediaType } from "@/context/MediaTypeContext";
 import { useWebHaptics } from "web-haptics/react";
 import { useRef } from "react";
 
@@ -10,8 +9,6 @@ const TILT_THRESHOLD: number = DRAG_THRESHOLD * 2; // Adjust this value to contr
 export const useSwipeableCard = ({ data, onSwipeLeft, onSwipeRight}: SwipeableCardProps) => {
     const thresholdZone = useRef<"none" | "left" | "right">("none");
     
-    const { mediaType } = useMediaType();
-
     const { trigger } = useWebHaptics();
 
     const posX = useMotionValue(0);
@@ -57,7 +54,6 @@ export const useSwipeableCard = ({ data, onSwipeLeft, onSwipeRight}: SwipeableCa
     };
 
     return {
-        mediaType,
         styles,
         handleCardDragEnd
     }
