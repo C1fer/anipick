@@ -84,7 +84,7 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
             const pendingPicks = hasNewFilters ? [] : queuedPicks;
             const lastPage = hasNewFilters ? null : lastVisibleResultsPage;
 
-            const { picks, toQueue, lastVisiblePageFromApi } = await MediaService.getPicksFromFilters(mediaType, filterOptions, pendingPicks, lastPage);
+            const { picks, toQueue, lastVisiblePageFromApi } = await MediaService.getPicksFromFilters(filterOptions, pendingPicks, lastPage);
 
             if (picks.length > 0) {
                 setQueuedPicks(toQueue);

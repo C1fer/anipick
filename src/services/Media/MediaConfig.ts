@@ -1,7 +1,16 @@
 import type { SelectableOption  } from "@/components/MediaFilterView/MediaFilterView-def";
 import type { FilterOptions } from "@/types/filters";
-import type { MediaTypeOptions } from "@/types/media";
+import type { MediaPick, MediaTypeOptions } from "@/types/media";
 import { Constants } from "@/utils/constants";
+
+export type ShuffledPicks = {
+    picks: MediaPick[];
+    toQueue: MediaPick[];
+}
+
+export type PicksFromFilters = ShuffledPicks & {
+    lastVisiblePageFromApi: number | null;
+}
 
 const DEFAULT_FILTER_OPTIONS: FilterOptions = {
     mediaType: 'anime',

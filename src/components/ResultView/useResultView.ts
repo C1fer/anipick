@@ -22,7 +22,7 @@ export const useResultView = ({ selection, onRedrawPicks, onGoBack }: ResultView
         try {
             setIsRedrawing(true);
             
-            const { picks, toQueue, lastVisiblePageFromApi } = await MediaService.getPicksFromFilters(globalFilters.mediaType, globalFilters, queuedPicks, lastVisibleResultsPage);
+            const { picks, toQueue, lastVisiblePageFromApi } = await MediaService.getPicksFromFilters(globalFilters, queuedPicks, lastVisibleResultsPage);
                 
             if (picks.length > 0) {
                 setQueuedPicks(toQueue);
