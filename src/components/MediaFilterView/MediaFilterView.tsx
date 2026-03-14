@@ -2,7 +2,7 @@ import { useMediaFilterView } from "./useMediaFilterView"
 import { ToggleRadio } from "../ToggleRadio/ToggleRadio";
 import { CustomDropdown } from "../CustomDropdown/CustomDropdown";
 import { NSFWToggle } from "../NSFWToggle/NSFWToggle";
-import { Sparkles  } from "lucide-react";
+import { BookOpen, Sparkles, Tv  } from "lucide-react";
 import type { MediaFilterViewProps } from "./MediaFilterView-def";
 import { AnimatePresence, motion } from "motion/react"
 import { AnimatedButton } from "../AnimatedButton/AnimatedButton";
@@ -26,7 +26,7 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
     const renderMediaTypeToggle = () => (
         <motion.div className="flex items-center justify-center mb-4">
             <div className="bg-muted/50 border border-border/50 rounded-xl p-1 flex gap-1">
-                {lists.mediaTypes.map(({ label, value, icon: Icon }) => (
+                {lists.mediaTypes.map(({ label, value }) => (
                     <motion.button
                         key={`media-type-toggle-${value}`}
                         onClick={() => handleChange('mediaType', value)}
@@ -37,7 +37,7 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                     >
-                        <Icon className="w-4 h-4" />
+                        {value === "anime" ? <Tv className="w-4 h-4"/> : <BookOpen className="w-4 h-4"/>}
                         {label}
                     </motion.button>
                 ))}

@@ -1,5 +1,9 @@
 export type MediaType = "anime" | "manga";
 
+export type MediaTypeOptions = {
+    label: string;
+    value: MediaType;
+}
 
 export type MediaPick = {
     type: MediaType;

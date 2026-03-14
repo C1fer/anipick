@@ -1,70 +1,13 @@
 import { MediaService } from "@/services/Media/MediaService";
 import { triggerErrorToast, triggerWarningToast } from "@/utils/ToastUtils";
 import { useState } from "react";
-import { Constants } from "../../utils/constants";
-import type { SelectableOption, MediaFilterViewProps, MediaTypeOptions } from "./MediaFilterView-def";
+import type { SelectableOption, MediaFilterViewProps } from "./MediaFilterView-def";
 import { useFilters } from "@/context/FiltersContext";
 import { usePicks } from "@/context/PicksContext";
-import { BookOpen, Tv } from "lucide-react";
 import { useWebHaptics } from "web-haptics/react";
 import type { MediaType } from "@/types/media";
 import type { FilterOptions } from "@/types/filters";
 import { MediaConfig } from "@/services/Media/MediaConfig";
-
-const MEDIA_TYPE_OPTIONS: MediaTypeOptions[] = [
-    { label: "Anime", value: "anime", icon: Tv },
-    { label: "Manga", value: "manga", icon: BookOpen },
-]
-const ANIME_LENGTH: SelectableOption[] = [
-    { label: "Short", value: "short" },
-    { label: "Medium", value: "medium" },
-    { label: "Long", value: "long" },
-    { label: "Any", value: "any" },
-]
-
-const ANIME_STATUS: SelectableOption[] = [
-    { label: "Finished", value: "complete" },
-    { label: "Airing", value: "airing" },
-    { label: "Any", value: "any" },
-]
-
-const ANIME_RELEASE_TYPE: SelectableOption[] = [
-    { label: "Movie", value: "movie" },
-    { label: "ONA", value: "ona" },
-    { label: "TV", value: "tv" },
-    { label: "Any", value: "any" },
-]
-
-const MANGA_LENGTH: SelectableOption[] = [
-    { label: "Short", value: "short" },
-    { label: "Medium", value: "medium" },
-    { label: "Long", value: "long" },
-    { label: "Any", value: "any" },
-]
-
-const MANGA_STATUS: SelectableOption[] = [
-    { label: "Complete", value: "complete" },
-    { label: "Publishing", value: "publishing" },
-    { label: "Any", value: "any" },
-]
-
-const MANGA_RELEASE_TYPE: SelectableOption[] = [
-    { label: "Any", value: "any" },
-    { label: "Light Novel", value: "lightnovel" },
-    { label: "Manga", value: "manga" },
-    { label: "Manwha", value: "manhwa" },
-    { label: "One-shot", value: "oneshot" },
-]
-
-const GENRES: SelectableOption[] = Constants.genres.map((genre) => ({
-    label: genre.name,
-    value: String(genre.mal_id),
-}))
-
-const DEMOGRAPHICS: SelectableOption[] = Constants.demographics.map((demo) => ({
-    label: demo.name,
-    value: String(demo.mal_id),
-}))
 
 
 export const useMediaFilterView = (props: MediaFilterViewProps) => {
@@ -74,8 +17,9 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
     const [ filterOptions, setFilterOptions ] = useState<FilterOptions>(globalFilters);
     const [ isLoading, setIsLoading ] = useState<boolean>(false);
 
-    const { trigger } = useWebHaptics();
+    const { trigger } = useWebHaptics();   
     
+    const mediaType = filterOptions.mediaType;
 
     const handleChange = <K extends keyof FilterOptions>(key: K, value: FilterOptions[K]) => {
         setFilterOptions((prev) => ({
@@ -119,7 +63,7 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
         if (!globalFilters) return true; 
         
         return Boolean(
-            filterOptions.mediaType !== globalFilters.mediaType ||
+            mediaType !== globalFilters.mediaType ||
             filterOptions.releaseType !== globalFilters.releaseType ||
             filterOptions.status !== globalFilters.status ||
             filterOptions.mediaLength !== globalFilters.mediaLength ||
@@ -140,7 +84,7 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
             const pendingPicks = hasNewFilters ? [] : queuedPicks;
             const lastPage = hasNewFilters ? null : lastVisibleResultsPage;
 
-            const { picks, toQueue, lastVisiblePageFromApi } = await MediaService.getPicksFromFilters(filterOptions.mediaType, filterOptions, pendingPicks, lastPage);
+            const { picks, toQueue, lastVisiblePageFromApi } = await MediaService.getPicksFromFilters(mediaType, filterOptions, pendingPicks, lastPage);
 
             if (picks.length > 0) {
                 setQueuedPicks(toQueue);
@@ -153,7 +97,7 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
                 triggerWarningToast("No picks found with the selected filters. Try relaxing your criteria!");
             }
         } catch (error) {
-            console.error(`Error fetching ${filterOptions.mediaType} picks:`, error);
+            console.error(`Error fetching ${mediaType} picks:`, error);
             triggerErrorToast();
         } finally {
             setIsLoading(false);
@@ -161,7 +105,7 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
     }
 
     const handleMediaTypeChange = (value: MediaType) => {
-       if (value === filterOptions.mediaType) return;
+       if (value === mediaType) return;
 
        trigger("medium");
 
@@ -170,17 +114,17 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
     }
     
     const showStatusLengthSection = Boolean(
-        filterOptions.mediaType === "anime" && filterOptions.releaseType !== 'movie'
-        || filterOptions.mediaType === "manga" && filterOptions.releaseType !== 'oneshot'
+        mediaType === "anime" && filterOptions.releaseType !== 'movie'
+        || mediaType === "manga" && filterOptions.releaseType !== 'oneshot'
     )
 
     const lists = {
-        mediaTypes: MEDIA_TYPE_OPTIONS,
-        releaseType: filterOptions.mediaType === "anime" ? ANIME_RELEASE_TYPE : MANGA_RELEASE_TYPE,
-        status: filterOptions.mediaType === "anime" ? ANIME_STATUS : MANGA_STATUS,
-        mediaLength: filterOptions.mediaType === "anime" ? ANIME_LENGTH : MANGA_LENGTH,
-        genres: GENRES,
-        demographics: DEMOGRAPHICS,
+        mediaTypes: MediaConfig.mediaTypeOptions,
+        releaseType: mediaType === "anime" ? MediaConfig.animeReleaseTypeOptions : MediaConfig.mangaReleaseTypeOptions,
+        status: mediaType === "anime" ? MediaConfig.animeStatusOptions : MediaConfig.mangaStatusOptions,
+        mediaLength: mediaType === "anime" ? MediaConfig.animeLengthOptions : MediaConfig.mangaLengthOptions,
+        genres: MediaConfig.genreOptions,
+        demographics: MediaConfig.demographicOptions,
     }
  
     return {

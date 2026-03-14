@@ -1,3 +1,4 @@
+import type { MediaTypeOptions } from "@/types/media";
 import type { ToggleRadioOption } from "../ToggleRadio/ToggleRadio-def";
 
 export type MediaFilterViewProps = {
@@ -16,8 +17,4 @@ export type Lists = {
 export type SelectableOption = {
     label: string;
     value: string;
-}
-
-export interface MediaTypeOptions extends SelectableOption {
-    icon: React.ComponentType<{ className?: string; size?: number }>;
 }
