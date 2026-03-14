@@ -16,7 +16,7 @@ export const useResultView = ({ selection, onRedrawPicks, onGoBack }: ResultView
     const [ showModal, setShowModal ] = useState(false);
 
     const { filterOptions: globalFilters } = useFilters();
-    const { queuedPicks, setQueuedPicks, setCurrentPicks } = usePicks();
+    const { queuedPicks, setQueuedPicks, setCurrentPicks, lastVisibleResultsPage, setLastVisibleResultsPage } = usePicks();
     const { mediaType } = useMediaType();  
 
     const { trigger } = useWebHaptics();
@@ -25,11 +25,14 @@ export const useResultView = ({ selection, onRedrawPicks, onGoBack }: ResultView
         try {
             setIsRedrawing(true);
             
-            const { picks, toQueue } = await MediaService.getPicksFromFilters(mediaType, globalFilters, queuedPicks);
+            const { picks, toQueue, lastVisiblePageFromApi } = await MediaService.getPicksFromFilters(mediaType, globalFilters, queuedPicks, lastVisibleResultsPage);
                 
             if (picks.length > 0) {
                 setQueuedPicks(toQueue);
                 setCurrentPicks(picks);
+                if (lastVisiblePageFromApi) {
+                    setLastVisibleResultsPage(lastVisiblePageFromApi);
+                }
                 onRedrawPicks();
             }
         } catch (error) {

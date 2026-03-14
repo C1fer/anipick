@@ -3,18 +3,30 @@ import type { FilterOptions } from "@/components/MediaFilterView/MediaFilterView
 import type { MediaPick, MediaType } from "@/types/media";
 import { AnimeService } from "./AnimeService";
 import { MangaService } from "./MangaService";
+import type { MALAnime } from "@/types/anime";
+import type { MALManga } from "@/types/manga";
 
 type PicksFromFilters = {
     picks: MediaPick[];
     toQueue: MediaPick[];
+    lastVisiblePageFromApi?: number | null;
 }
 
-const getPicksFromFilters = async (mediaType: MediaType, filters: FilterOptions | null, queuedPicks: MediaPick[] = []): Promise<PicksFromFilters> => {
-    if (!filters) return { picks: [], toQueue: [] };
+const getPicksFromFilters = async (mediaType: MediaType, filters: FilterOptions | null, queuedPicks: MediaPick[] = [], lastVisiblePageWithFilters: number | null): Promise<PicksFromFilters> => {
+    if (!filters) return { picks: [], toQueue: [], lastVisiblePageFromApi: null };
 
     if (queuedPicks.length > 0) {
-        return getShuffledPicks(queuedPicks);
+        const data = getShuffledPicks(queuedPicks);
+        return { ...data, lastVisiblePageFromApi: null };
     }
+
+    const isDefaultFilters = Boolean(
+        filters.releaseType === "any" 
+        && filters.status === "any"  
+        && filters.genres.length === 0
+        && filters.demographics.length === 0
+        && filters.sfw === true
+    );
 
     const malGenresAndDemos = Array.from([...filters.genres, ...filters.demographics], (x => x.value)).join(",");
 
@@ -26,18 +38,30 @@ const getPicksFromFilters = async (mediaType: MediaType, filters: FilterOptions 
         limit: 25,
         order_by: "score",
         sort: "desc",
-        page: Math.floor(Math.random() * 10) + 1, // Randomizing requested page since Jikan API does not expose a random endpoint.
+        page: getRequestedPage(lastVisiblePageWithFilters, isDefaultFilters),
     }
 
-    if (mediaType === "anime") {
-        const response = await JikanAPI.searchAnime(request);
-        return getShuffledPicks(AnimeService.getPicksData(filters, response.data));
-    } else {   
-        const response = await JikanAPI.searchManga(request);
-        return getShuffledPicks(MangaService.getPicksData(filters, response.data));
+    const response = mediaType === "anime"
+        ? await JikanAPI.searchAnime(request)
+        : await JikanAPI.searchManga(request);
+
+
+    const data = mediaType === "anime"
+        ? getShuffledPicks(AnimeService.getPicksData(filters, response.data as MALAnime[]))
+        : getShuffledPicks(MangaService.getPicksData(filters, response.data as MALManga[]));
+
+    return {...data, lastVisiblePageFromApi: response.pagination.last_visible_page};
+
+
+const getRequestedPage = (lastVisiblePageWithFilters: number | null,isDefaultFilters: boolean, ): number => {
+    if (isDefaultFilters) {
+        return Math.floor(Math.random() * 200) + 1; // Start with a random page for default filters to increase variety
     }
+
+    return lastVisiblePageWithFilters        
+        ? Math.floor(Math.random() * lastVisiblePageWithFilters) + 1
+        : 1; 
 }
-
 
 const getShuffledPicks = (queuedPicks: MediaPick[]): PicksFromFilters => {
     const shuffledPicks = Array.from(queuedPicks).sort(() => Math.random() - 0.5);

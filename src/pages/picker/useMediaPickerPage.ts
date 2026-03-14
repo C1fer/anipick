@@ -1,12 +1,10 @@
 import { useMediaType } from "@/context/MediaTypeContext";
-import { usePicks } from "@/context/PicksContext";
 import type { MediaPick } from "@/types/media";
 import { useState } from "react";
 import type { ViewState } from "./MediaPickerPage-def";
 
 export const useMediaPickerPage = () => {
     const [ viewState, setViewState ] = useState<ViewState>({ phase: "filter" });
-    const { currentPicks, queuedPicks, setQueuedPicks } = usePicks();
 
     const { mediaType } = useMediaType();
 
@@ -14,20 +12,7 @@ export const useMediaPickerPage = () => {
 
     const goToPick = () => setViewState({ phase: "pick" });
 
-    const goToResult = (selection: MediaPick | null) => {
-        if (!selection) {
-            setViewState({ phase: "result", selection: null });
-            return;
-        }
-        
-        const remainingFromSwipe = currentPicks.slice(currentPicks.findIndex((p) => p.id === selection.id) + 1);
-
-        if (remainingFromSwipe.length > 0) {
-            setQueuedPicks([...queuedPicks, ...remainingFromSwipe]);
-        }
-
-        setViewState({ phase: "result", selection });
-    }
+    const goToResult = (selection: MediaPick | null) => setViewState({ phase: "result", selection });
     
     return { 
         mediaType,

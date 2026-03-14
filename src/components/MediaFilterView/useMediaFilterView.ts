@@ -38,9 +38,9 @@ const ANIME_STATUS: SelectableOption[] = [
 ]
 
 const ANIME_RELEASE_TYPE: SelectableOption[] = [
-    { label: "TV", value: "tv" },
-    { label: "ONA", value: "ona" },
     { label: "Movie", value: "movie" },
+    { label: "ONA", value: "ona" },
+    { label: "TV", value: "tv" },
     { label: "Any", value: "any" },
 ]
 
@@ -77,8 +77,8 @@ const DEMOGRAPHICS: SelectableOption[] = Constants.demographics.map((demo) => ({
 
 
 export const useMediaFilterView = (props: MediaFilterViewProps) => {
-    const { filterOptions: globalFilters, setFilterOptions: setGlobalFilters } = useFilters();
-    const { queuedPicks, setQueuedPicks, setCurrentPicks } = usePicks();
+    const { filterOptions: globalFilters, setFilterOptions: setGlobalFilters, } = useFilters();
+    const { queuedPicks, setQueuedPicks, setCurrentPicks, lastVisibleResultsPage, setLastVisibleResultsPage  } = usePicks();
     const { mediaType, setMediaType } = useMediaType();
     
     const [ filterOptions, setFilterOptions ] = useState<FilterOptions>(globalFilters || DEFAULT_FILTER_OPTIONS);
@@ -146,11 +146,16 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
             }
 
             const pendingPicks = hasNewFilters ? [] : queuedPicks;
-            const { picks, toQueue } = await MediaService.getPicksFromFilters(mediaType, filterOptions, pendingPicks);
+            const lastPage = hasNewFilters ? null : lastVisibleResultsPage;
+
+            const { picks, toQueue, lastVisiblePageFromApi } = await MediaService.getPicksFromFilters(mediaType, filterOptions, pendingPicks, lastPage);
 
             if (picks.length > 0) {
                 setQueuedPicks(toQueue);
                 setCurrentPicks(picks);
+                if (lastVisiblePageFromApi) {
+                    setLastVisibleResultsPage(lastVisiblePageFromApi);
+                }
                 props.onFilterSuccess();
             } else {
                 triggerWarningToast("No picks found with the selected filters. Try relaxing your criteria!");
