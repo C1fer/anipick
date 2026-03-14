@@ -2,33 +2,24 @@ import { MediaService } from "@/services/MediaService";
 import { triggerErrorToast, triggerWarningToast } from "@/utils/ToastUtils";
 import { useState } from "react";
 import { Constants } from "../../utils/constants";
-import type { SelectableOption, MediaFilterViewProps, FilterOptions } from "./MediaFilterView-def";
+import type { SelectableOption, MediaFilterViewProps } from "./MediaFilterView-def";
 import { useFilters } from "@/context/FiltersContext";
 import { usePicks } from "@/context/PicksContext";
 import { useMediaType } from "@/context/MediaTypeContext";
 import { BookOpen, Tv } from "lucide-react";
 import { useWebHaptics } from "web-haptics/react";
 import type { MediaType } from "@/types/media";
+import type { FilterOptions } from "@/types/filters";
 
 const MEDIA_TYPE_OPTIONS = [
     { label: "Anime", value: "anime", icon: Tv },
     { label: "Manga", value: "manga", icon: BookOpen },
 ]
-
-const DEFAULT_FILTER_OPTIONS: FilterOptions = {
-    releaseType: 'any',
-    status: 'any',
-    minEpisodes: "0",
-    genres: [],
-    demographics: [],
-    sfw: true,
-}
-
-const ANIME_MAX_EPISODES: SelectableOption[] = [
-    { label: "Short", value: "13" },
-    { label: "Medium", value: "25" },
-    { label: "Long", value: "26" },
-    { label: "Any", value: "0" },
+const ANIME_LENGTH: SelectableOption[] = [
+    { label: "Short", value: "short" },
+    { label: "Medium", value: "medium" },
+    { label: "Long", value: "long" },
+    { label: "Any", value: "any" },
 ]
 
 const ANIME_STATUS: SelectableOption[] = [
@@ -44,11 +35,11 @@ const ANIME_RELEASE_TYPE: SelectableOption[] = [
     { label: "Any", value: "any" },
 ]
 
-const MANGA_MAX_CHAPTERS: SelectableOption[] = [
-    { label: "Short", value: "50" },
-    { label: "Medium", value: "150" },
-    { label: "Long", value: "250" },
-    { label: "Any", value: "0" },
+const MANGA_LENGTH: SelectableOption[] = [
+    { label: "Short", value: "short" },
+    { label: "Medium", value: "medium" },
+    { label: "Long", value: "long" },
+    { label: "Any", value: "any" },
 ]
 
 const MANGA_STATUS: SelectableOption[] = [
@@ -81,7 +72,7 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
     const { queuedPicks, setQueuedPicks, setCurrentPicks, lastVisibleResultsPage, setLastVisibleResultsPage  } = usePicks();
     const { mediaType, setMediaType } = useMediaType();
     
-    const [ filterOptions, setFilterOptions ] = useState<FilterOptions>(globalFilters || DEFAULT_FILTER_OPTIONS);
+    const [ filterOptions, setFilterOptions ] = useState<FilterOptions>(globalFilters);
     const [ isLoading, setIsLoading ] = useState<boolean>(false);
 
     const { trigger } = useWebHaptics();
@@ -98,7 +89,7 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
            setFilterOptions((prev) => ({
                 ...prev,
                 releaseType: value,
-                minEpisodes: "0",
+                mediaLength: "any",
                 status: "any",
             }))
         } else {
@@ -130,7 +121,7 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
         return Boolean(
             filterOptions.releaseType !== globalFilters.releaseType ||
             filterOptions.status !== globalFilters.status ||
-            filterOptions.minEpisodes !== globalFilters.minEpisodes ||
+            filterOptions.mediaLength !== globalFilters.mediaLength ||
             filterOptions.sfw !== globalFilters.sfw ||
             filterOptions.genres.some(g => !globalFilters.genres.some(gg => gg.value === g.value)) ||
             filterOptions.demographics.some(d => !globalFilters.demographics.some(dd => dd.value === d.value))
@@ -191,7 +182,7 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
             mediaTypes: MEDIA_TYPE_OPTIONS,
             releaseType: mediaType === "anime" ? ANIME_RELEASE_TYPE : MANGA_RELEASE_TYPE,
             status: mediaType === "anime" ? ANIME_STATUS : MANGA_STATUS,
-            minEpisodes: mediaType === "anime" ? ANIME_MAX_EPISODES : MANGA_MAX_CHAPTERS,
+            mediaLength: mediaType === "anime" ? ANIME_LENGTH : MANGA_LENGTH,
             genres: GENRES,
             demographics: DEMOGRAPHICS,
         },

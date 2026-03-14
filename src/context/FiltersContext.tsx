@@ -1,15 +1,25 @@
-import type { FilterOptions } from "@/components/MediaFilterView/MediaFilterView-def";
+import type { FilterOptions } from "@/types/filters";
 import { createContext, useContext, useState, type ReactNode } from "react";
 
 type FiltersContextType = {
-    filterOptions: FilterOptions | null;
+    filterOptions: FilterOptions;
     setFilterOptions: (options: FilterOptions ) => void;
 }
+
+const DEFAULT_FILTER_OPTIONS: FilterOptions = {
+    releaseType: 'any',
+    status: 'any',
+    mediaLength: "any",
+    genres: [],
+    demographics: [],
+    sfw: true,
+}
+
 
 const FiltersContext = createContext<FiltersContextType | null>(null);
 
 export const FiltersProvider = ({ children }: { children: ReactNode}) =>  {
-    const [filterOptions, setFilterOptions] = useState<FilterOptions | null>(null);
+    const [filterOptions, setFilterOptions] = useState<FilterOptions>(DEFAULT_FILTER_OPTIONS);
 
     return (
         <FiltersContext.Provider value={{ filterOptions, setFilterOptions }}>

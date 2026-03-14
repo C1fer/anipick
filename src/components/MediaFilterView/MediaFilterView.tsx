@@ -86,9 +86,9 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
 
                             <ToggleRadio 
                                 headerTitle="Length" 
-                                options={lists.minEpisodes} 
-                                selectedValue={state.minEpisodes.toString()} 
-                                onSelected={(value) => handleChange('minEpisodes', value)} 
+                                options={lists.mediaLength} 
+                                selectedValue={state.mediaLength} 
+                                onSelected={(value) => handleChange('mediaLength', value)} 
                             />
                         </motion.div>
                     ): null}

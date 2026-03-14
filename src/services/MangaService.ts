@@ -11,16 +11,16 @@ const getEpisodeCount = (count?: number | null ): string =>  {
 const getMangaAuthor = (authors: MALEntity[] | undefined): string[] => {
     if (!authors || authors.length === 0) return [];
     return authors.map(a => a.name.split(",").reverse().join(" ").trim()); // Convert "Last, First" to "First Last"
-}
+};
 
 const getPicksData = (filters: FilterOptions | null, data: MALManga[]): MediaPick[] => {
     const filteredData = data.filter((media) => {
-        if (filters?.minEpisodes === "0") return true;
+        if (filters?.mediaLength === "0") return true;
 
         if (filters?.status === "publishing") {
-            return media.chapters === null || media.chapters >= parseInt(filters.minEpisodes);
+            return media.chapters === null || media.chapters >= parseInt(filters.mediaLength);
         }
-        return (media.chapters ?? 0) >= parseInt(filters?.minEpisodes ?? "0");
+        return (media.chapters ?? 0) >= parseInt(filters?.mediaLength ?? "0");
     });
 
     return filteredData.map((media) => ({

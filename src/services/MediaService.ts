@@ -1,10 +1,10 @@
 import { JikanAPI } from "@/api/JikanAPI/JikanAPI";
-import type { FilterOptions } from "@/components/MediaFilterView/MediaFilterView-def";
 import type { MediaPick, MediaType } from "@/types/media";
 import { AnimeService } from "./AnimeService";
 import { MangaService } from "./MangaService";
 import type { MALAnime } from "@/types/anime";
 import type { MALManga } from "@/types/manga";
+import type { FilterOptions } from "@/types/filters";
 
 type PicksFromFilters = {
     picks: MediaPick[];
@@ -12,9 +12,7 @@ type PicksFromFilters = {
     lastVisiblePageFromApi?: number | null;
 }
 
-const getPicksFromFilters = async (mediaType: MediaType, filters: FilterOptions | null, queuedPicks: MediaPick[] = [], lastVisiblePageWithFilters: number | null): Promise<PicksFromFilters> => {
-    if (!filters) return { picks: [], toQueue: [], lastVisiblePageFromApi: null };
-
+const getPicksFromFilters = async (mediaType: MediaType, filters: FilterOptions, queuedPicks: MediaPick[] = [], lastVisiblePageWithFilters: number | null): Promise<PicksFromFilters> => {
     if (queuedPicks.length > 0) {
         const data = getShuffledPicks(queuedPicks);
         return { ...data, lastVisiblePageFromApi: null };
@@ -45,17 +43,16 @@ const getPicksFromFilters = async (mediaType: MediaType, filters: FilterOptions 
         ? await JikanAPI.searchAnime(request)
         : await JikanAPI.searchManga(request);
 
-
     const data = mediaType === "anime"
         ? getShuffledPicks(AnimeService.getPicksData(filters, response.data as MALAnime[]))
         : getShuffledPicks(MangaService.getPicksData(filters, response.data as MALManga[]));
 
     return {...data, lastVisiblePageFromApi: response.pagination.last_visible_page};
-
+}
 
 const getRequestedPage = (lastVisiblePageWithFilters: number | null,isDefaultFilters: boolean, ): number => {
     if (isDefaultFilters) {
-        return Math.floor(Math.random() * 200) + 1; // Start with a random page for default filters to increase variety
+        return Math.floor(Math.random() * 100) + 1; // Start with a random page for default filters to increase variety
     }
 
     return lastVisiblePageWithFilters        

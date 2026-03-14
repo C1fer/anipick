@@ -7,18 +7,9 @@ export type MediaFilterViewProps = {
 export type Lists = {
     releaseType: ToggleRadioOption[];
     status: ToggleRadioOption[];
-    minEpisodes:ToggleRadioOption[];
+    mediaLength:ToggleRadioOption[];
     genres: SelectableOption[];
     demographics: SelectableOption[];
-}
-
-export type FilterOptions = {
-    releaseType: string;
-    status: string;
-    minEpisodes: string;
-    genres: SelectableOption[];
-    demographics: SelectableOption[];
-    sfw: boolean;
 }
 
 export type SelectableOption = {
