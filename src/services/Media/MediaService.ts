@@ -38,8 +38,8 @@ const getPicksFromFilters = async (filters: FilterOptions, queuedPicks: MediaPic
         ? await JikanAPI.searchAnime(request)
         : await JikanAPI.searchManga(request);
 
-    // Fetch recursively on initial load if custom filters are set
-    if (!isDefaultFilters && lastVisiblePageWithFilters === null) {
+    // Fetch recursively on initial load if custom filters are set and there are multiple pages of results
+    if (!isDefaultFilters && lastVisiblePageWithFilters === null && response.pagination.last_visible_page !== 1) {
         return getPicksFromFilters(filters, queuedPicks, response.pagination.last_visible_page);
     }
 
@@ -50,9 +50,9 @@ const getPicksFromFilters = async (filters: FilterOptions, queuedPicks: MediaPic
     return {...data, lastVisiblePageFromApi: response.pagination.last_visible_page};
 }
 
-const getRequestedPage = (lastVisiblePageWithFilters: number | null,isDefaultFilters: boolean, ): number => {
+const getRequestedPage = (lastVisiblePageWithFilters: number | null,isDefaultFilters: boolean): number => {
     if (isDefaultFilters) {
-        return Math.floor(Math.random() * 100) + 1; // If no custom filters are set, start with a safe random page to increase variety
+        return Math.floor(Math.random() * 150) + 1; // If no custom filters are set, start with a safe random page to increase variety
     }
 
     return lastVisiblePageWithFilters        

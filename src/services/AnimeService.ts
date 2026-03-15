@@ -11,13 +11,15 @@ const ANIME_EPISODE_THRESHOLDS: Record<string,number[]> = {
     long: [26, Infinity],
 }
 
+const WHITELISTED_ANIME_RELEASE_TYPES = new Set(["tv", "movie", "ona"]);
+
 const getEpisodeCount = (count?: number | null ): string =>  {
     if (!count) return "Unknown (Airing)";
     return count === 1 ? "1 episode" : `${count} episodes`;
 };
 
 const validateAnime = ({ type, episodes }: MALAnime, filters: FilterOptions): boolean => {
-    if (!type || !Constants.whitelistedAnimeReleaseTypes.has(type.toLowerCase())) {
+    if (!type || !WHITELISTED_ANIME_RELEASE_TYPES.has(type.toLowerCase())) {
         return false;
     }
 

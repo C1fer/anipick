@@ -98,7 +98,6 @@ const RATINGS: Record<MALRating, string> = {
     "Rx - Hentai": "Hentai",
 } 
 
-const WHITELISTED_ANIME_RELEASE_TYPES = new Set(["tv", "movie", "ona"]);
 
 export const Constants = Object.freeze({
     genres: GENRES,
@@ -106,5 +105,4 @@ export const Constants = Object.freeze({
     demographics: DEMOGRAPHICS,
     themes: THEMES,
     ratings: RATINGS,
-    whitelistedAnimeReleaseTypes: WHITELISTED_ANIME_RELEASE_TYPES,
 });
