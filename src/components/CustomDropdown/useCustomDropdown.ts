@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useWebHaptics } from "web-haptics/react";
 import type { CustomDropdownProps, SelectableOption } from "./CustomDropdown-def";
 
-export const useCustomDropdown = ({ selectedValues, onSelected }: CustomDropdownProps) => {
+export const useCustomDropdown = ({ selectedValues, onSelected, disabled = false }: CustomDropdownProps) => {
     const [ showOptions, setShowOptions] = useState(false);
 
     const { trigger } = useWebHaptics();
@@ -37,6 +37,8 @@ export const useCustomDropdown = ({ selectedValues, onSelected }: CustomDropdown
     }
 
     const onValueChange = (value: SelectableOption) => {
+        if (disabled) return;
+        
         trigger("selection");
         onSelected(value);
     }

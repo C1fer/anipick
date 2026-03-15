@@ -16,6 +16,7 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
         state,
         lists,
         handleChange,
+        handleMediaTypeChange,
         onSelectReleaseType,
         onToggleSFW,
         onSelectGenre,
@@ -29,13 +30,14 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
                 {lists.mediaTypes.map(({ label, value }) => (
                     <motion.button
                         key={`media-type-toggle-${value}`}
-                        onClick={() => handleChange('mediaType', value)}
+                        onClick={() => handleMediaTypeChange(value)}
                         className={twMerge([
-                            'flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer',
+                            'flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:pointer-events-none',
                             state.mediaType === value ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/25' : 'text-muted-foreground hover:text-foreground hover:bg-muted/80'
                         ])}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
+                        disabled={isLoading}
                     >
                         {value === "anime" ? <Tv className="w-4 h-4"/> : <BookOpen className="w-4 h-4"/>}
                         {label}
@@ -55,6 +57,7 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
                         options={lists.releaseType} 
                         selectedValue={state.releaseType} 
                         onSelected={(value) => onSelectReleaseType(value)}
+                        disabled={isLoading}
                     />) 
                     : (
                     <CustomSelect
@@ -62,6 +65,7 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
                         options={lists.releaseType}
                         selectedValue={state.releaseType}
                         onSelected={(value) => onSelectReleaseType(value)}
+                        disabled={isLoading}
                     />
                 )}
                 <AnimatePresence mode="wait">
@@ -79,7 +83,8 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
                                 headerTitle="Status" 
                                 options={lists.status} 
                                 selectedValue={state.status} 
-                                onSelected={(value) => handleChange('status', value)} 
+                                onSelected={(value) => handleChange('status', value)}
+                                disabled={isLoading}
                             />
 
                             <ToggleRadio 
@@ -87,6 +92,7 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
                                 options={lists.mediaLength} 
                                 selectedValue={state.mediaLength} 
                                 onSelected={(value) => handleChange('mediaLength', value)} 
+                                disabled={isLoading}
                             />
                         </motion.div>
                     ): null}
@@ -97,6 +103,7 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
                     selectedValues={state.genres}
                     onSelected={(value) => onSelectGenre(value)}
                     showSelectionBadges={true}
+                    disabled={isLoading}
                 />
                 <CustomDropdown
                     label="Demographics"
@@ -104,10 +111,12 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
                     selectedValues={state.demographics}
                     onSelected={(value) => onSelectDemographic(value)}
                     showSelectionBadges={true}
+                    disabled={isLoading}
                 />
                 <NSFWToggle
                     isChecked={!state.sfw}
                     onToggle={onToggleSFW}
+                    disabled={isLoading}
                 />
             </div>
             <AnimatedButton

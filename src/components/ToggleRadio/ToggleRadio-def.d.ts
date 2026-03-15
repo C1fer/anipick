@@ -8,4 +8,5 @@ export interface ToggleRadioProps {
     options: ToggleRadioOption[];
     onSelected: (value: string) => void;
     selectedValue: string;
+    disabled?: boolean;
 }

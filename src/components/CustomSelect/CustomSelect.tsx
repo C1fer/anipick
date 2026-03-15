@@ -26,9 +26,10 @@ export const CustomSelect = (props: CustomSelectProps): React.ReactNode => {
                     onValueChange={onValueChange} 
                 >
                     <SelectTrigger 
-                        className="w-full cursor-pointer border-border/50 transition-colors duration-250 dark:bg-background/90 dark:hover:bg-muted dark:data-[state=open]:bg-muted text-foreground" 
+                        className="w-full cursor-pointer border-border/50 transition-colors duration-250 dark:bg-background/90 dark:hover:bg-muted dark:data-[state=open]:bg-muted text-foreground disabled:pointer-events-none" 
                         onPointerDown={handlePointerStart} 
                         onPointerUp={handlePointerEnd}
+                        disabled={props.disabled}
                     >
                         <SelectValue placeholder="Select an option" />
                     </SelectTrigger>

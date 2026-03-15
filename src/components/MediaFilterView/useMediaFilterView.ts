@@ -105,7 +105,7 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
     }
 
     const handleMediaTypeChange = (value: MediaType) => {
-       if (value === mediaType) return;
+       if (value === mediaType || isLoading) return;
 
        trigger("medium");
 

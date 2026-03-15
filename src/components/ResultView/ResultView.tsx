@@ -189,7 +189,8 @@ export const ResultView = (props: ResultViewProps ) => {
                 transition={{ duration: 0.5 }}
             >
                 <button 
-                    className="cursor-pointer p-1.5 text-muted-foreground rounded-lg hover:bg-action hover:text-foreground transition-all" 
+                    className="cursor-pointer p-1.5 text-muted-foreground rounded-lg hover:bg-action hover:text-foreground transition-all disabled:opacity-50 disabled:cursor-not-allowed" 
+                    disabled={isLoadingStreams || isRedrawing}
                     onClick={handleGoBack}
                 >
                    <ChevronFirst className="w-5 h-5" />

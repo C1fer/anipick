@@ -19,8 +19,8 @@ export const AnimatedButton = (props: AnimatedButtonProps) => {
             whileTap={{ scale: 0.98 }}
             onClick={handleClick}
             className={style}
-            style={isLoading ? { pointerEvents: "none" } : {}}
-            disabled={disabled}
+            style={props.isLoading ? { cursor: "wait" } : {}}
+            disabled={disabled || isLoading}
         >
             {isLoading ? <Spinner className="w-4 h-4"/> : leftIcon}
             {label}

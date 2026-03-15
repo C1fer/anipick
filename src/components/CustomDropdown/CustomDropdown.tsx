@@ -27,14 +27,19 @@ export const CustomDropdown = (props: CustomDropdownProps): React.ReactElement =
        
     const showBadges = () => {
         if (!showSelectionBadges || !selectedValues.length) return null;
+
+        const _badgeStyle = twMerge(
+            "bg-primary/20 text-primary border-primary/30 hover:bg-primary/30 cursor-pointer",
+            props.disabled ? "cursor-not-allowed opacity-50" : ""
+        )
         
         return (
             <div className="flex flex-wrap gap-1.5 mt-2">
                 {selectedValues.map(val => (
                     <Badge
+                        className={_badgeStyle}
                         key={"badge-" + val.label}
                         variant="secondary"
-                        className="bg-primary/20 text-primary border-primary/30 hover:bg-primary/30 cursor-pointer"
                         onClick={() => onValueChange(val)}
                     >
                         {val.label}
@@ -56,11 +61,12 @@ export const CustomDropdown = (props: CustomDropdownProps): React.ReactElement =
                 {label}
             </h3>}
             <DropdownMenu open={showOptions} onOpenChange={setShowOptions}>
-                <DropdownMenuTrigger className="w-full" asChild>
+                <DropdownMenuTrigger className="w-full peer" asChild>
                     <Button
-                        className="justify-between border bg-background/90 border-border/50 hover:bg-muted cursor-pointer min-w-full"
+                        className="justify-between border bg-background/90 border-border/50 hover:bg-muted peer-[state=open]:bg-muted cursor-pointer min-w-full"
                         onPointerDown={handlePointerStart}
                         onPointerUp={handlePointerEnd}
+                        disabled={props.disabled}
                     >
                         <span className={triggerLabelStyle}>{triggerLabel}</span>
                         <ChevronDown className="w-4 h-4 ml-2 shrink-0 text-muted-foreground" />

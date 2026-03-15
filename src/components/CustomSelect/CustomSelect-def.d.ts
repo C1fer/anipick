@@ -8,4 +8,5 @@ export interface CustomSelectProps {
     options: SelectableOption[];
     selectedValue: string;
     onSelected: (value: string) => void;
+    disabled?: boolean;
 }

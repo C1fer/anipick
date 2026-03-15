@@ -9,4 +9,5 @@ export interface CustomDropdownProps {
   selectedValues: SelectableOption[];
   onSelected: (value: SelectableOption) => void;
   showSelectionBadges?: boolean;
+  disabled?: boolean;
 }

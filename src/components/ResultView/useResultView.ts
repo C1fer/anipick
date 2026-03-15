@@ -65,7 +65,7 @@ export const useResultView = ({ selection, onRedrawPicks, onGoBack }: ResultView
         }
     }
 
-    const handleGoBack = () => {
+    const handleGoBack = () => {        
         trigger("light");
         onGoBack()
     }
