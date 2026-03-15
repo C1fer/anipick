@@ -91,7 +91,7 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
                 <img 
                     src={data.imgUri} 
                     alt={data.title} 
-                    className="w-full h-auto object-cover"
+                    className="w-full h-full object-cover"
                     draggable={false}
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-card via-card/20 to-transparent" />

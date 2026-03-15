@@ -4,6 +4,7 @@ import type { FilterOptions } from "@/types/filters";
 import type { MALStreamingOption } from "@/types/mal";
 import type { MediaPick } from "@/types/media";
 import { Constants } from "@/utils/constants";
+import { StringUtils } from "@/utils/StringUtils";
 
 const ANIME_EPISODE_THRESHOLDS: Record<string,number[]> = {
     short: [1, 13],
@@ -39,11 +40,11 @@ const getPicksData = (filters: FilterOptions, data: MALAnime[]): MediaPick[] => 
             id: media.mal_id,
             title: media.title,
             titleLocalized: media.title_english || null,
-            synopsis: media.synopsis || null,
+            synopsis: StringUtils.cleanSynopsis(media.synopsis) || null,
             episodeCount: getEpisodeCount(media.episodes),
             imgUri: media.images.jpg.large_image_url,
             releaseType: media.type || "Unknown",
-            score: media.score || null,
+            score: media.score?.toFixed(2) || null,
             releaseYear: String(media.aired?.prop?.from?.year) || "Unknown",
             genres: media.genres.slice(0, 3).map((g) => g.name),
             demographic: media.demographics.length > 0 ? media.demographics[0].name : null,

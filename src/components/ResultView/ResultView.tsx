@@ -23,7 +23,7 @@ export const ResultView = (props: ResultViewProps ) => {
     } = useResultView(props);
 
     const renderEmptyState = () => (
-        <motion.div className="flex flex-col items-center justify-center gap-6 max-w-sm">
+        <motion.div className="flex flex-col items-center justify-center gap-6 max-w-sm h-dvh">
             <motion.div
                 className="bg-muted/50 w-24 h-24 rounded-full flex items-center justify-center"
                 animate={{ y: [0, -10, 0] }}
@@ -87,10 +87,7 @@ export const ResultView = (props: ResultViewProps ) => {
         </Badge>
     )
 
-    const renderSelectionContent = (selection: MediaPick) => {
-        const cleanedSynopsis = StringUtils.cleanSynopsis(selection.synopsis);
-
-        return (
+    const renderSelectionContent = (selection: MediaPick) => (
         <div className="bg-card rounded-2xl overflow-hidden media-card-shadow md:landscape:flex md:landscape:flex-row">
             {/* Left — Image & Score */}
             <div className="relative aspect-video md:landscape:aspect-auto md:landscape:w-2/5 md:landscape:shrink-0 overflow-hidden">
@@ -105,14 +102,14 @@ export const ResultView = (props: ResultViewProps ) => {
                     <div className="absolute bottom-3 right-3">
                     <Badge className="bg-accent/90 text-accent-foreground border-0 gap-1 text-lg px-3 py-1">
                         <Star className="w-4 h-4 fill-current" />
-                        {selection.score.toFixed(2)}
+                        {selection.score}
                     </Badge>
                     </div>
                 )}
             </div>
 
             {/* Right — Details */}
-            <div className="flex flex-col p-5 gap-4 w-full md:landscape:overflow-y-auto md:landscape:max-h-[calc(100dvh-8rem)] scrollbar-subtle">
+            <div className="flex flex-col p-5 gap-4 w-full md:landscape:overflow-y-auto md:landscape:max-h-[calc(100dvh-8rem)] md:landscape:scrollbar-subtle">
                 {/* Title */}
                 <div>
                     <h2 className="text-foreground font-bold text-xl line-clamp-3">
@@ -152,9 +149,9 @@ export const ResultView = (props: ResultViewProps ) => {
                 </div>
 
                 {/* Synopsis */}
-                <div className="min-h-24 max-h-32 overflow-y-auto scrollbar-subtle rounded-lg bg-muted/25 px-3 py-2 landscape:max-h-50">
-                    <p className={`text-sm ${cleanedSynopsis ? "text-muted-foreground text-justify" : "text-muted-foreground/80 italic"}`}>
-                        {cleanedSynopsis ?? "No synopsis available."}
+                <div className="min-h-24 max-h-32 overflow-y-auto scrollbar-subtle rounded-lg bg-muted/25 px-3 py-2 landscape:max-h-none landscape:h-60">
+                    <p className={`text-sm ${selection.synopsis?.length ? "text-muted-foreground text-justify" : "text-muted-foreground/80 italic"}`}>
+                        {selection.synopsis || "No synopsis available."}
                     </p>
                 </div>
 
@@ -175,15 +172,15 @@ export const ResultView = (props: ResultViewProps ) => {
                 </a>
             </div>
             {/* Buttons — landscape only*/}
-            <div className="hidden md:landscape:flex gap-3">
+            <div className="hidden md:landscape:flex gap-3 mt-auto">
                 {renderActionButtons()}
             </div>
             </div>
         </div>
-    )}
+    )
 
     const renderSelectionDetails = (value: MediaPick) => (
-        <motion.div className="flex flex-col items-center justify-center gap-6 w-full max-w-lg md:landscape:max-w-4xl">
+        <motion.div className="flex flex-col items-center justify-center gap-6 w-full max-w-lg md:landscape:max-w-4xl md:landscape:px-5">
             <motion.div 
                 className="flex items-center justify-between w-full gap-3"
                 initial={{ opacity: 0, y: -20 }}

@@ -15,7 +15,7 @@ export type MediaPick = {
     imgUri: string;
     releaseType: string;
     rating?: string | null;
-    score: number | null;
+    score: string | null;
     releaseYear: string | null;
     genres: string[];
     demographic: string | null;
