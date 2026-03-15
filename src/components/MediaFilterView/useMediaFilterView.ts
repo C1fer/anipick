@@ -1,6 +1,6 @@
 import { MediaService } from "@/services/Media/MediaService";
 import { triggerErrorToast, triggerWarningToast } from "@/utils/ToastUtils";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { SelectableOption, MediaFilterViewProps } from "./MediaFilterView-def";
 import { useFilters } from "@/context/FiltersContext";
 import { usePicks } from "@/context/PicksContext";
@@ -21,6 +21,12 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
     
     const mediaType = filterOptions.mediaType;
 
+    const genreOptionsToDisplay = useMemo(() => {
+        return filterOptions.sfw 
+            ? MediaConfig.genreOptions
+            : [...MediaConfig.explicitGenreOptions, ...MediaConfig.genreOptions].sort((a, b) => a.label.localeCompare(b.label));
+    }, [filterOptions.sfw]);
+
     const handleChange = <K extends keyof FilterOptions>(key: K, value: FilterOptions[K]) => {
         setFilterOptions((prev) => ({
             ...prev,
@@ -28,20 +34,37 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
         }))
     }
 
+    const handleChanges = (changes: Partial<FilterOptions>) => {
+        setFilterOptions((prev) => ({
+            ...prev,
+            ...changes,
+        }))
+    }
+
     const onSelectReleaseType = (value: string) => {
         if (value === "movie" || value === "oneshot") {
-           setFilterOptions((prev) => ({
-                ...prev,
+           handleChanges({
                 releaseType: value,
                 mediaLength: "any",
                 status: "any",
-            }))
+            })
         } else {
             handleChange('releaseType', value);
         }
     }
 
-    const onToggleSFW = () => handleChange('sfw', !filterOptions.sfw);
+    const onToggleSFW = () => {
+        const newValue = !filterOptions.sfw;
+
+        const newGenres = newValue           
+            ? filterOptions.genres.filter(g => !MediaConfig.explicitGenreOptions.some(eg => eg.value === g.value))
+            : filterOptions.genres;
+
+        handleChanges({
+            sfw: newValue,
+            genres: newGenres,
+        })
+    };
 
     const onSelectGenre = (genre: SelectableOption) => {
         if (filterOptions.genres.some(g => g.value === genre.value)) {
@@ -109,7 +132,11 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
 
        trigger("medium");
 
-       setFilterOptions({ ...MediaConfig.defaultFilters, mediaType: value });
+       handleChanges({
+            mediaType: value,
+            releaseType: MediaConfig.defaultFilters.releaseType,
+            status: MediaConfig.defaultFilters.status,
+       });
        setQueuedPicks([]);
     }
     
@@ -123,7 +150,7 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
         releaseType: mediaType === "anime" ? MediaConfig.animeReleaseTypeOptions : MediaConfig.mangaReleaseTypeOptions,
         status: mediaType === "anime" ? MediaConfig.animeStatusOptions : MediaConfig.mangaStatusOptions,
         mediaLength: mediaType === "anime" ? MediaConfig.animeLengthOptions : MediaConfig.mangaLengthOptions,
-        genres: MediaConfig.genreOptions,
+        genres: genreOptionsToDisplay,
         demographics: MediaConfig.demographicOptions,
     }
  

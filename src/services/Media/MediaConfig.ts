@@ -72,6 +72,12 @@ const GENRES: SelectableOption[] = Constants.genres.map((genre) => ({
     value: String(genre.mal_id),
 }))
 
+const EXPLICIT_GENRES: SelectableOption[] = Constants.explicitGenres.map((genre) => ({
+    label: genre.name,
+    value: String(genre.mal_id),
+}))
+
+
 const DEMOGRAPHICS: SelectableOption[] = Constants.demographics.map((demo) => ({
     label: demo.name,
     value: String(demo.mal_id),
@@ -88,5 +94,6 @@ export const MediaConfig = Object.freeze({
     mangaStatusOptions: MANGA_STATUS,
     mangaReleaseTypeOptions: MANGA_RELEASE_TYPE,
     genreOptions: GENRES,
+    explicitGenreOptions: EXPLICIT_GENRES,
     demographicOptions: DEMOGRAPHICS,
 })
