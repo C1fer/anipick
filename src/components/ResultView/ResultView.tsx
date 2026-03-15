@@ -15,6 +15,7 @@ export const ResultView = (props: ResultViewProps ) => {
         streamingOptions,
         isRedrawing,
         isLoadingStreams,
+        streamsButtonLabel,
         setShowModal,
         handleRedraw,
         handleWatchNow,
@@ -58,11 +59,11 @@ export const ResultView = (props: ResultViewProps ) => {
                     />
                     <AnimatedButton
                         onClick={handleWatchNow}
-                        disabled={Array.isArray(streamingOptions) && streamingOptions.length === 0}
                         leftIcon={<Play className="w-4 h-4"/>}
-                        label="Watch Now"
+                        label={streamsButtonLabel}
                         variant="primary"
                         isLoading={isLoadingStreams}
+                        disabled={streamingOptions?.length === 0 || isRedrawing}
                     />
                 </>
             )}
@@ -72,6 +73,7 @@ export const ResultView = (props: ResultViewProps ) => {
                 label="Redraw"
                 variant="secondary"
                 isLoading={isRedrawing}
+                disabled={isLoadingStreams}
             />
         </>
     )

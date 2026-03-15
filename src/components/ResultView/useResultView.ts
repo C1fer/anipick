@@ -1,7 +1,7 @@
 import { useFilters } from "@/context/FiltersContext";
 import { MediaService } from "@/services/Media/MediaService";
 import { triggerErrorToast, triggerWarningToast } from "@/utils/ToastUtils";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { ResultViewProps } from "./ResultView-def";
 import { usePicks } from "@/context/PicksContext";
 import type { MALStreamingOption } from "@/types/mal";
@@ -70,8 +70,17 @@ export const useResultView = ({ selection, onRedrawPicks, onGoBack }: ResultView
         onGoBack()
     }
 
+    const streamsButtonLabel = useMemo(() => {
+        if (!streamingOptions) {
+            return "Find Streams";
+        }
+
+        return streamingOptions.length > 0 ? "Watch Now" : "No streams available";
+    }, [streamingOptions])
+
     return { 
         mediaType: globalFilters.mediaType,
+        streamsButtonLabel,
         showModal,
         streamingOptions,
         isRedrawing,
