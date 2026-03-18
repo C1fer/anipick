@@ -1,6 +1,7 @@
 import type { MediaPick } from "@/types/media";
 import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { X } from "lucide-react";
+import { twMerge } from "tailwind-merge";
 
 type PickSummaryDialogProps = {
     className?: string;
@@ -19,7 +20,12 @@ export const PickSummaryDialog = ({ data, isVisible, toggleModal }: PickSummaryD
             <DialogHeader>
                 <DialogTitle className="text-foreground font-bold text-base text-center">About</DialogTitle>
             </DialogHeader>
-            <p className="text-muted-foreground text-sm whitespace-pre-wrap text-justify max-h-72 overflow-y-auto scrollbar-subtle bg-muted/25 p-3 rounded-lg">
+            <p 
+                className={twMerge(
+                    "text-muted-foreground text-justify text-sm whitespace-pre-wrap min-h-20 max-h-92 overflow-y-auto scrollbar-subtle bg-muted/25 p-3 rounded-lg",
+                    data.synopsis ? "" : "text-muted-foreground/80 italic"
+                )}
+            >
                 {data.synopsis || "No synopsis available."}
             </p>
             {data.rating && (
@@ -38,5 +44,4 @@ export const PickSummaryDialog = ({ data, isVisible, toggleModal }: PickSummaryD
        </DialogContent>
     </Dialog>
 )
-
 

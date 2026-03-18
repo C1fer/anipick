@@ -118,7 +118,7 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
                     className="w-full h-full object-cover"
                     draggable={false}
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-card via-card/20 to-transparent" />
+                <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-card via-card/20 to-transparent" />
                 <div className="absolute top-3 left-3">
                     <Badge className="bg-primary/90 text-primary-foreground border-0 gap-1">
                         {getReleaseTypeIcon(data.releaseType)}
@@ -135,18 +135,18 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
                 )} 
                 {renderSummaryToggle()}
             </div>
-            <div className="flex flex-col justify-between gap-3.5 p-4">
+            <div className="relative -mt-px bg-card flex flex-col justify-between gap-3.5 p-4">
                 {/* Titltes */}
                 <div >
                     <h2 
-                        className="text-foreground font-bold text-xl line-clamp-2 md:line-clamp-none leading-tight hover:cursor-default" 
+                        className="text-foreground font-bold text-xl line-clamp-3 md:line-clamp-none leading-tight hover:cursor-default" 
                         title={data.titleLocalized || data.title}
                     >
                         {data.titleLocalized || data.title}
                     </h2>
                     {data.titleLocalized && data.title !== data.titleLocalized ?  (
                         <p 
-                            className="text-muted-foreground text-sm mt-1 line-clamp-2 md:line-clamp-none" 
+                            className="text-muted-foreground text-sm mt-1 line-clamp-3 md:line-clamp-none" 
                             title={data.title}
                         >
                             {data.title}

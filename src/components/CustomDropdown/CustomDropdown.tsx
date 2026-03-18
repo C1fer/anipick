@@ -72,7 +72,7 @@ export const CustomDropdown = (props: CustomDropdownProps): React.ReactElement =
                         <ChevronDown className="w-4 h-4 ml-2 shrink-0 text-muted-foreground" />
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56 bg-popover border-border max-h-65 overflow-y-auto scrollbar-subtle">
+                <DropdownMenuContent className="w-(--radix-dropdown-menu-trigger-width) bg-popover border-border max-h-65 overflow-y-auto scrollbar-subtle">
                     {options.map((option) => (
                         <DropdownMenuCheckboxItem
                             className="data-highlighted:bg-action data-highlighted:text-foreground" 

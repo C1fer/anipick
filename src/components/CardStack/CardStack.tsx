@@ -41,7 +41,7 @@ export const CardStack = (props: CardStackProps): React.ReactElement => {
             {/* Header */}
             <div className="flex items-center w-full justify-between">
                 <button 
-                    className="cursor-pointer p-2.5 rounded-lg text-muted-foreground hover:bg-action hover:text-foreground transition-all" 
+                    className="cursor-pointer p-1.5 rounded-lg text-muted-foreground hover:bg-action hover:text-foreground transition-colors" 
                     onClick={handleGoBack}
                 >
                    <ChevronLeft className="w-5 h-5" />

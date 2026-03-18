@@ -45,7 +45,7 @@ const getPicksData = (filters: FilterOptions, data: MALAnime[]): MediaPick[] => 
             imgUri: media.images.jpg.large_image_url,
             releaseType: media.type || "Unknown",
             score: media.score?.toFixed(2) || null,
-            releaseYear: String(media.aired?.prop?.from?.year) || "Unknown",
+            releaseYear: String(media.aired?.prop?.from?.year) || null,
             genres: media.genres.slice(0, 3).map((g) => g.name),
             demographic: media.demographics.length > 0 ? media.demographics[0].name : null,
             url: media.url, 
