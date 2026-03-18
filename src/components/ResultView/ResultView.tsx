@@ -3,7 +3,7 @@ import { StringUtils } from "@/utils/StringUtils";
 import { Book, Building2, Calendar, ChevronFirst, Clock, ExternalLink, Frown, MonitorPlay, Pencil, Play, RotateCcw, Star } from "lucide-react";
 import { motion } from "motion/react";
 import { AnimatedButton } from "../AnimatedButton/AnimatedButton";
-import { StreamingOptionsDialog } from "../StreamingDialog/StreamingOptionsDialog";
+import { StreamingOptionsDialog } from "../Dialogs/StreamingOptionsDialog";
 import { Badge } from "../ui/badge";
 import type { ResultViewProps } from "./ResultView-def";
 import { useResultView } from "./useResultView";

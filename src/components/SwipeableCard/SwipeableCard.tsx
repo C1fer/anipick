@@ -1,15 +1,20 @@
 import { Badge } from "../ui/badge"
-import { BookOpenText, Disc2, Film, Star, Tv, TvMinimal } from "lucide-react"
+import { BookOpenText, Disc2, Film, Info, Star, Tv, TvMinimal } from "lucide-react"
 import { useSwipeableCard } from "./useSwipeableCard"
 import type { SwipeableCardProps } from "./SwipeableCard-def"
 import { motion } from "motion/react"
+import { PickSummaryDialog } from "../Dialogs/PickSummaryDialog"
 
 export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => {
     const { displayedAtTop, data } = props;
 
     const {
+        isDragging,
         styles,
+        showSummaryModal,
+        setShowSummaryModal,
         handleCardDragEnd,
+        toggleIsDragging
     } = useSwipeableCard(props);
 
     const getReleaseTypeIcon = (type: string) => {
@@ -84,6 +89,25 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
         </div>
     )
 
+    const renderSummaryToggle = () => (
+        <>
+            <PickSummaryDialog
+                data={data}
+                isVisible={showSummaryModal}
+                toggleModal={setShowSummaryModal}
+            />
+            <motion.button
+                className="cursor-pointer absolute bottom-3 right-3 flex items-center justify-center p-1.5 rounded-full border border-border/50 bg-card text-muted-foreground hover:text-foreground peer transition-all"
+                style={{ zIndex: isDragging ? 0 : 20 }}
+                onClick={() => setShowSummaryModal(true)}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 1.2 }}
+            >
+                <Info className="w-5 h-5" />   
+            </motion.button>
+        </>
+    )
+
     const renderCardContent = () => (
         <>
             {/* Image and Release Type/Score */}
@@ -109,6 +133,7 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
                         </Badge>
                     </div>
                 )} 
+                {renderSummaryToggle()}
             </div>
             <div className="flex flex-col justify-between gap-3.5 p-4">
                 {/* Titltes */}
@@ -147,6 +172,7 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={0.8}
             whileDrag={{ cursor: "grabbing" }}
+            onDragStart={toggleIsDragging}
             onDragEnd={(_, info) => handleCardDragEnd(info)}
             initial={{ scale: displayedAtTop ? 0.95 : 0.85 }}
             animate={{ scale: displayedAtTop ? 0.95 : 0.85 }}
