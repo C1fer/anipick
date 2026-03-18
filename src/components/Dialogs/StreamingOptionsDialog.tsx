@@ -23,14 +23,6 @@ export const StreamingOptionsDialog = ({ streamingOptions, showModal, setShowMod
                             {streamingOptions?.length}
                         </span>
                     </div>
-                    <DialogClose>
-                        <button 
-                            className="cursor-pointer p-1.5 text-muted-foreground rounded-full hover:bg-action hover:text-foreground transition-all"
-                            onClick={() => trigger("light")}
-                            >
-                            <X className="h-5 w-5" />
-                        </button>
-                    </DialogClose>
                 </DialogHeader>
                 <ul className="flex flex-col px-2">
                     {streamingOptions?.map((option, index) => (
@@ -52,6 +44,11 @@ export const StreamingOptionsDialog = ({ streamingOptions, showModal, setShowMod
                         </li>
                     ))}
                 </ul>
+                <DialogClose asChild>
+                    <button className="cursor-pointer p-1 absolute top-4 right-4 rounded-md text-muted-foreground hover:bg-action hover:text-foreground transition-colors">
+                        <X className="w-4 h-4"/>
+                    </button>
+            </DialogClose>
             </DialogContent>
         </Dialog>
     )
