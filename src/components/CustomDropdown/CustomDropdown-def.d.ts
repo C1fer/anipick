@@ -4,6 +4,7 @@ type SelectableOption = {
 }
 
 export interface CustomDropdownProps {
+  className?: string;
   label: string;
   options: SelectableOption[];
   selectedValues: SelectableOption[];

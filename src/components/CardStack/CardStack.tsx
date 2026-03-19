@@ -8,6 +8,7 @@ import type { MediaPick } from "@/types/media";
 
 export const CardStack = (props: CardStackProps): React.ReactElement => {
     const { 
+        cardFrameStyle,
         picks,
         currentPickIdx,
         onCardSkipped,
@@ -37,9 +38,9 @@ export const CardStack = (props: CardStackProps): React.ReactElement => {
     }
 
     return (
-        <div className="flex flex-col items-center justify-center ">
+        <div className={`flex flex-col h-full items-center justify-center ${cardFrameStyle}`}>
             {/* Header */}
-            <div className="flex items-center w-full justify-between">
+            <div className={`flex items-center justify-between ${cardFrameStyle}`}>
                 <button 
                     className="cursor-pointer p-1.5 rounded-lg text-muted-foreground hover:bg-action hover:text-foreground transition-colors" 
                     onClick={handleGoBack}
@@ -52,7 +53,7 @@ export const CardStack = (props: CardStackProps): React.ReactElement => {
                 <div className="w-10"/> {/* Spacer */}
             </div>
             {/* Card Stack */}
-            <div className="grid w-[350px] md:w-[400px]">
+            <div className={`grid place-items-center ${cardFrameStyle} *:w-full`}>
                 {picks.map(renderCards)} 
             </div>
         </div>

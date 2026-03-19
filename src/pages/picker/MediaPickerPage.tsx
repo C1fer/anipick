@@ -13,13 +13,17 @@ export const MediaPickerPage = () => {
         goToPick, 
         goToResult 
     } = useMediaPickerPage();
+
+    const phaseViewportStyle = "w-full h-full min-h-0 overflow-y-auto overflow-x-hidden scrollbar-none p-4 md:py-6";
+    const phaseContentStyle = "min-h-full box-border flex flex-col items-center justify-start md:justify-center";
     
     const renderView = () => {
         switch (viewState.phase) {
             case "filter":
                 return (
                     <motion.div
-                        className="max-w-full "
+                        id="filter-view"
+                        className={phaseContentStyle}
                         key="filters"
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -27,13 +31,14 @@ export const MediaPickerPage = () => {
                     >
                         <Logo />
                         <MediaFilterView onFilterSuccess={goToPick}/>
-                        <Footer className="mt-10" />
+                        <Footer className="mt-8" />
                     </motion.div>
                 )
             case "pick":
                 return (
                     <motion.div
-                        className="max-w-full"
+                        id="pick-view"
+                        className={phaseContentStyle}
                         key="pick"
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -49,8 +54,9 @@ export const MediaPickerPage = () => {
             case "result": {
                 return (
                     <motion.div 
+                        id="result-view"
                         key="result"
-                        className="max-w-full"
+                        className={phaseContentStyle}
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
@@ -67,7 +73,7 @@ export const MediaPickerPage = () => {
     }
 
     return (
-        <div className="flex justify-center items-start h-full w-full overflow-y-auto scrollbar-subtle md:items-center p-5 md:p-0">
+        <div id="media-picker-root" className={phaseViewportStyle}>
             <AnimatePresence mode="wait">
                 {renderView()}
             </AnimatePresence>

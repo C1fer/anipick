@@ -1,3 +1,4 @@
+import { twMerge } from "tailwind-merge";
 import type { ToggleRadioProps } from "./ToggleRadio-def"
 import { useWebHaptics } from "web-haptics/react";
 
@@ -12,14 +13,14 @@ export const ToggleRadio = (props: ToggleRadioProps) : React.ReactElement => {
     }
 
     return (
-        <div>
+        <div className={twMerge("flex flex-col items-start w-full gap-3", props.className)}>
             {props.headerTitle && (
-                <h3 className="text-muted-foreground text-sm font-medium tracking-wider mb-3">
+                <h3 className="text-muted-foreground text-sm font-medium tracking-wider">
                     {props.headerTitle}
                 </h3>
             )}
             <div 
-                className="flex p-1 rounded-lg bg-background/90 border border-border/50 "
+                className="flex w-full p-1 rounded-lg bg-background/90 border border-border/50"
                 style={{ opacity: props.disabled ? 0.5 : 1, pointerEvents: props.disabled ? 'none' : 'all' }}
             >
                 {props.options.map((option) => (

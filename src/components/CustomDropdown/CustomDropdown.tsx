@@ -8,6 +8,7 @@ import { useCustomDropdown } from "./useCustomDropdown"
 
 export const CustomDropdown = (props: CustomDropdownProps): React.ReactElement => {
     const {
+        className = "",
         label = "",
         selectedValues = [],
         options = [],
@@ -34,7 +35,7 @@ export const CustomDropdown = (props: CustomDropdownProps): React.ReactElement =
         )
         
         return (
-            <div className="flex flex-wrap gap-1.5 mt-2">
+            <div className="flex flex-wrap w-full gap-1.5 mt-2">
                 {selectedValues.map(val => (
                     <Badge
                         className={_badgeStyle}
@@ -56,7 +57,7 @@ export const CustomDropdown = (props: CustomDropdownProps): React.ReactElement =
     );
 
     return (
-        <div>
+        <div className={twMerge("w-full", className)}>
             {label && <h3 className="text-muted-foreground text-sm font-medium tracking-wider mb-3">
                 {label}
             </h3>}

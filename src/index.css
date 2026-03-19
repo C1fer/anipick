@@ -178,4 +178,11 @@
       background: hsl(240 5% 60% / 0.3);
     }
   }
+
+  .scrollbar-none {
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
 }

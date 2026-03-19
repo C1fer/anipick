@@ -111,7 +111,7 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
     const renderCardContent = () => (
         <>
             {/* Image and Release Type/Score */}
-            <div className="relative aspect-3/4 overflow-hidden">
+            <div className="relative aspect-3/4 md:landscape:aspect-4/5 lg:landscape:aspect-5/6 overflow-hidden">
                 <img 
                     src={data.imgUri} 
                     alt={data.title} 
@@ -170,7 +170,7 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
             style={{ x: styles.x, opacity: styles.cardOpacity, rotate: styles.rotate, zIndex: displayedAtTop ? 10 : 0 }}
             drag={displayedAtTop ? 'x' : false}
             dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.8}
+            dragElastic={0.75}
             whileDrag={{ cursor: "grabbing" }}
             onDragStart={toggleIsDragging}
             onDragEnd={(_, info) => handleCardDragEnd(info)}

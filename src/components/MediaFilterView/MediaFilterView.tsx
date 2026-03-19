@@ -48,7 +48,7 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
     )
 
     return (
-        <motion.div className="flex flex-col items-center w-full max-w-2xl md:min-w-xl" layout >
+        <motion.div className="flex flex-col items-center w-full gap-6 max-w-2xl md:min-w-xl" layout >
             {renderMediaTypeToggle()}
             <div className="flex-col flex w-full gap-6 bg-card/50 border border-border/50 p-6 rounded-xl shadow-xl " >
                 {state.mediaType === "anime" ? (
@@ -72,7 +72,7 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
                     {showStatusLengthSection ? (
                         <motion.div 
                             key="status-length"
-                            className="flex flex-col gap-6 md:flex-row"
+                            className="flex flex-col gap-6 md:flex-row md:justify-between"
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
@@ -97,22 +97,25 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
                         </motion.div>
                     ): null}
                 </AnimatePresence>
-                <CustomDropdown
-                    label="Genres"
-                    options={lists.genres}
-                    selectedValues={state.genres}
-                    onSelected={(value) => onSelectGenre(value)}
-                    showSelectionBadges={true}
-                    disabled={isLoading}
-                />
-                <CustomDropdown
-                    label="Demographics"
-                    options={lists.demographics}
-                    selectedValues={state.demographics}
-                    onSelected={(value) => onSelectDemographic(value)}
-                    showSelectionBadges={true}
-                    disabled={isLoading}
-                />
+                <div className="w-full flex flex-col gap-6 md:flex-row">
+                    <CustomDropdown
+                        label="Genres"
+                        options={lists.genres}
+                        selectedValues={state.genres}
+                        onSelected={(value) => onSelectGenre(value)}
+                        showSelectionBadges={true}
+                        disabled={isLoading}
+                    />
+                    <CustomDropdown
+                        className="w-full md:w-2/3"
+                        label="Demographics"
+                        options={lists.demographics}
+                        selectedValues={state.demographics}
+                        onSelected={(value) => onSelectDemographic(value)}
+                        showSelectionBadges={true}
+                        disabled={isLoading}
+                    />
+                </div>
                 <NSFWToggle
                     isChecked={!state.sfw}
                     onToggle={onToggleSFW}
@@ -120,7 +123,7 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
                 />
             </div>
             <AnimatedButton
-                className="h-14 mt-6 shrink-0"
+                className="h-14 shrink-0"
                 leftIcon={<Sparkles className="w-4 h-4"/>}
                 label="Find Picks"
                 variant="primary"
