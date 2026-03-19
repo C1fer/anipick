@@ -10,4 +10,6 @@ export interface ToggleRadioProps {
     onSelected: (value: string) => void;
     selectedValue: string;
     disabled?: boolean;
+    showPopover?: boolean;
+    popoverContent?: string;
 }

@@ -15,6 +15,7 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
         isLoading,
         state,
         lists,
+        lengthPopoverContent,
         handleChange,
         handleMediaTypeChange,
         onSelectReleaseType,
@@ -93,6 +94,8 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
                                 selectedValue={state.mediaLength} 
                                 onSelected={(value) => handleChange('mediaLength', value)} 
                                 disabled={isLoading}
+                                showPopover={true}
+                                popoverContent={lengthPopoverContent}
                             />
                         </motion.div>
                     ): null}

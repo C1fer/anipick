@@ -1,6 +1,6 @@
 import { MediaService } from "@/services/Media/MediaService";
 import { triggerErrorToast, triggerWarningToast } from "@/utils/ToastUtils";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import type { SelectableOption, MediaFilterViewProps } from "./MediaFilterView-def";
 import { useFilters } from "@/context/FiltersContext";
 import { usePicks } from "@/context/PicksContext";
@@ -23,11 +23,20 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
     
     const mediaType = filterOptions.mediaType;
 
-    const genreOptionsToDisplay = useMemo(() => {
-        return filterOptions.sfw 
-            ? MediaConfig.genreOptions
-            : [...MediaConfig.explicitGenreOptions, ...MediaConfig.genreOptions].sort((a, b) => a.label.localeCompare(b.label));
-    }, [filterOptions.sfw]);
+    const genreOptionsToDisplay = filterOptions.sfw 
+        ? MediaConfig.genreOptions
+        : [...MediaConfig.explicitGenreOptions, ...MediaConfig.genreOptions].sort((a, b) => a.label.localeCompare(b.label));
+
+    const getLengthPopoverContent = () => {
+        const thresholds = mediaType === "anime" ? AnimeConfig.episodeThresholds : MangaConfig.chapterThresholds;
+        const unit = mediaType === "anime" ? "episodes" : "chapters";
+       
+        const [shortMin, shortMax] = thresholds["short"];
+        const [mediumMin, mediumMax] = thresholds["medium"];
+        const [longMin] = thresholds["long"];
+
+        return `Refers to the total length of the media.\n\nShort: ${shortMin}-${shortMax} ${unit}\nMedium: ${mediumMin}-${mediumMax} ${unit}\nLong: ${longMin}+ ${unit}`;
+    }
 
     const handleChange = <K extends keyof FilterOptions>(key: K, value: FilterOptions[K]) => {
         setFilterOptions((prev) => ({
@@ -161,6 +170,7 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
         isLoading,
         lists,
         state: filterOptions,
+        lengthPopoverContent: getLengthPopoverContent(),
         handleChange,
         onSelectReleaseType,
         onToggleSFW,
