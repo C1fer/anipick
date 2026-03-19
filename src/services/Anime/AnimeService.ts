@@ -5,14 +5,8 @@ import type { MALStreamingOption } from "@/types/mal";
 import type { MediaPick } from "@/types/media";
 import { Constants } from "@/utils/constants";
 import { StringUtils } from "@/utils/StringUtils";
+import { AnimeConfig } from "./AnimeConfig";
 
-const ANIME_EPISODE_THRESHOLDS: Record<string,number[]> = {
-    short: [1, 13],
-    medium: [13, 26],
-    long: [26, Infinity],
-}
-
-const WHITELISTED_ANIME_RELEASE_TYPES = new Set(["tv", "movie", "ona"]);
 
 const getEpisodeCount = (count?: number | null ): string =>  {
     if (!count) return "Unknown (Airing)";
@@ -20,12 +14,12 @@ const getEpisodeCount = (count?: number | null ): string =>  {
 };
 
 const validateAnime = ({ type, episodes }: MALAnime, filters: FilterOptions): boolean => {
-    if (!type || !WHITELISTED_ANIME_RELEASE_TYPES.has(type.toLowerCase())) {
+    if (!type || !AnimeConfig.whitelistedReleaseTypes.has(type.toLowerCase())) {
         return false;
     }
 
     if (filters.mediaLength !== "any") {
-        const [min, max] = ANIME_EPISODE_THRESHOLDS[filters.mediaLength];
+        const [min, max] = AnimeConfig.episodeThresholds[filters.mediaLength];
         return episodes !== null && episodes >= min && episodes <= max;
     }
 

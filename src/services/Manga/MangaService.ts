@@ -3,14 +3,7 @@ import type { MALEntity } from "@/types/mal";
 import type { MALManga } from "@/types/manga";
 import type { MediaPick } from "@/types/media";
 import { StringUtils } from "@/utils/StringUtils";
-
-const MANGA_CHAPTERS_THRESHOLDS: Record<string,number[]> = {
-    short: [1, 50],
-    medium: [50, 100],
-    long: [100, Infinity],
-}
-
-const WHITELISTED_MANGA_RELEASE_TYPES = new Set(["manga", "lightnovel", "oneshot", "doujin, manhwa", "manhua"]);
+import { MangaConfig } from "./MangaConfig";
 
 const getEpisodeCount = (count?: number | null ): string =>  {
     if (!count) return "Unknown (Publishing)";
@@ -24,12 +17,12 @@ const getMangaAuthors = (authors: MALEntity[] | undefined): string[] => {
 
 
 const validateManga = ({ type, chapters }: MALManga, filters: FilterOptions): boolean => {
-    if (!type || !WHITELISTED_MANGA_RELEASE_TYPES.has(type.toLowerCase())) {
+    if (!type || !MangaConfig.whitelistedReleaseTypes.has(type.toLowerCase())) {
         return false;
     }
 
     if (filters.mediaLength !== "any") {
-        const [min, max] = MANGA_CHAPTERS_THRESHOLDS[filters.mediaLength];
+        const [min, max] = MangaConfig.chapterThresholds[filters.mediaLength];
         return chapters !== null && chapters >= min && chapters <= max;
     }
 

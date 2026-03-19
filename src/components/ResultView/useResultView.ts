@@ -6,7 +6,7 @@ import type { ResultViewProps } from "./ResultView-def";
 import { usePicks } from "@/context/PicksContext";
 import type { MALStreamingOption } from "@/types/mal";
 import { useWebHaptics } from "web-haptics/react";
-import { AnimeService } from "@/services/AnimeService";
+import { AnimeService } from "@/services/Anime/AnimeService";
 
 export const useResultView = ({ selection, onRedrawPicks, onGoBack }: ResultViewProps) => {
     const [ isRedrawing, setIsRedrawing ] = useState(false);

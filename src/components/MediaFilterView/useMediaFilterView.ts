@@ -8,6 +8,8 @@ import { useWebHaptics } from "web-haptics/react";
 import type { MediaType } from "@/types/media";
 import type { FilterOptions } from "@/types/filters";
 import { MediaConfig } from "@/services/Media/MediaConfig";
+import { AnimeConfig } from "@/services/Anime/AnimeConfig";
+import { MangaConfig } from "@/services/Manga/MangaConfig";
 
 
 export const useMediaFilterView = (props: MediaFilterViewProps) => {
@@ -147,9 +149,9 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
 
     const lists = {
         mediaTypes: MediaConfig.mediaTypeOptions,
-        releaseType: mediaType === "anime" ? MediaConfig.animeReleaseTypeOptions : MediaConfig.mangaReleaseTypeOptions,
-        status: mediaType === "anime" ? MediaConfig.animeStatusOptions : MediaConfig.mangaStatusOptions,
-        mediaLength: mediaType === "anime" ? MediaConfig.animeLengthOptions : MediaConfig.mangaLengthOptions,
+        releaseType: mediaType === "anime" ? AnimeConfig.releaseTypeOptions : MangaConfig.releaseTypeOptions,
+        status: mediaType === "anime" ? AnimeConfig.statusOptions : MangaConfig.statusOptions,
+        mediaLength: mediaType === "anime" ? AnimeConfig.lengthOptions : MangaConfig.lengthOptions,
         genres: genreOptionsToDisplay,
         demographics: MediaConfig.demographicOptions,
     }

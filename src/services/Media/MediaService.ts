@@ -1,7 +1,7 @@
 import { JikanAPI } from "@/api/JikanAPI/JikanAPI";
 import type { MediaPick } from "@/types/media";
-import { AnimeService } from "../AnimeService";
-import { MangaService } from "../MangaService";
+import { AnimeService } from "../Anime/AnimeService";
+import { MangaService } from "../Manga/MangaService";
 import type { MALAnime } from "@/types/anime";
 import type { MALManga } from "@/types/manga";
 import type { FilterOptions } from "@/types/filters";
