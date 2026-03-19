@@ -23,10 +23,6 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
     
     const mediaType = filterOptions.mediaType;
 
-    const genreOptionsToDisplay = filterOptions.sfw 
-        ? MediaConfig.genreOptions
-        : [...MediaConfig.explicitGenreOptions, ...MediaConfig.genreOptions].sort((a, b) => a.label.localeCompare(b.label));
-
     const getLengthPopoverContent = () => {
         const thresholds = mediaType === "anime" ? AnimeConfig.episodeThresholds : MangaConfig.chapterThresholds;
         const unit = mediaType === "anime" ? "episodes" : "chapters";
@@ -39,64 +35,52 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
     }
 
     const handleChange = <K extends keyof FilterOptions>(key: K, value: FilterOptions[K]) => {
-        setFilterOptions((prev) => ({
-            ...prev,
-            [key]: value,
-        }))
+        setFilterOptions((prev) => ({ ...prev, [key]: value }));
     }
 
     const handleChanges = (changes: Partial<FilterOptions>) => {
-        setFilterOptions((prev) => ({
-            ...prev,
-            ...changes,
-        }))
+        setFilterOptions((prev) => ({ ...prev, ...changes }));
     }
 
     const onSelectReleaseType = (value: string) => {
-        if (value === "movie" || value === "oneshot") {
-           handleChanges({
-                releaseType: value,
-                mediaLength: "any",
-                status: "any",
-            })
-        } else {
-            handleChange('releaseType', value);
-        }
+        const isSpecialType = value === "movie" || value === "oneshot";
+        handleChanges({
+            releaseType: value,
+            ...(isSpecialType && { mediaLength: "any", status: "any" }),
+        })
     }
 
     const onToggleSFW = () => {
-        const newValue = !filterOptions.sfw;
-
-        const newGenres = newValue           
+        const sfw = !filterOptions.sfw;
+        const newGenres = sfw
             ? filterOptions.genres.filter(g => !MediaConfig.explicitGenreOptions.some(eg => eg.value === g.value))
             : filterOptions.genres;
 
-        handleChanges({
-            sfw: newValue,
-            genres: newGenres,
-        })
-    };
+        handleChanges({ sfw, genres: newGenres })
+    }
 
     const onSelectGenre = (genre: SelectableOption) => {
-        if (filterOptions.genres.some(g => g.value === genre.value)) {
-            handleChange('genres', filterOptions.genres.filter((g) => g.value !== genre.value));
-        } else {
-            handleChange('genres', [...filterOptions.genres, genre]);
-        }
+        const isSelected = filterOptions.genres.some(g => g.value === genre.value);
+       
+        handleChange('genres',  isSelected
+            ? filterOptions.genres.filter((g) => g.value !== genre.value)
+            : [...filterOptions.genres, genre]
+        );
     }
 
     const onSelectDemographic = (demographic: SelectableOption) => {
-        if (filterOptions.demographics.some(d => d.value === demographic.value)) {
-            handleChange('demographics', filterOptions.demographics.filter((d) => d.value !== demographic.value));
-        } else {
-            handleChange('demographics', [...filterOptions.demographics, demographic]);
-        }
+        const isSelected = filterOptions.demographics.some(d => d.value === demographic.value);
+        
+        handleChange('demographics', isSelected
+            ? filterOptions.demographics.filter((d) => d.value !== demographic.value)
+            : [...filterOptions.demographics, demographic]
+        );
     }
 
     const haveFiltersChanged = (): boolean => {
-        if (!globalFilters) return true; 
+        if (!globalFilters) return true;
         
-        return Boolean(
+        return (
             mediaType !== globalFilters.mediaType ||
             filterOptions.releaseType !== globalFilters.releaseType ||
             filterOptions.status !== globalFilters.status ||
@@ -104,9 +88,9 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
             filterOptions.sfw !== globalFilters.sfw ||
             filterOptions.genres.some(g => !globalFilters.genres.some(gg => gg.value === g.value)) ||
             filterOptions.demographics.some(d => !globalFilters.demographics.some(dd => dd.value === d.value))
-        );
+        )
     }
-    
+
     const onSubmit = async () => {
         setIsLoading(true);
         try {
@@ -155,6 +139,10 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
         mediaType === "anime" && filterOptions.releaseType !== 'movie'
         || mediaType === "manga" && filterOptions.releaseType !== 'oneshot'
     )
+
+    const genreOptionsToDisplay = filterOptions.sfw 
+        ? MediaConfig.genreOptions
+        : [...MediaConfig.explicitGenreOptions, ...MediaConfig.genreOptions].sort((a, b) => a.label.localeCompare(b.label));
 
     const lists = {
         mediaTypes: MediaConfig.mediaTypeOptions,
