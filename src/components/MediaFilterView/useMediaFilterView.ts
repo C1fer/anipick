@@ -1,5 +1,3 @@
-import { MediaService } from "@/services/Media/MediaService";
-import { triggerErrorToast, triggerWarningToast } from "@/utils/ToastUtils";
 import { useState } from "react";
 import type { SelectableOption, MediaFilterViewProps } from "./MediaFilterView-def";
 import { useFilters } from "@/context/FiltersContext";
@@ -10,16 +8,17 @@ import type { FilterOptions } from "@/types/filters";
 import { MediaConfig } from "@/services/Media/MediaConfig";
 import { AnimeConfig } from "@/services/Anime/AnimeConfig";
 import { MangaConfig } from "@/services/Manga/MangaConfig";
-
+import { useDrawPicks } from "@/hooks/useDrawPicks";
 
 export const useMediaFilterView = (props: MediaFilterViewProps) => {
     const { filterOptions: globalFilters, setFilterOptions: setGlobalFilters, } = useFilters();
-    const { queuedPicks, setQueuedPicks, setCurrentPicks, lastVisibleResultsPage, setLastVisibleResultsPage  } = usePicks();
+    const { setQueuedPicks } = usePicks();
+    const { isDrawingPicks, drawPicks } = useDrawPicks();
     
     const [ filterOptions, setFilterOptions ] = useState<FilterOptions>(globalFilters);
-    const [ isLoading, setIsLoading ] = useState<boolean>(false);
 
     const { trigger } = useWebHaptics();   
+
     
     const mediaType = filterOptions.mediaType;
 
@@ -92,38 +91,17 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
     }
 
     const onSubmit = async () => {
-        setIsLoading(true);
-        try {
-            const hasNewFilters = haveFiltersChanged();
-            if (hasNewFilters) {
-                setGlobalFilters(filterOptions);
-            }
-
-            const pendingPicks = hasNewFilters ? [] : queuedPicks;
-            const lastPage = hasNewFilters ? null : lastVisibleResultsPage;
-
-            const { picks, toQueue, lastVisiblePageFromApi } = await MediaService.getPicksFromFilters(filterOptions, pendingPicks, lastPage);
-
-            if (picks.length > 0) {
-                setQueuedPicks(toQueue);
-                setCurrentPicks(picks);
-                if (lastVisiblePageFromApi) {
-                    setLastVisibleResultsPage(lastVisiblePageFromApi);
-                }
-                props.onFilterSuccess();
-            } else {
-                triggerWarningToast("No picks found with the selected filters. Try relaxing your criteria!");
-            }
-        } catch (error) {
-            console.error(`Error fetching ${mediaType} picks:`, error);
-            triggerErrorToast();
-        } finally {
-            setIsLoading(false);
+        const hasNewFilters = haveFiltersChanged();
+        if (hasNewFilters) {
+            setGlobalFilters(filterOptions);
+            drawPicks({ filters: filterOptions, lastPage: null, onDrawSuccess: props.onFilterSuccess });
+        } else {
+            drawPicks({ onDrawSuccess: props.onFilterSuccess, });
         }
     }
 
     const handleMediaTypeChange = (value: MediaType) => {
-       if (value === mediaType || isLoading) return;
+       if (value === mediaType || isDrawingPicks) return;
 
        trigger("medium");
 
@@ -155,7 +133,7 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
  
     return {
         showStatusLengthSection,
-        isLoading,
+        isLoading: isDrawingPicks,
         lists,
         state: filterOptions,
         lengthPopoverContent: getLengthPopoverContent(),
