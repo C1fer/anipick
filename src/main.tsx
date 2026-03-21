@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import '@fontsource/mochiy-pop-one';
+import '@fontsource/mochiy-pop-one/400.css'
 
 import { Toaster } from 'sonner';
 import { AppRouter } from './pages/router';
