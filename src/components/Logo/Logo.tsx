@@ -42,7 +42,7 @@ export const Logo = (): React.JSX.Element => (
             </div>
         </motion.div>
         <p className="text-muted-foreground text-sm mt-1.5 tracking-wide italic">
-           Find your next binge in seconds.
+          Swipe to your next binge.
         </p>
     </div>
 );

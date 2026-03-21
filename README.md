@@ -3,7 +3,7 @@
     <span style="vertical-align: middle;">Pikku</span>
 </h1>
 
-> **Animanga Discovery** — Find your next binge in seconds.
+> **Animanga Discovery** — Swipe to your next binge.
 
 Pikku is a web application that helps you break out of the "what should I watch/read?" spiral and jump straight into an anime or manga you will actually enjoy.
 
@@ -21,21 +21,21 @@ Pikku is a web application that helps you break out of the "what should I watch/
 2. **Dial In Your Filters** — Refine results based on what you are in the mood for:
     - Release type: (TV Show, Manga, Manwha, Light Novel, etc.)
     - Status
-    - Episode or chapter length
+    - E
     - Genres
     - Demographics (Shounen, Shoujo, etc.)
-    - NSFW content
+    - Mature Content
 3. **Swipe Through Picks** — Browse recommendations and keep what clicks.
 4. **Check Streaming Availability** — See where anime picks are available to watch.
 
 ## Tech Stack
 
-- **React 19** with TypeScript, Vite, Tailwind CSS 4
-- **UI**: shadcn/ui components (Radix UI primitives)
+- **React 19** with TypeScript, Vite, Tailwind v4
+- **UI**: shadcn/ui components (Radix UI primitives), Lucide Icons
 - **Routing**: React Router 7
 - **State**: Context API
 - **API**: Jikan API (MyAnimeList data)
-- **Additional**: Motion (animations), Sonner (notifications), Lucide React (icons)
+- **Additional**: Motion (Animations), WebHaptics (Haptic Feedback), Sonner (Toast notifications).
 
 ## Getting Started
 
@@ -104,4 +104,5 @@ This project is open source and available under the MIT License.
 - [Jikan API](https://jikan.moe/) — FOSS MyAnimeList API
 - [shadcn/ui](https://ui.shadcn.com/) — High-quality React component library
 - [Motion](https://motion.dev/) — JavaScript animation library
+- [WebHaptics](https://github.com/lochie/web-haptics) — Haptic feedback for the mobile web.
 
