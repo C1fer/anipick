@@ -5,6 +5,8 @@ import type { SwipeableCardProps } from "./SwipeableCard-def"
 import { motion } from "motion/react"
 import { PickSummaryDialog } from "../Dialogs/PickSummaryDialog"
 
+const DRAG_INDICATOR_LAYER = 10;
+
 export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => {
     const { displayedAtTop, data } = props;
 
@@ -36,7 +38,6 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
             default:
                 return null;
         }
-
     }
 
    const renderGenreDemoBadge = (gd: string) => (
@@ -53,7 +54,7 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
         <>
             <motion.div
                 className="absolute inset-0 bg-neon-cyan/20 z-10 flex items-center justify-center rounded-2xl border-4 border-neon-cyan"
-                style={{ opacity: styles.pickOpacity }}
+                style={{ opacity: styles.pickOpacity, zIndex: DRAG_INDICATOR_LAYER }}
             >
                 <span className="text-4xl font-bold text-neon-cyan -rotate-20 border-4 border-neon-cyan px-4 py-2 rounded-lg">
                     PICK!
@@ -61,7 +62,7 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
             </motion.div>
             <motion.div
                 className="absolute inset-0 bg-destructive/20 z-10 flex items-center justify-center rounded-2xl border-4 border-destructive"
-                style={{ opacity: styles.skipOpacity }}
+                style={{ opacity: styles.skipOpacity, zIndex: DRAG_INDICATOR_LAYER }}
             >
                 <span className="text-4xl font-bold text-destructive rotate-20 border-4 border-destructive px-4 py-2 rounded-lg">
                     SKIP
@@ -97,8 +98,8 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
                 toggleModal={setShowSummaryModal}
             />
             <motion.button
-                className="cursor-pointer absolute bottom-3 right-3 flex items-center justify-center p-1.5 rounded-full border border-border/50 bg-card text-muted-foreground hover:text-foreground peer transition-all"
-                style={{ zIndex: isDragging ? 0 : 20 }}
+                className="cursor-pointer absolute bottom-3 right-3 flex items-center justify-center p-1.5 rounded-full border border-border/50 bg-card transition-all text-muted-foreground hover:text-foreground"
+                style={{ zIndex: isDragging ? DRAG_INDICATOR_LAYER - 1 : DRAG_INDICATOR_LAYER + 1 }} // Ensure the toggle is above the drag indicators when not dragging, and below when dragging
                 onClick={() => setShowSummaryModal(true)}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 1.2 }}
@@ -114,11 +115,12 @@ export const SwipeableCard = (props: SwipeableCardProps): React.ReactElement => 
             <div className="relative aspect-3/4 md:landscape:aspect-4/5 lg:landscape:aspect-5/6 overflow-hidden">
                 <img 
                     src={data.imgUri} 
-                    alt={data.title} 
+                    alt={`${data.titleLocalized || data.title} cover image`} 
                     className="w-full h-full object-cover"
                     draggable={false}
+                    loading={displayedAtTop ? "eager" : "lazy"}
                 />
-                <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-card via-card/20 to-transparent" />
+                <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-card via-card/20 to-transparent" /> {/* Gradient Overlay */}
                 <div className="absolute top-3 left-3">
                     <Badge className="bg-primary/90 text-primary-foreground border-0 gap-1">
                         {getReleaseTypeIcon(data.releaseType)}

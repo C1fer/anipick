@@ -1,5 +1,5 @@
 import type { MediaPick } from "@/types/media";
-import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/dialog";
 import { X } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 
@@ -19,6 +19,9 @@ export const PickSummaryDialog = ({ data, isVisible, toggleModal }: PickSummaryD
        >
             <DialogHeader>
                 <DialogTitle className="text-foreground font-bold text-base text-center">About</DialogTitle>
+                <DialogDescription className="sr-only">
+                    Summary details for the selected pick.
+                </DialogDescription>
             </DialogHeader>
             <p 
                 className={twMerge(

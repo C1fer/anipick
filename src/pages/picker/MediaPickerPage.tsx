@@ -15,7 +15,7 @@ export const MediaPickerPage = () => {
     } = useMediaPickerPage();
 
     const phaseViewportStyle = "w-full h-full min-h-0 overflow-y-auto overflow-x-hidden scrollbar-none p-4 md:py-6";
-    const phaseContentStyle = "min-h-full box-border flex flex-col items-center justify-start md:justify-center";
+    const phaseContentStyle = "min-h-full box-border flex flex-col items-center justify-center md:justify-center";
     
     const renderView = () => {
         switch (viewState.phase) {

@@ -1,5 +1,4 @@
 import type { MediaPick } from "@/types/media";
-import { StringUtils } from "@/utils/StringUtils";
 import { Book, Building2, Calendar, ChevronFirst, Clock, ExternalLink, Frown, MonitorPlay, Pencil, Play, RotateCcw, Star } from "lucide-react";
 import { motion } from "motion/react";
 import { AnimatedButton } from "../AnimatedButton/AnimatedButton";
@@ -89,7 +88,7 @@ export const ResultView = (props: ResultViewProps ) => {
 
     const renderSelectionContent = (selection: MediaPick) => (
         <div className="bg-card rounded-2xl overflow-hidden media-card-shadow md:landscape:flex md:landscape:flex-row">
-            {/* Left — Image & Score */}
+            {/*Image & Score */}
             <div className="relative aspect-video md:landscape:aspect-auto md:landscape:w-2/5 md:landscape:shrink-0 overflow-hidden">
                 <img 
                     src={selection.imgUri} 
@@ -97,18 +96,18 @@ export const ResultView = (props: ResultViewProps ) => {
                     className="w-full h-full object-cover"
                     draggable={false}
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-card via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-card via-transparent to-transparent" /> {/* Gradient Overlay */}
                 {selection.score && (
                     <div className="absolute bottom-3 right-3">
-                    <Badge className="bg-accent/90 text-accent-foreground border-0 gap-1 text-lg px-3 py-1">
-                        <Star className="w-4 h-4 fill-current" />
-                        {selection.score}
-                    </Badge>
+                        <Badge className="bg-accent/90 text-accent-foreground border-0 gap-1 text-lg px-3 py-1">
+                            <Star className="w-4 h-4 fill-current" />
+                            {selection.score}
+                        </Badge>
                     </div>
                 )}
             </div>
 
-            {/* Right — Details */}
+            {/* Details */}
             <div className="flex flex-col p-5 gap-4 w-full md:landscape:overflow-y-auto md:landscape:max-h-[calc(100dvh-8rem)] md:landscape:scrollbar-subtle">
                 {/* Title */}
                 <div>
@@ -125,7 +124,7 @@ export const ResultView = (props: ResultViewProps ) => {
                 {/* Meta Info */}
                 <div className="grid gap-y-3 justify-between text-muted-foreground text-sm max-w-xs">
                     <span className="col-start-1 flex items-center gap-2">
-                        {mediaType === "manga" ? <Book className="w-4 h-4" /> : <MonitorPlay className="w-4 h-4" />}
+                        {mediaType === "anime" ? <MonitorPlay className="w-4 h-4" /> :  <Book className="w-4 h-4" /> }
                         {selection.releaseType}
                     </span>
                     <span className="col-start-2 flex items-center gap-2">
@@ -138,7 +137,7 @@ export const ResultView = (props: ResultViewProps ) => {
                     </span>
                     <span className="flex items-center gap-2">
                         {mediaType === "anime" ? <Building2 className="w-4 h-4" /> : <Pencil className="w-4 h-4"/> }
-                        {selection.studio || selection.authors?.[0]}
+                        {mediaType === "anime" ? selection.studio : selection.authors?.[0]}
                     </span>
                 </div>
 
@@ -155,26 +154,28 @@ export const ResultView = (props: ResultViewProps ) => {
                     </p>
                 </div>
 
-            <div className="flex justify-between w-full">
-                {selection.rating ? (
-                    <Badge variant="outline" className="text-xs border-border/50 text-muted-foreground px-3 py-1">
-                        {selection.rating}
-                    </Badge>
-                ): <div/>}
-                <a 
-                    className="flex items-center justify-end gap-2 text-sm mt-2 text-action hover:underline"
-                    href={selection.url} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                >
-                    <ExternalLink className="w-4 h-4" />
-                    View on MAL
-                </a>
-            </div>
-            {/* Buttons — landscape only*/}
-            <div className="hidden md:landscape:flex gap-3 mt-auto">
-                {renderActionButtons()}
-            </div>
+                {/* Age Rating & MAL Hyperlink */}
+                <div className="flex justify-between w-full">
+                    {selection.rating ? (
+                        <Badge variant="outline" className="text-xs border-border/50 text-muted-foreground px-3 py-1">
+                            {selection.rating}
+                        </Badge>
+                    ): <div/>}
+                    <a 
+                        className="flex items-center justify-end gap-2 text-sm mt-2 text-action hover:underline"
+                        href={selection.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                    >
+                        <ExternalLink className="w-4 h-4" />
+                        View on MAL
+                    </a>
+                </div>
+
+                {/* Buttons — landscape only*/}
+                <div className="hidden md:landscape:flex gap-3 mt-auto">
+                    {renderActionButtons()}
+                </div>
             </div>
         </div>
     )

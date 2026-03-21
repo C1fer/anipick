@@ -58,7 +58,7 @@ export const CustomDropdown = (props: CustomDropdownProps): React.ReactElement =
 
     return (
         <div className={twMerge("w-full", className)}>
-            {label && <h3 className="text-muted-foreground text-sm font-medium tracking-wider mb-3">
+            {label && <h3 className="text-muted-foreground text-sm font-medium tracking-wider mb-2">
                 {label}
             </h3>}
             <DropdownMenu open={showOptions} onOpenChange={setShowOptions}>

@@ -1,5 +1,5 @@
 import { CirclePlay, ExternalLink, X } from "lucide-react";
-import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/dialog";
 import type { MALStreamingOption } from "@/types/mal";
 import { useWebHaptics } from "web-haptics/react";
 
@@ -19,6 +19,9 @@ export const StreamingOptionsDialog = ({ streamingOptions, showModal, setShowMod
                 <DialogHeader className="flex flex-row items-center justify-between">
                     <div className="flex items-center gap-2 px-2">
                         <DialogTitle className="font-bold">Where to Watch</DialogTitle>
+                        <DialogDescription className="sr-only">
+                            Streaming providers available for this title.
+                        </DialogDescription>
                         <span className="text-xs bg-primary/20 text-primary rounded-full px-2 py-0.5">
                             {streamingOptions?.length}
                         </span>
