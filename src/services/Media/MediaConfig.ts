@@ -23,8 +23,8 @@ const DEFAULT_FILTER_OPTIONS: FilterOptions = {
 }
 
 const MEDIA_TYPE_OPTIONS: MediaTypeOptions[] = [
-    { label: "Anime", value: "anime" },
-    { label: "Manga", value: "manga" },
+    { label: "Watch", value: "anime" },
+    { label: "Read", value: "manga" },
 ]
 
 const GENRES: SelectableOption[] = Constants.genres.map((genre) => ({
