@@ -6,15 +6,18 @@ import { Toaster } from 'sonner';
 import { AppRouter } from './pages/router';
 import { FiltersProvider } from './context/FiltersContext';
 import { PicksProvider } from './context/PicksContext';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
+    <ErrorBoundary>
       <FiltersProvider>
         <PicksProvider>
             <AppRouter />
         </PicksProvider>
       </FiltersProvider>
-    <Toaster richColors position="top-right" />
+      <Toaster richColors={true} position="top-right" />
+    </ErrorBoundary>
   </StrictMode>
 )
