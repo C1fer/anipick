@@ -9,7 +9,7 @@ Pikku is a web application that helps you break out of the "what should I watch/
 
 ## Features
 
-- **Smart filters That Actually Help** — Narrow anime and manga by genre, release type, status, length, and more.
+- **Smart filters That Actually Help** — Narrow media by genre, release type, status, length, and more.
 - **Random Picks, Tailored to You** — Get instant recommendations based on your active filters.
 - **Swipe-First Experience** — Browse picks with smooth, Tinder-style swipe interactions.
 - **Built-In Streaming Discovery** — See where your selected anime is available to watch.
@@ -17,9 +17,9 @@ Pikku is a web application that helps you break out of the "what should I watch/
 
 ## Usage
 
-1. **Select Media Type** — Choose Watch or Read.
+1. **Select Media Type** — Choose between something to Watch or Read.
 2. **Dial In Your Filters** — Refine results based on what you are in the mood for:
-    - Release type (TV, Movie, ONA, etc.) / (Manga, Manwha, Light Novel, etc.)
+    - Release type: (TV Show, Manga, Manwha, Light Novel, etc.)
     - Status
     - Episode or chapter length
     - Genres
@@ -101,8 +101,7 @@ This project is open source and available under the MIT License.
 
 ## Acknowledgments
 
-- [Jikan API](https://jikan.moe/) — MyAnimeList API
+- [Jikan API](https://jikan.moe/) — FOSS MyAnimeList API
 - [shadcn/ui](https://ui.shadcn.com/) — High-quality React component library
-- [Radix UI](https://www.radix-ui.com/) — Accessible component primitives
 - [Motion](https://motion.dev/) — JavaScript animation library
-- [Tailwind CSS](https://tailwindcss.com/) — Utility-first CSS framework
+
