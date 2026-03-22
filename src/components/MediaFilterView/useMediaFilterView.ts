@@ -94,7 +94,7 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
         const hasNewFilters = haveFiltersChanged();
         if (hasNewFilters) {
             setGlobalFilters(filterOptions);
-            drawPicks({ filters: filterOptions, lastPage: null, onDrawSuccess: props.onFilterSuccess });
+            drawPicks({ filters: filterOptions, pendingPicks: [],lastPage: null, onDrawSuccess: props.onFilterSuccess });
         } else {
             drawPicks({ onDrawSuccess: props.onFilterSuccess, });
         }

@@ -44,9 +44,9 @@ export const useDrawPicks = () => {
             setIsDrawingPicks(true);
 
             const { picks, toQueue, lastVisiblePageFromApi } = await MediaService.getPicksFromFilters(
-                {...globalFilters, ...filters} , 
-                pendingPicks ?? queuedPicks, 
-                lastPage ?? lastVisibleResultsPage
+                {...globalFilters, ...filters}, 
+                pendingPicks !== undefined ? pendingPicks : queuedPicks, 
+                lastPage !== undefined ? lastPage : lastVisibleResultsPage
             );
 
             if (!picks.length ) {
