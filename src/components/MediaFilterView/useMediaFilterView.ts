@@ -15,11 +15,10 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
     const { setQueuedPicks } = usePicks();
     const { isDrawingPicks, drawPicks } = useDrawPicks();
     
-    const [ filterOptions, setFilterOptions ] = useState<FilterOptions>(globalFilters);
+    const [ filterOptions, setFilterOptions ] = useState<FilterOptions>({...globalFilters});
 
     const { trigger } = useWebHaptics();   
 
-    
     const mediaType = filterOptions.mediaType;
 
     const getLengthPopoverContent = () => {
@@ -78,6 +77,16 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
 
     const haveFiltersChanged = (): boolean => {
         if (!globalFilters) return true;
+        const globalGenres = new Set(globalFilters.genres.map(g => g.value));
+        const globalDemographics = new Set(globalFilters.demographics.map(d => d.value));
+        
+        const hasSameGenres =
+            filterOptions.genres.length === globalFilters.genres.length &&
+            filterOptions.genres.every(g => globalGenres.has(g.value));
+        
+        const hasSameDemographics =
+            filterOptions.demographics.length === globalFilters.demographics.length &&
+            filterOptions.demographics.every(d => globalDemographics.has(d.value));
         
         return (
             mediaType !== globalFilters.mediaType ||
@@ -85,8 +94,8 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
             filterOptions.status !== globalFilters.status ||
             filterOptions.mediaLength !== globalFilters.mediaLength ||
             filterOptions.sfw !== globalFilters.sfw ||
-            filterOptions.genres.some(g => !globalFilters.genres.some(gg => gg.value === g.value)) ||
-            filterOptions.demographics.some(d => !globalFilters.demographics.some(dd => dd.value === d.value))
+            !hasSameGenres ||
+            !hasSameDemographics
         )
     }
 

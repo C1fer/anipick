@@ -14,6 +14,7 @@ type DrawPicksArgs = {
     filters?: FilterOptions;
     onDrawSuccess: () => void;
     onDrawFailure?: () => void;
+    onNoPicksFound?: () => void;
     preloadImages?: boolean;
 }
 
@@ -39,7 +40,7 @@ export const useDrawPicks = () => {
         ImageUtils.preloadImages(deferredImages);
     }
     
-    const drawPicks = async ({ lastPage, pendingPicks, filters, onDrawSuccess, onDrawFailure, preloadImages = true }: DrawPicksArgs) => {
+    const drawPicks = async ({ lastPage, pendingPicks, filters, onDrawSuccess, onDrawFailure, onNoPicksFound, preloadImages = true }: DrawPicksArgs) => {
         try {
             setIsDrawingPicks(true);
 
@@ -49,8 +50,9 @@ export const useDrawPicks = () => {
                 lastPage !== undefined ? lastPage : lastVisibleResultsPage
             );
 
-            if (!picks.length ) {
+            if (!picks.length) {
                 triggerWarningToast("No picks found with the selected filters. Try relaxing your criteria!");
+                onNoPicksFound?.();
                 return;
             } 
 
