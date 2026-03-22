@@ -27,7 +27,7 @@ const MANGA_CHAPTERS_THRESHOLDS: Record<string,number[]> = {
     long: [100, Infinity],
 }
 
-const WHITELISTED_MANGA_RELEASE_TYPES = new Set(["manga", "lightnovel", "oneshot", "doujin, manhwa", "manhua"]);
+const WHITELISTED_MANGA_RELEASE_TYPES = new Set(["manga", "light novel", "one-shot", "doujin", "manhwa", "manhua"]);
 
 export const MangaConfig = Object.freeze({
     lengthOptions: MANGA_LENGTH,
