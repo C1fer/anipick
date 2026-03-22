@@ -18,6 +18,7 @@ const MANGA_RELEASE_TYPE: SelectableOption[] = [
     { label: "Light Novel", value: "lightnovel" },
     { label: "Manga", value: "manga" },
     { label: "Manwha", value: "manhwa" },
+    { label: "Manhua", value: "manhua" },
     { label: "One-shot", value: "oneshot" },
 ]
 
