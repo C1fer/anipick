@@ -30,7 +30,7 @@ export const CustomDropdown = (props: CustomDropdownProps): React.ReactElement =
         if (!showSelectionBadges || !selectedValues.length) return null;
 
         const _badgeStyle = twMerge(
-            "bg-primary/20 text-primary border-primary/30 hover:bg-primary/30 cursor-pointer",
+            "bg-primary/20 text-primary border-primary/30 hover:bg-primary/30 cursor-pointer select-none",
             props.disabled ? "cursor-not-allowed opacity-50" : ""
         )
         

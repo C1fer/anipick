@@ -38,7 +38,8 @@ export const ToggleRadio = ({ options, selectedValue, disabled, onSelected, clas
                             onChange={() => handleChange(option.value)} 
                             disabled={disabled}
                         />
-                        <div className="flex py-2.5 px-4 items-center justify-center rounded-md text-sm font-medium text-muted-foreground/70 transition-colors duration-250 motion-reduce:duration-0 peer-checked:bg-action peer-checked:text-foreground hover:bg-muted peer-checked:hover:bg-action cursor-pointer peer-checked:cursor-default">
+                        <div 
+                        className="select-none flex py-2.5 px-4 items-center justify-center rounded-md text-sm font-medium text-muted-foreground/70 transition-colors duration-250 motion-reduce:duration-0 peer-checked:bg-action peer-checked:text-foreground hover:bg-muted peer-checked:hover:bg-action cursor-pointer peer-checked:cursor-default">
                             {option.label}
                         </div>
                     </label>

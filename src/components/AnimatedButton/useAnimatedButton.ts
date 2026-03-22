@@ -7,7 +7,7 @@ const VARIANT_STYLES = {
     secondary: "border border-border/50 hover:bg-muted/50",
 }
 
-const BASE_STYLE = "flex items-center justify-center gap-2 w-full h-12 text-sm font-semibold rounded-md transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer";
+const BASE_STYLE = "flex items-center justify-center gap-2 w-full h-12 text-sm font-semibold rounded-md transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer select-none";
 
 export const useAnimatedButton = ({ className, variant = "primary", hapticsEnabled = true, hapticsType = "light", onClick}: AnimatedButtonProps) => {
     const { trigger } = useWebHaptics();
