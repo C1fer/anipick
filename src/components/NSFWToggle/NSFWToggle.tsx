@@ -1,38 +1,46 @@
 import { TriangleAlert } from "lucide-react";
 import { Switch } from "../ui/switch";
-import { useWebHaptics } from "web-haptics/react";
+import type { NSFWToggleProps } from "./NSFWToggle-def";
+import { useNSFWToggle } from "./useNSFWToggle";
+import { motion}  from "motion/react";
 
-type NSFWToggleProps = {
-    isChecked: boolean;
-    onToggle: () => void;
-    disabled?: boolean;
-}
+export const NSFWToggle = (props: NSFWToggleProps): React.ReactElement => {
+    const { isChecked, disabled = false } = props;
 
-export const NSFWToggle = ({ isChecked, onToggle, disabled = false }: NSFWToggleProps): React.ReactElement => {
-    const { trigger } = useWebHaptics();
-
-    const handleToggle = () => {
-        trigger("light");
-        onToggle();
-    };
+    const {
+        rootClassName,
+        iconWrapperClassName,
+        iconClassName,
+        hintText,
+        handleToggle
+    } = useNSFWToggle(props);
 
     return (
-        <div 
-            className="flex items-center justify-between gap-4 p-5 q border border-border/50 rounded-md bg-background/90 active:bg-muted sm:hover:bg-muted transition-all cursor-pointer"  
-            style={{ opacity: disabled ? 0.5 : 1, pointerEvents: disabled ? 'none' : 'all'}} 
+        <motion.button
+            type="button"
+            aria-label="Toggle mature content"
+            aria-pressed={isChecked}
+            disabled={disabled}
             onClick={handleToggle}
+            className={rootClassName}
+            whileHover={{ opacity: 0.7 }}
+            whileTap={{ scale: 0.99 }}
         >
-            <div className="flex items-center gap-3">
-                <TriangleAlert className="text-action w-7 h-7" strokeWidth={2}/>
-                <div className="flex-col text-start">
-                    <p className="text-foreground font-bold text-sm">NSFW Content</p>
-                    <p className="text-muted-foreground text-xs">Show mature and R-rated series</p>
+            <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                    <div className={iconWrapperClassName}>
+                        <TriangleAlert className={iconClassName} strokeWidth={2.2}/>
+                    </div>
+                    <div className="flex-col text-start">
+                        <p className="text-sm font-semibold text-foreground">Mature Content</p>
+                        <p className="text-xs text-muted-foreground/90">{hintText}</p>
+                    </div>
                 </div>
+                <Switch
+                    className="pointer-events-none data-[state=unchecked]:bg-muted data-[state=checked]:bg-destructive/85"
+                    checked={isChecked}
+                />
             </div>
-            <Switch 
-                className="data-[state=unchecked]:bg-muted/50 data-[state=checked]:bg-primary/65"
-                checked={isChecked}
-            />
-        </div>
+        </motion.button>
     );
 }
