@@ -5,7 +5,7 @@ import { useNSFWToggle } from "./useNSFWToggle";
 import { motion}  from "motion/react";
 
 export const NSFWToggle = (props: NSFWToggleProps): React.ReactElement => {
-    const { isChecked, disabled = false } = props;
+    const { isChecked } = props;
 
     const {
         rootClassName,
@@ -16,14 +16,10 @@ export const NSFWToggle = (props: NSFWToggleProps): React.ReactElement => {
     } = useNSFWToggle(props);
 
     return (
-        <motion.button
-            type="button"
+        <motion.div
             aria-label="Toggle mature content"
-            aria-pressed={isChecked}
-            disabled={disabled}
             onClick={handleToggle}
             className={rootClassName}
-            whileHover={{ opacity: 0.7 }}
             whileTap={{ scale: 0.99 }}
         >
             <div className="flex items-center justify-between gap-4">
@@ -41,6 +37,6 @@ export const NSFWToggle = (props: NSFWToggleProps): React.ReactElement => {
                     checked={isChecked}
                 />
             </div>
-        </motion.button>
+        </motion.div>
     );
 }

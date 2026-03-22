@@ -2,13 +2,14 @@ import { twMerge } from "tailwind-merge";
 import { useWebHaptics } from "web-haptics/react";
 import type { NSFWToggleProps } from "./NSFWToggle-def";
 
-const BASE_ROOT_STYLE = "group w-full rounded-xl border p-4 text-left transition-all duration-200 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/70 focus-visible:ring-offset-2 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60";
+const BASE_ROOT_STYLE = "group w-full rounded-xl border p-4 text-left transition-all duration-200 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/70 focus-visible:ring-offset-2 cursor-pointer";
 
-export const useNSFWToggle = ({ isChecked, disabled, onToggle }: NSFWToggleProps) => {
+export const useNSFWToggle = ({ isChecked, disabled , onToggle }: NSFWToggleProps) => {
     const { trigger } = useWebHaptics();
 
     const rootClassName = twMerge(
         BASE_ROOT_STYLE,
+        disabled ? "pointer-events-none opacity-50" : "sm:hover:opacity-70",
         isChecked
             ? "border-destructive/35 bg-destructive/5 shadow-[0_0_0_1px_hsl(var(--destructive)/0.08)]"
             : "border-border/70 bg-background/90",
@@ -25,8 +26,8 @@ export const useNSFWToggle = ({ isChecked, disabled, onToggle }: NSFWToggleProps
     );
 
     const hintText = isChecked
-        ? "18+ results can appear in your picks."
-        : "18+ results are currently filtered out.";
+        ? "18+ results are included."
+        : "18+ results are hidden.";
 
     const handleToggle = () => {
         if (disabled) return;
