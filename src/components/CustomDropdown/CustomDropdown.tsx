@@ -62,9 +62,9 @@ export const CustomDropdown = (props: CustomDropdownProps): React.ReactElement =
                 {label}
             </h3>}
             <DropdownMenu open={showOptions} onOpenChange={setShowOptions}>
-                <DropdownMenuTrigger className="w-full peer" asChild>
+                <DropdownMenuTrigger className="w-full" asChild>
                     <Button
-                        className="justify-between border bg-background/90 border-border/50 hover:bg-muted peer-[state=open]:bg-muted cursor-pointer min-w-full"
+                        className="justify-between border bg-background/90 border-border/50 hover:bg-muted data-[state=open]:bg-muted cursor-pointer min-w-full"
                         onPointerDown={handlePointerStart}
                         onPointerUp={handlePointerEnd}
                         disabled={props.disabled}
