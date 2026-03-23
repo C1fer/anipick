@@ -18,7 +18,7 @@ createRoot(document.getElementById('root')!).render(
             <AppRouter />
         </PicksProvider>
       </FiltersProvider>
-      <Toaster richColors={true} position="top-right" />
+      <Toaster richColors={true} position="top-right" visibleToasts={2}/>
     </ErrorBoundary>
   </StrictMode>
 )
