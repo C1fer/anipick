@@ -7,12 +7,19 @@ type FiltersContextType = {
     setFilterOptions: (options: FilterOptions ) => void;
 }
 
+const ROUTE_TO_MEDIA_TYPE: Record<string, FilterOptions["mediaType"]> = {
+    "/anime": "anime",
+    "/manga": "manga",
+    "/watch": "anime",
+    "/read": "manga",
+}
+
 const FiltersContext = createContext<FiltersContextType | null>(null);
 
 export const FiltersProvider = ({ children }: { children: ReactNode}) =>  {
     const initFilters = {
         ...MediaConfig.defaultFilters,
-        mediaType: window.location.pathname === "manga" ? "manga" : "anime" as FilterOptions["mediaType"],
+        mediaType: ROUTE_TO_MEDIA_TYPE[window.location.pathname] || "anime",
     };
 
     const [filterOptions, setFilterOptions] = useState<FilterOptions>(initFilters);
