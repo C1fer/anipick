@@ -14,6 +14,7 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
     const {
         showStatusLengthSection,
         isLoading,
+        submitButtonData,
         state,
         lists,
         lengthPopoverContent,
@@ -131,9 +132,10 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
             <AnimatedButton
                 className="h-14 shrink-0"
                 leftIcon={<Sparkles className="w-4 h-4"/>}
-                label="Find Picks"
+                label={submitButtonData.label}
                 variant="primary"
                 isLoading={isLoading}
+                disabled={submitButtonData.disabled}
                 onClick={onSubmit}
             />
             {errorModalInfo.isVisible && (

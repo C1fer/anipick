@@ -1,5 +1,5 @@
 export type AnimatedButtonProps = {
-    onClick?: () => void;
+    onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
     leftIcon?: React.ReactNode | null;
     disabled?: boolean;
     label?: string;

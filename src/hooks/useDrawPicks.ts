@@ -5,7 +5,7 @@ import { MediaService } from "@/services/Media/MediaService";
 import type { FilterOptions } from "@/types/filters";
 import type { MediaPick } from "@/types/media";
 import { ImageUtils } from "@/utils/ImageUtils";
-import { triggerErrorToast, triggerWarningToast } from "@/utils/ToastUtils";
+import { triggerErrorToast } from "@/utils/ToastUtils";
 import { useState } from "react";
 
 

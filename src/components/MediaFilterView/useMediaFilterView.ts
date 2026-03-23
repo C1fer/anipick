@@ -18,6 +18,7 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
     
     const [ filterOptions, setFilterOptions ] = useState<FilterOptions>({...globalFilters});
     const [ errorModalInfo, setErrorModalInfo ] = useState<ErrorModalInfo>({ isVisible: props.showSuggestionsOnMount || false, reason: "pagesExhausted" });
+    const [ blockedFilterSignature, setBlockedFilterSignature ] = useState<FilterOptions | null>(props.showSuggestionsOnMount ? {...globalFilters} : null);
 
     const { trigger } = useWebHaptics();
 
@@ -36,7 +37,6 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
 
     const handleChange = <K extends keyof FilterOptions>(key: K, value: FilterOptions[K]) => {
         setFilterOptions((prev) => ({ ...prev, [key]: value }));
-        
     }
 
     const handleChanges = (changes: Partial<FilterOptions>) => {
@@ -78,38 +78,45 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
         );
     }
 
-    const haveFiltersChanged = (): boolean => {
-        if (!globalFilters) return true;
-        const globalGenres = new Set(globalFilters.genres.map(g => g.value));
-        const globalDemographics = new Set(globalFilters.demographics.map(d => d.value));
-        
+    const haveFiltersChanged = (refFilters: FilterOptions, newFilters: FilterOptions): boolean => {
+        const refGenres = new Set(refFilters.genres.map(g => g.value));
+        const refDemographics = new Set(refFilters.demographics.map(d => d.value));
+
         const hasSameGenres =
-            filterOptions.genres.length === globalFilters.genres.length &&
-            filterOptions.genres.every(g => globalGenres.has(g.value));
+            newFilters.genres.length === refFilters.genres.length &&
+            newFilters.genres.every(g => refGenres.has(g.value));
         
         const hasSameDemographics =
-            filterOptions.demographics.length === globalFilters.demographics.length &&
-            filterOptions.demographics.every(d => globalDemographics.has(d.value));
+            newFilters.demographics.length === refFilters.demographics.length &&
+            newFilters.demographics.every(d => refDemographics.has(d.value));
         
         return (
-            mediaType !== globalFilters.mediaType ||
-            filterOptions.releaseType !== globalFilters.releaseType ||
-            filterOptions.status !== globalFilters.status ||
-            filterOptions.mediaLength !== globalFilters.mediaLength ||
-            filterOptions.sfw !== globalFilters.sfw ||
+            newFilters.mediaType !== refFilters.mediaType ||
+            newFilters.releaseType !== refFilters.releaseType ||
+            newFilters.status !== refFilters.status ||
+            newFilters.mediaLength !== refFilters.mediaLength ||
+            newFilters.sfw !== refFilters.sfw ||
             !hasSameGenres ||
             !hasSameDemographics
         )
     }
 
     const onSubmit = async () => {
+        if (blockedFilterSignature) setBlockedFilterSignature(null);
+        
         const baseArgs: DrawPicksArgs = {
             onDrawSuccess: props.onFilterSuccess,
-            onNoPicksFound: () => setErrorModalInfo({ isVisible: true, reason: "noPicks" }),
-            onPagesExhausted: () => setErrorModalInfo({ isVisible: true, reason: "pagesExhausted" }),
+            onNoPicksFound: () => { 
+                setErrorModalInfo({ isVisible: true, reason: "noPicks" });
+                setBlockedFilterSignature(filterOptions);
+            },
+            onPagesExhausted: () => {
+                setErrorModalInfo({ isVisible: true, reason: "pagesExhausted" });
+                setBlockedFilterSignature(filterOptions);
+            }
         }
 
-        if (haveFiltersChanged()) {
+        if (haveFiltersChanged(globalFilters, filterOptions)) {
             setGlobalFilters(filterOptions);
             drawPicks({ 
                 resetRequestedPagesCache: true,
@@ -121,6 +128,7 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
         } else {
             drawPicks(baseArgs);
         }
+
     }
 
     const handleMediaTypeChange = (value: MediaType) => {
@@ -140,7 +148,7 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
         if (appliedSuggestionKeys.size > 0) {
             const newFilters = MediaService.getFiltersWithSuggestions(filterOptions, appliedSuggestionKeys);
             handleChanges(newFilters);
-        }
+        } 
         setErrorModalInfo({ isVisible: false, reason: "pagesExhausted" });
     }
 
@@ -152,6 +160,14 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
     const genreOptionsToDisplay = filterOptions.sfw 
         ? MediaConfig.genreOptions
         : [...MediaConfig.explicitGenreOptions, ...MediaConfig.genreOptions].sort((a, b) => a.label.localeCompare(b.label));
+
+
+    const getSubmitButtonData = () => {
+        if (blockedFilterSignature && !haveFiltersChanged(blockedFilterSignature, filterOptions)) {
+           return { disabled: true, label: "Filters unchanged" }
+        }
+        return { disabled: false, label: "Find Picks" };
+    }
 
     const lists = {
         mediaTypes: MediaConfig.mediaTypeOptions,
@@ -165,6 +181,7 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
     return {
         showStatusLengthSection,
         isLoading: isDrawingPicks,
+        submitButtonData: getSubmitButtonData(),
         lists,
         state: filterOptions,
         lengthPopoverContent: getLengthPopoverContent(),

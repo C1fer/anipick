@@ -12,10 +12,10 @@ const BASE_STYLE = "flex items-center justify-center gap-2 w-full h-12 text-sm f
 export const useAnimatedButton = ({ className, variant = "primary", hapticsEnabled = true, hapticsType = "light", onClick}: AnimatedButtonProps) => {
     const { trigger } = useWebHaptics();
 
-     const handleClick = () => {
+    const handleClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
         if (hapticsEnabled) trigger(hapticsType);
-        onClick?.();
-    }
+        onClick?.(event);
+    };
 
     const _style: string = twMerge(BASE_STYLE, VARIANT_STYLES[variant], className)
 
