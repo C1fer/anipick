@@ -2,7 +2,7 @@ import { useMediaFilterView } from "./useMediaFilterView"
 import { ToggleRadio } from "../ToggleRadio/ToggleRadio";
 import { CustomDropdown } from "../CustomDropdown/CustomDropdown";
 import { NSFWToggle } from "../NSFWToggle/NSFWToggle";
-import { BookOpen, Sparkles, Tv  } from "lucide-react";
+import { BookOpen, Sparkles, Tv, Undo2  } from "lucide-react";
 import type { MediaFilterViewProps } from "./MediaFilterView-def";
 import { AnimatePresence, motion } from "motion/react"
 import { AnimatedButton } from "../AnimatedButton/AnimatedButton";
@@ -25,6 +25,7 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
         onToggleSFW,
         onSelectGenre,
         onSelectDemographic,
+        onResetFilters,
         onSubmit,
         onCloseErrorModal,
     } = useMediaFilterView(props);
@@ -52,10 +53,27 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
         </motion.div>
     )
 
+    const renderHeader = () => (
+    <div className="w-full flex items-center justify-between">
+        <h3 className="text-md font-medium text-muted-foreground">Filters</h3>
+        <button
+            type="button"
+            onClick={onResetFilters}
+            disabled={isLoading}
+            className="cursor-pointer text-muted-foreground active:text-action sm:hover:text-action transition-colors inline-flex items-center gap-2 self-end p-1.5 rounded-md bg-card disabled:opacity-50 disabled:pointer-events-none"
+        >
+            <Undo2 className="w-4 h-4" />
+            <span className="text-sm">Reset</span>
+        </button>
+    </div>
+    )
+
     return (
         <motion.div className="flex flex-col items-center w-full gap-6 max-w-2xl md:min-w-xl" layout>
             {renderMediaTypeToggle()}
+            {/* Filter Options Section */}
             <div className="flex-col flex w-full gap-6 bg-card/50 border border-border/50 p-6 rounded-xl shadow-xl " >
+                {renderHeader()}
                 {state.mediaType === "anime" ? (
                     <ToggleRadio 
                         headerTitle="Release Type" 
@@ -138,6 +156,7 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
                 disabled={submitButtonData.disabled}
                 onClick={onSubmit}
             />
+            
             {errorModalInfo.isVisible && (
                 <FilterSuggestionsDialog
                     isOpen={true} 

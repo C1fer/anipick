@@ -100,10 +100,16 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
             !hasSameDemographics
         )
     }
+    
+    const onResetFilters = () => {
+        if (!haveFiltersChanged(filterOptions, MediaConfig.defaultFilters)) return;
+        trigger("medium");
+        handleChanges({ ...MediaConfig.defaultFilters, mediaType: filterOptions.mediaType });
+    }
 
     const onSubmit = async () => {
         if (blockedFilterSignature) setBlockedFilterSignature(null);
-        
+
         const baseArgs: DrawPicksArgs = {
             onDrawSuccess: props.onFilterSuccess,
             onNoPicksFound: () => { 
@@ -187,12 +193,13 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
         lengthPopoverContent: getLengthPopoverContent(),
         errorModalInfo,
         handleChange,
+        handleMediaTypeChange,
         onSelectReleaseType,
         onToggleSFW,
         onSelectGenre,
         onSelectDemographic,
+        onResetFilters,
         onSubmit,
-        handleMediaTypeChange,
-        onCloseErrorModal
+        onCloseErrorModal,
     }
 }
