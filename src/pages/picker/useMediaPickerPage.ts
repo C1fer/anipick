@@ -3,9 +3,9 @@ import { useState } from "react";
 import type { ViewState } from "./MediaPickerPage-def";
 
 export const useMediaPickerPage = () => {
-    const [ viewState, setViewState ] = useState<ViewState>({ phase: "filter" });
+    const [ viewState, setViewState ] = useState<ViewState>({ phase: "filter", showSuggestionsOnMount: false });
 
-    const goToFilter = () => setViewState({ phase: "filter" });
+    const goToFilter = (showSuggestionsOnMount: boolean = false) => setViewState({ phase: "filter", showSuggestionsOnMount });
 
     const goToPick = () => setViewState({ phase: "pick" });
 

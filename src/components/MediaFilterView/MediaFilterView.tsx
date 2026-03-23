@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from "motion/react"
 import { AnimatedButton } from "../AnimatedButton/AnimatedButton";
 import { twMerge } from "tailwind-merge";
 import { CustomSelect } from "../CustomSelect/CustomSelect";
+import { FilterSuggestionsDialog } from "../Dialogs/FilterSuggestionsDialog/FilterSuggestionsDialog";
 
 export const MediaFilterView = (props: MediaFilterViewProps) => {
     const {
@@ -16,6 +17,7 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
         state,
         lists,
         lengthPopoverContent,
+        errorModalInfo,
         handleChange,
         handleMediaTypeChange,
         onSelectReleaseType,
@@ -23,6 +25,7 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
         onSelectGenre,
         onSelectDemographic,
         onSubmit,
+        onCloseErrorModal,
     } = useMediaFilterView(props);
         
     const renderMediaTypeToggle = () => (
@@ -49,7 +52,7 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
     )
 
     return (
-        <motion.div className="flex flex-col items-center w-full gap-6 max-w-2xl md:min-w-xl" layout >
+        <motion.div className="flex flex-col items-center w-full gap-6 max-w-2xl md:min-w-xl" layout>
             {renderMediaTypeToggle()}
             <div className="flex-col flex w-full gap-6 bg-card/50 border border-border/50 p-6 rounded-xl shadow-xl " >
                 {state.mediaType === "anime" ? (
@@ -133,6 +136,14 @@ export const MediaFilterView = (props: MediaFilterViewProps) => {
                 isLoading={isLoading}
                 onClick={onSubmit}
             />
+            {errorModalInfo.isVisible && (
+                <FilterSuggestionsDialog
+                    isOpen={true} 
+                    appliedFilters={state}
+                    reason={errorModalInfo.reason}
+                    onClose={onCloseErrorModal}
+                />
+            )}
         </motion.div>
     )
 }

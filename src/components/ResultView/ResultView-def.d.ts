@@ -3,6 +3,6 @@ import type { MALManga } from "@/types/manga";
 
 export interface ResultViewProps {
     selection: MALAnime | MALManga | null;
-    onGoBack: () => void;
+    onGoBack: (showSuggestionsOnMount?: boolean) => void;
     onRedrawPicks: () => void;
 }

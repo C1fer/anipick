@@ -1,5 +1,6 @@
 import { useFilters } from "@/context/FiltersContext";
 import { usePicks } from "@/context/PicksContext";
+import { PagesExhaustedError } from "@/lib/errors";
 import { MediaService } from "@/services/Media/MediaService";
 import type { FilterOptions } from "@/types/filters";
 import type { MediaPick } from "@/types/media";
@@ -8,14 +9,16 @@ import { triggerErrorToast, triggerWarningToast } from "@/utils/ToastUtils";
 import { useState } from "react";
 
 
-type DrawPicksArgs = {
+export type DrawPicksArgs = {
     lastPage?: number | null;
     pendingPicks?: MediaPick[];
     filters?: FilterOptions;
     onDrawSuccess: () => void;
-    onDrawFailure?: () => void;
+    onError?: () => void;
+    onPagesExhausted?: () => void;
     onNoPicksFound?: () => void;
     preloadImages?: boolean;
+    resetRequestedPagesCache?: boolean;
 }
 
 export const useDrawPicks = () => {
@@ -40,18 +43,18 @@ export const useDrawPicks = () => {
         ImageUtils.preloadImages(deferredImages);
     }
     
-    const drawPicks = async ({ lastPage, pendingPicks, filters, onDrawSuccess, onDrawFailure, onNoPicksFound, preloadImages = true }: DrawPicksArgs) => {
+    const drawPicks = async ({ lastPage, pendingPicks, filters, onDrawSuccess, onError, onNoPicksFound, onPagesExhausted, preloadImages = true, resetRequestedPagesCache = false }: DrawPicksArgs) => {
         try {
             setIsDrawingPicks(true);
 
             const { picks, toQueue, lastVisiblePageFromApi } = await MediaService.getPicksFromFilters(
-                {...globalFilters, ...filters}, 
+                filters !== undefined ? filters : globalFilters,
                 pendingPicks !== undefined ? pendingPicks : queuedPicks, 
-                lastPage !== undefined ? lastPage : lastVisibleResultsPage
+                lastPage !== undefined ? lastPage : lastVisibleResultsPage,
+                resetRequestedPagesCache
             );
 
             if (!picks.length) {
-                triggerWarningToast("No picks found with the selected filters. Try relaxing your criteria!");
                 onNoPicksFound?.();
                 return;
             } 
@@ -68,8 +71,12 @@ export const useDrawPicks = () => {
             onDrawSuccess();
         } catch (error) {
             console.error(`Error fetching picks:`, error);
-            triggerErrorToast();
-            onDrawFailure?.();
+            if (error instanceof PagesExhaustedError) {
+                onPagesExhausted?.();
+            } else {
+                triggerErrorToast();
+                onError?.();
+            }
         } finally {
             setIsDrawingPicks(false);
         }

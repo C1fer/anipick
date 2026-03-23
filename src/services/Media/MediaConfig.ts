@@ -12,6 +12,13 @@ export type PicksFromFilters = ShuffledPicks & {
     lastVisiblePageFromApi: number | null;
 }
 
+export type FilterSuggestion = {
+    type: keyof FilterOptions;
+    label: string;
+    validation(filters: FilterOptions): boolean;
+    apply(filters: FilterOptions): FilterOptions[keyof FilterOptions];
+}
+
 const DEFAULT_FILTER_OPTIONS: FilterOptions = {
     mediaType: 'anime',
     releaseType: 'any',
@@ -43,6 +50,33 @@ const DEMOGRAPHICS: SelectableOption[] = Constants.demographics.map((demo) => ({
     value: String(demo.mal_id),
 }))
 
+const SUGGESTIONS: FilterSuggestion[] = [
+    {
+        type: "genres",
+        label: "Remove 1-2 genres",
+        validation: (filters) => filters.genres.length > 3,
+        apply: (filters) => filters.genres.slice(0, -2)
+    },
+    {
+        type: "demographics",
+        label: "Expand demographics",
+        validation: (filters) => filters.demographics.length > 0,
+        apply: () => []
+    },
+    {
+        type: "status",
+        label: "Include all statuses",
+        validation: (filters) => filters.status === "airing",
+        apply: () => "any"
+    },
+    {
+        type: "mediaLength",
+        label: "Expand length requirements",
+        validation: (filters) => filters.mediaLength !== "any",
+        apply: () => "any"
+    }
+]
+
 
 export const MediaConfig = Object.freeze({
     defaultFilters: DEFAULT_FILTER_OPTIONS,
@@ -50,4 +84,5 @@ export const MediaConfig = Object.freeze({
     genreOptions: GENRES,
     explicitGenreOptions: EXPLICIT_GENRES,
     demographicOptions: DEMOGRAPHICS,
+    filterSuggestions: SUGGESTIONS
 })

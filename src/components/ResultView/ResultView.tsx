@@ -1,5 +1,5 @@
 import type { MediaPick } from "@/types/media";
-import { Book, Building2, Calendar, ChevronFirst, Clock, ExternalLink, Frown, MonitorPlay, Pencil, Play, RotateCcw, Star } from "lucide-react";
+import { Book, Building2, Calendar, ChevronFirst, Clock, ExternalLink, Frown, House, MonitorPlay, Pencil, Play, RotateCcw, Star } from "lucide-react";
 import { motion } from "motion/react";
 import { AnimatedButton } from "../AnimatedButton/AnimatedButton";
 import { StreamingOptionsDialog } from "../Dialogs/StreamingOptionsDialog";
@@ -36,14 +36,24 @@ export const ResultView = (props: ResultViewProps ) => {
                     You've gone through all the picks. Want to try again with fresh options?
                 </p>
             </div>
-            <AnimatedButton
-                className="w-40"
-                onClick={handleRedraw}
-                leftIcon={<RotateCcw className="w-4 h-4"/>}
-                label="Try Again"
-                variant="primary"
-                isLoading={isRedrawing}
-            />
+            <div>
+                <AnimatedButton
+                    className="w-40"
+                    onClick={handleRedraw}
+                    leftIcon={<RotateCcw className="w-4 h-4"/>}
+                    label="Try Again"
+                    variant="primary"
+                    isLoading={isRedrawing}
+                />
+                <AnimatedButton
+                    className="w-40 mt-4"
+                    onClick={props.onGoBack}
+                    leftIcon={<House className="w-4 h-4"/>}
+                    label="Go Back"
+                    variant="secondary"
+                    disabled={isRedrawing}
+                />
+            </div>
         </motion.div>
     )
 

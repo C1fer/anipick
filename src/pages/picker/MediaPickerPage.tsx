@@ -30,7 +30,10 @@ export const MediaPickerPage = () => {
                         exit={{ opacity: 0, x: -20 }}
                     >
                         <Logo />
-                        <MediaFilterView onFilterSuccess={goToPick}/>
+                        <MediaFilterView 
+                            onFilterSuccess={goToPick}
+                            showSuggestionsOnMount={viewState.showSuggestionsOnMount}
+                        />
                         <Footer className="mt-8" />
                     </motion.div>
                 )

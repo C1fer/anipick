@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { SelectableOption, MediaFilterViewProps } from "./MediaFilterView-def";
+import type { SelectableOption, MediaFilterViewProps, ErrorModalInfo } from "./MediaFilterView-def";
 import { useFilters } from "@/context/FiltersContext";
 import { usePicks } from "@/context/PicksContext";
 import { useWebHaptics } from "web-haptics/react";
@@ -8,16 +8,18 @@ import type { FilterOptions } from "@/types/filters";
 import { MediaConfig } from "@/services/Media/MediaConfig";
 import { AnimeConfig } from "@/services/Anime/AnimeConfig";
 import { MangaConfig } from "@/services/Manga/MangaConfig";
-import { useDrawPicks } from "@/hooks/useDrawPicks";
+import { useDrawPicks, type DrawPicksArgs } from "@/hooks/useDrawPicks";
+import { MediaService } from "@/services/Media/MediaService";
 
 export const useMediaFilterView = (props: MediaFilterViewProps) => {
-    const { filterOptions: globalFilters, setFilterOptions: setGlobalFilters, } = useFilters();
+    const { filterOptions: globalFilters, setFilterOptions: setGlobalFilters } = useFilters();
     const { setQueuedPicks } = usePicks();
     const { isDrawingPicks, drawPicks } = useDrawPicks();
     
     const [ filterOptions, setFilterOptions ] = useState<FilterOptions>({...globalFilters});
+    const [ errorModalInfo, setErrorModalInfo ] = useState<ErrorModalInfo>({ isVisible: props.showSuggestionsOnMount || false, reason: "pagesExhausted" });
 
-    const { trigger } = useWebHaptics();   
+    const { trigger } = useWebHaptics();
 
     const mediaType = filterOptions.mediaType;
 
@@ -34,6 +36,7 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
 
     const handleChange = <K extends keyof FilterOptions>(key: K, value: FilterOptions[K]) => {
         setFilterOptions((prev) => ({ ...prev, [key]: value }));
+        
     }
 
     const handleChanges = (changes: Partial<FilterOptions>) => {
@@ -100,12 +103,23 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
     }
 
     const onSubmit = async () => {
-        const hasNewFilters = haveFiltersChanged();
-        if (hasNewFilters) {
+        const baseArgs: DrawPicksArgs = {
+            onDrawSuccess: props.onFilterSuccess,
+            onNoPicksFound: () => setErrorModalInfo({ isVisible: true, reason: "noPicks" }),
+            onPagesExhausted: () => setErrorModalInfo({ isVisible: true, reason: "pagesExhausted" }),
+        }
+
+        if (haveFiltersChanged()) {
             setGlobalFilters(filterOptions);
-            drawPicks({ filters: filterOptions, pendingPicks: [],lastPage: null, onDrawSuccess: props.onFilterSuccess });
+            drawPicks({ 
+                resetRequestedPagesCache: true,
+                filters: filterOptions, 
+                pendingPicks: [],
+                lastPage: null, 
+                ...baseArgs
+            });
         } else {
-            drawPicks({ onDrawSuccess: props.onFilterSuccess, });
+            drawPicks(baseArgs);
         }
     }
 
@@ -122,6 +136,14 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
        setQueuedPicks([]);
     }
     
+    const onCloseErrorModal = (appliedSuggestionKeys: Set<string>) => {
+        if (appliedSuggestionKeys.size > 0) {
+            const newFilters = MediaService.getFiltersWithSuggestions(filterOptions, appliedSuggestionKeys);
+            handleChanges(newFilters);
+        }
+        setErrorModalInfo({ isVisible: false, reason: "pagesExhausted" });
+    }
+
     const showStatusLengthSection = Boolean(
         mediaType === "anime" && filterOptions.releaseType !== 'movie'
         || mediaType === "manga" && filterOptions.releaseType !== 'oneshot'
@@ -146,12 +168,14 @@ export const useMediaFilterView = (props: MediaFilterViewProps) => {
         lists,
         state: filterOptions,
         lengthPopoverContent: getLengthPopoverContent(),
+        errorModalInfo,
         handleChange,
         onSelectReleaseType,
         onToggleSFW,
         onSelectGenre,
         onSelectDemographic,
         onSubmit,
-        handleMediaTypeChange
+        handleMediaTypeChange,
+        onCloseErrorModal
     }
 }

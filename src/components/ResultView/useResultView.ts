@@ -15,7 +15,10 @@ export const useResultView = ({ selection, onRedrawPicks, onGoBack }: ResultView
 
     const { isDrawingPicks, drawPicks } = useDrawPicks();
 
-    const handleRedraw = () => drawPicks({ onDrawSuccess: onRedrawPicks });
+    const handleRedraw = () => drawPicks({
+        onDrawSuccess: onRedrawPicks,
+        onPagesExhausted: () => onGoBack(true) // Return to FilterView and trigger suggestions modal,
+    });
 
     const handleWatchNow = async () => {
         try {
